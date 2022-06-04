@@ -130,7 +130,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <dt>パスワード<span class="required">（必須）</span></dt>
             <dd>
               <input type="password" name="password" size="10" maxlength="20" value="" />
-                <p class="error">* パスワードは4文字以上で入力してください</p>
             </dd>
 
             <dd>
