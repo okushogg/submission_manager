@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 画像のアップロード
     if ($image['name'] !== '') {
       $filename = date('Ymdhis') . '_' . $image['name'];
-      if (!move_uploaded_file($image['tmp_name'], '../student_picture/' . $filename)) {
+      if (!move_uploaded_file($image['tmp_name'], '../student_pictures/' . $filename)) {
         die('ファイルのアップロードに失敗しました');
       }
       $_SESSION['form']['image'] = $filename;

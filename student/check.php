@@ -6,6 +6,6 @@
   <title>登録ページ</title>
 </head>
 <body>
-  
+
 </body>
 </html>
