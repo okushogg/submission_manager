@@ -1,6 +1,8 @@
 <?php
 session_start();
 require('../libs.php');
+require('../dbconnect.php');
+
 // 直接check.phpに飛ばないようにする
 if (isset($_SESSION['form'])) {
   $form = $_SESSION['form'];
@@ -11,25 +13,41 @@ if (isset($_SESSION['form'])) {
 
 $form = $_SESSION['form'];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $db = dbconnect();
-  // 画像があった場合
-  if($form['image'] !== ''){
+  // 画像がある場合
+  if ($form['image'] !== '') {
     $stmt = $db->prepare('insert into images(path) VALUES(?)');
-    $image_id = $db-> lastInsertId();
-    $stmt->bindParam('s', $form['image']);
+    if (!$stmt) {
+      die($db->error);
+    }
+    $stmt->bindParam(1, $form['image'], PDO::PARAM_STR);
     $success = $stmt->execute();
     if (!$success) {
-    die($db->error);
+      die($db->error);
     }
+    $get_image_id = $db->prepare("select id from images where path = '". $form['image']."'");
+    $get_image_id->execute();
+    $image_id_str = $get_image_id->fetch(PDO::FETCH_COLUMN);
+    $image_id = intval($image_id_str);
     var_dump($image_id);
+    var_dump($form['image']);
     unset($stmt);
+  } else {
+    // 画像がない場合
+    $image_id = $no_image_id;
   }
 
   // パスワードをDBに直接保管しない
   $password = password_hash($form['password'], PASSWORD_DEFAULT);
   $stmt = $db->prepare('insert into teachers(last_name, first_name, email, password, image_id) VALUES(?, ?, ?, ?, ?)');
-  $stmt->bind_param('ssss', $form['last_name'], $form['first_name'], $form['email'], $password, $image_id);
-  $success = $stmt->execute();
+  $success = $stmt->execute(array($form['last_name'], $form['first_name'], $form['email'], $password, $image_id));
+    // （これも使える）
+    // $stmt = $db->prepare('insert into teachers(last_name, first_name, email, password, image_id) VALUES(:last_name, :first_name, :email, :password, :image_id)');
+    // $stmt->bindParam(':last_name', $form['last_name'], PDO::PARAM_STR);
+    // $stmt->bindParam(':first_name', $form['first_name'], PDO::PARAM_STR);
+    // $stmt->bindParam(':email', $form['email'], PDO::PARAM_STR);
+    // $stmt->bindParam(':password', $password, PDO::PARAM_STR);
+    // $stmt->bindParam(':image_id', $image_id, PDO::PARAM_INT);
+    // $success = $stmt->execute();
   if (!$success) {
     die($db->error);
   }

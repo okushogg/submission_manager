@@ -32,21 +32,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $error['last_name'] = 'blank';
   }
 
-  // Emailのチェック
+  //メールアドレスが入力されているかチェック
   $form['email'] = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
   if ($form['email'] === '') {
     $error['email'] = 'blank';
   } else {
+    // 同一のメールアドレスがないかチェック
     $stmt = $db->prepare('select count(*) from students where email=?');
     if (!$stmt) {
       die($db->error);
     }
-    $success = $stmt->execute(array($form['email']));
+    $stmt->bindParam(1, $form['email'], PDO::PARAM_STR);
+    // $success = $stmt->execute(array($form['email']));
+    $success = $stmt->execute();
     if (!$success) {
       die($db->error);
     }
-    // $stmt->bind_result($cnt);
-    $stmt->fetch();
+    $cnt_string = $stmt->fetch(PDO::FETCH_COLUMN);
+    $cnt = intval($cnt_string);
+    // var_dump($cnt);
+
+    if($cnt > 0){
+        $error['email'] = 'duplicate';
+    }
   }
 
 

@@ -1,4 +1,6 @@
 <?php
+// 画像がないユーザー用のimagesレコード
+$no_image_id = 69;
 
 //不正な文字列をチェック
 function h($value)
