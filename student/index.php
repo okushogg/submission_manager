@@ -1,5 +1,6 @@
 <?php
 session_start();
+require('../dbconnect.php');
 require('../libs.php');
 
 if (isset($_GET['action']) && isset($_SESSION['form'])) {

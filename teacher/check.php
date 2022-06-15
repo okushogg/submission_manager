@@ -7,7 +7,7 @@ require('../dbconnect.php');
 if (isset($_SESSION['form'])) {
   $form = $_SESSION['form'];
 } else {
-  header('Location: index.php');
+  header('Location: sign_up.php');
   exit();
 }
 
@@ -28,8 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $get_image_id->execute();
     $image_id_str = $get_image_id->fetch(PDO::FETCH_COLUMN);
     $image_id = intval($image_id_str);
-    var_dump($image_id);
-    var_dump($form['image']);
+    // var_dump($image_id);
+    // var_dump($form['image']);
     unset($stmt);
   } else {
     // 画像がない場合
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     die($db->error);
   }
   unset($_SESSION['form']);
-  header('Location: index.php');
+  header('Location: home.php');
 }
 ?>
 
