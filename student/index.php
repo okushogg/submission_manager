@@ -78,9 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if (!move_uploaded_file($image['tmp_name'], '../student_pictures/' . $filename)) {
         die('ファイルのアップロードに失敗しました');
       }
-      $_SESSION['form']['image'] = $filename;
+      $_SESSION['form']['image_path'] = $filename;
     } else {
-      $_SESSION['form']['image'] = '';
+      $_SESSION['form']['image_path'] = '';
     }
 
     header('Location: check.php');

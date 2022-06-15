@@ -1,6 +1,7 @@
 <?php
 session_start();
 require('../libs.php');
+require('../dbconnect.php');
 
 if (isset($_GET['action']) && isset($_SESSION['form'])) {
   $form = $_SESSION['form'];
@@ -36,20 +37,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($form['email'] === '') {
     $error['email'] = 'blank';
   } else {
-    $db = dbconnect();
     $stmt = $db->prepare('select count(*) from students where email=?');
     if (!$stmt) {
       die($db->error);
     }
-    $stmt->bind_param('s', $form['email']);
-    $success = $stmt->execute();
+    $success = $stmt->execute(array($form['email']));
     if (!$success) {
       die($db->error);
     }
-
-    $stmt->bind_result($cnt);
+    // $stmt->bind_result($cnt);
     $stmt->fetch();
   }
+
 
   // パスワードのチェック
   $form['password'] = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
@@ -57,6 +56,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $error['password'] = 'blank';
   } elseif (strlen($form['password']) < 4) {
     $error['password'] = 'length';
+  }
+
+  // 画像のチェック
+  $image = $_FILES['image'];
+  if ($image['name'] !== '' && $image['error'] === 0) {
+    $type = mime_content_type($image['tmp_name']);
+    if ($type !== 'image/png' && $type !== 'image/jpeg') {
+      $error['image'] = 'type';
+    }
   }
 
   if (empty($error)) {

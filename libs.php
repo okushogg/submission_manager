@@ -1,17 +1,12 @@
 <?php
+
+//不正な文字列をチェック
 function h($value)
 {
     return htmlspecialchars($value, ENT_QUOTES);
 }
 
-function dbconnect(){
-  $db = new mysqli('localhost', 'root', 'root', 'submissions_manager');
-  if(!$db){
-		die($db->error);
-  }
-  return $db;
-}
-
+//日本時間を求める
 function jp_time(){
   date_default_timezone_set('Asia/Tokyo');
   $jp_time = date('Y-m-d H:i:s');
