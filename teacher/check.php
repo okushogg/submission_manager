@@ -38,16 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // パスワードをDBに直接保管しない
   $password = password_hash($form['password'], PASSWORD_DEFAULT);
-  $stmt = $db->prepare('insert into teachers(last_name, first_name, email, password, image_id) VALUES(?, ?, ?, ?, ?)');
+  $stmt = $db->prepare('insert into teachers(last_name, first_name, email, password, image_id) values(?, ?, ?, ?, ?)');
+  if (!$stmt) {
+    die($db->error);
+  }
   $success = $stmt->execute(array($form['last_name'], $form['first_name'], $form['email'], $password, $image_id));
-    // （これも使える）
-    // $stmt = $db->prepare('insert into teachers(last_name, first_name, email, password, image_id) VALUES(:last_name, :first_name, :email, :password, :image_id)');
-    // $stmt->bindParam(':last_name', $form['last_name'], PDO::PARAM_STR);
-    // $stmt->bindParam(':first_name', $form['first_name'], PDO::PARAM_STR);
-    // $stmt->bindParam(':email', $form['email'], PDO::PARAM_STR);
-    // $stmt->bindParam(':password', $password, PDO::PARAM_STR);
-    // $stmt->bindParam(':image_id', $image_id, PDO::PARAM_INT);
-    // $success = $stmt->execute();
   if (!$success) {
     die($db->error);
   }
