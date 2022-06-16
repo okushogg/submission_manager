@@ -8,11 +8,11 @@ function h($value)
     return htmlspecialchars($value, ENT_QUOTES);
 }
 
-function get_classes($value, $grade){
+function get_classes($classes_info, $grade){
   $i = 0;
-  while(!empty($value[$i]['grade']=$grade)){
-    $grade = $value[$i]['grade'];
-    $class = $value[$i]['class'];
+  while(($classes_info[$i]['grade'] == $grade)){
+    $grade = $classes_info[$i]['grade'];
+    $class = $classes_info[$i]['class'];
     return "$grade - $class";
     $i ++;
   }

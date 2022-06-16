@@ -31,7 +31,9 @@ $classes_stmt = $db->prepare("select id, year, grade, class from classes where y
 $classes_stmt->bindParam(':year', $year, PDO::PARAM_STR);
 $classes_stmt->execute();
 $classes_info = $classes_stmt->fetchAll(PDO::FETCH_ASSOC);
+echo('<pre>');
 var_dump($classes_info);
+echo('<pre>');
 ?>
 
 <!DOCTYPE html>
