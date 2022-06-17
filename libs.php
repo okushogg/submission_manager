@@ -1,4 +1,5 @@
 <?php
+require('dbconnect.php');
 // 画像がないユーザー用のimagesレコード
 $no_image_id = 69;
 
@@ -8,14 +9,18 @@ function h($value)
     return htmlspecialchars($value, ENT_QUOTES);
 }
 
-function get_classes($classes_info, $grade){
-  $i = 0;
-  while(($classes_info[$i]['grade'] == $grade)){
-    $grade = $classes_info[$i]['grade'];
-    $class = $classes_info[$i]['class'];
-    return "$grade - $class";
-    $i ++;
+function get_classes($classes_info){
+  $all_classes_array = array();
+  foreach($classes_info as $class_info){
+  $all_classes_array = array(
+    $class_info['grade']=>
+    arry(
+       => $class_info['grade']
+      'class' => $class_info['class']
+    )
+  );
   }
+  return $all_classes_array;
 }
 
 //日本時間を求める

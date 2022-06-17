@@ -31,9 +31,12 @@ $classes_stmt = $db->prepare("select id, year, grade, class from classes where y
 $classes_stmt->bindParam(':year', $year, PDO::PARAM_STR);
 $classes_stmt->execute();
 $classes_info = $classes_stmt->fetchAll(PDO::FETCH_ASSOC);
-echo('<pre>');
-var_dump($classes_info);
-echo('<pre>');
+$cnt = count($classes_info);
+
+// echo ('<pre>');
+// var_dump($classes_info);
+// echo ('<pre>');
+// var_dump(get_classes($classes_info));
 ?>
 
 <!DOCTYPE html>
@@ -59,13 +62,21 @@ echo('<pre>');
         <img src="../teacher_pictures/<?php echo h($pic_info['path']); ?>" width="48" height="48" alt="" />
         <?php echo $last_name ?> <?php echo $first_name . ' 先生' ?>
       </div>
-      <div class="classes">
-        <div class="grades">
-          <?php echo get_classes($classes_info, 1); ?>
-        </div>
+
+      <div>
+      <?php foreach  ($classes_info as $a) : ?>
+        <div style="display: inline-block;">
+          <?php ?>
+          <?php echo "{$a['grade']} - {$a['class']}" ?>
+       </div>
+
+      <?php endforeach; ?>
+      </div>
+
+      <div>
+        <?php get_classes($classes_info); ?>
       </div>
     </div>
-  </div>
 
 
 </body>
