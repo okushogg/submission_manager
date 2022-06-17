@@ -45,16 +45,9 @@ $classes_info = array(
 );
 
 
-
+  $array = array();
+  // $array = array();
   foreach($classes_info as $a){
-    $all_classes_array = array(
-      $a['grade'] => array(
-          'id' =>$a['id'],
-          'year' =>$a['year'],
-          'grade' =>$a['grade'],
-          'class' =>$a['class']
-        )
-      );
+   $array[$a['grade']][$a['class']]=$a;
   }
-
-  print_r($all_classes_array);
+ print_r($array);

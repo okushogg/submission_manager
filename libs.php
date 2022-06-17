@@ -10,17 +10,11 @@ function h($value)
 }
 
 function get_classes($classes_info){
-  $all_classes_array = array();
-  foreach($classes_info as $class_info){
-  $all_classes_array = array(
-    $class_info['grade']=>
-    arry(
-       => $class_info['grade']
-      'class' => $class_info['class']
-    )
-  );
+  $classes_array = array();
+  foreach($classes_info as $a){
+  $classes_array[$a['grade']][$a['class']]=$a;
   }
-  return $all_classes_array;
+  return $classes_array;
 }
 
 //日本時間を求める
