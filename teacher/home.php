@@ -33,10 +33,13 @@ $classes_stmt->execute();
 $classes_info = $classes_stmt->fetchAll(PDO::FETCH_ASSOC);
 $cnt = count($classes_info);
 
-// echo ('<pre>');
-// var_dump($classes_info);
-// echo ('<pre>');
+// 学年ごとにクラスのデータを配列で取得
+$classes_array = get_classes($classes_info);
+
+echo ('<pre>');
 // var_dump(get_classes($classes_info));
+// echo ('<pre>');
+// var_dump($classes_array[1]['A']['class']);
 ?>
 
 <!DOCTYPE html>
@@ -64,19 +67,31 @@ $cnt = count($classes_info);
       </div>
 
       <div>
-      <?php foreach  ($classes_info as $a) : ?>
-        <div style="display: inline-block;">
-          <?php ?>
-          <?php echo "{$a['grade']} - {$a['class']}" ?>
-       </div>
 
-      <?php endforeach; ?>
-      </div>
+        <div class="box">
+          <?php foreach ($classes_array['1'] as $a): ?>
+            <div class="box">
+              <?php echo "{$a['grade']} - {$a['class']}";?>
+            </div>
+          <?php endforeach; ?>
+        </div>
 
-      <div>
-        <?php get_classes($classes_info); ?>
+        <div class="box">
+          <?php foreach ($classes_array['2'] as $a): ?>
+            <div class="box">
+              <?php echo "{$a['grade']} - {$a['class']}";?>
+            </div>
+          <?php endforeach; ?>
+        </div>
+
+        <div class="box">
+          <?php foreach ($classes_array['3'] as $a): ?>
+            <div class="box">
+              <?php echo "{$a['grade']} - {$a['class']}";?>
+            </div>
+          <?php endforeach; ?>
+        </div>
       </div>
-    </div>
 
 
 </body>

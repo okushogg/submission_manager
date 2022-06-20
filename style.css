@@ -272,3 +272,7 @@ li {
   font-size: 80%;
   color: #999;
 }
+
+.box {
+  margin: 10px;
+}

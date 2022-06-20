@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $error['email'] = 'blank';
   } else {
     // 同一のメールアドレスがないかチェック
-    $stmt = $db->prepare('select count(*) from students where email=?');
+    $stmt = $db->prepare('select count(*) from teachers where email=?');
     if (!$stmt) {
       die($db->error);
     }

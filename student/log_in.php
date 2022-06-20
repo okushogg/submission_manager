@@ -3,6 +3,7 @@ session_start();
 require('../dbconnect.php');
 require('../libs.php');
 
+// フォームの中身を確認、内容がなければ初期化
 if (isset($_GET['action']) && isset($_SESSION['form'])) {
   $form = $_SESSION['form'];
 } else {
@@ -17,7 +18,9 @@ if (isset($_GET['action']) && isset($_SESSION['form'])) {
   ];
 }
 
+// エラーの初期化
 $error = [];
+
 
 // フォームの内容をチェック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -32,62 +35,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $error['last_name'] = 'blank';
   }
 
-  // Emailのチェック
+  //メールアドレスが入力されているかチェック
   $form['email'] = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
   if ($form['email'] === '') {
     $error['email'] = 'blank';
   } else {
-    $db = dbconnect();
+    // 同一のメールアドレスがないかチェック
     $stmt = $db->prepare('select count(*) from students where email=?');
     if (!$stmt) {
       die($db->error);
     }
-    $stmt->bind_param('s', $form['email']);
+    $stmt->bindParam(1, $form['email'], PDO::PARAM_STR);
+    // $success = $stmt->execute(array($form['email']));
     $success = $stmt->execute();
     if (!$success) {
       die($db->error);
     }
+    $cnt_string = $stmt->fetch(PDO::FETCH_COLUMN);
+    $cnt = intval($cnt_string);
+    // var_dump($cnt);
 
-    $stmt->bind_result($cnt);
-    $stmt->fetch();
-  }
-
-  // パスワードのチェック
-  $form['password'] = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
-  if ($form['password'] === '') {
-    $error['password'] = 'blank';
-  } elseif (strlen($form['password']) < 4) {
-    $error['password'] = 'length';
-  }
-
-  // 学年・クラスのチェック
-  $form['grade'] = filter_input(INPUT_POST, 'grade', FILTER_SANITIZE_NUMBER_INT);
-  if ($form['grade'] == 0) {
-    $error['grade'] = 'blank';
-  }
-  $form['class'] = filter_input(INPUT_POST, 'class', FILTER_SANITIZE_NUMBER_INT);
-  if ($form['class'] == 0) {
-    $error['class'] = 'blank';
-  }
-
-  if (empty($error)) {
-    $_SESSION['form'] = $form;
-
-    // 画像のアップロード
-    if ($image['name'] !== '') {
-      $filename = date('Ymdhis') . '_' . $image['name'];
-      if (!move_uploaded_file($image['tmp_name'], '../student_pictures/' . $filename)) {
-        die('ファイルのアップロードに失敗しました');
-      }
-      $_SESSION['form']['image_path'] = $filename;
-    } else {
-      $_SESSION['form']['image_path'] = '';
+    if ($cnt > 0) {
+      $error['email'] = 'duplicate';
     }
-
-    header('Location: check.php');
-    exit();
   }
 }
+
+// パスワードのチェック
+$form['password'] = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+if ($form['password'] === '') {
+  $error['password'] = 'blank';
+} elseif (strlen($form['password']) < 4) {
+  $error['password'] = 'length';
+}
+
+// 学年とクラスのチェック
+$form['grade'] = filter_input(INPUT_POST, 'grade', FILTER_SANITIZE_NUMBER_INT);
+if ($form['grade'] == 0) {
+  $error['grade'] = 'blank';
+}
+$form['class'] = filter_input(INPUT_POST, 'class', FILTER_SANITIZE_NUMBER_INT);
+if ($form['class'] == 0) {
+  $error['class'] = 'blank';
+}
+
+if (empty($error)) {
+  $_SESSION['form'] = $form;
+
+  // 画像のアップロード
+  if ($image['name'] !== '') {
+    $filename = date('Ymdhis') . '_' . $image['name'];
+    if (!move_uploaded_file($image['tmp_name'], '../student_pictures/' . $filename)) {
+      die('ファイルのアップロードに失敗しました');
+    }
+    $_SESSION['form']['image_path'] = $filename;
+  } else {
+    $_SESSION['form']['image_path'] = '';
+  }
+
+  header('Location: check.php');
+  exit();
+}
+
+
+// 本年度のクラスを求める
+$year = (new \DateTime('-3 month'))->format('Y');
+$stmt = $db->prepare("select id, grade, class from classes where year=:year");
+if (!$stmt) {
+  die($db->error);
+}
+$stmt->bindParam(':year', $year, PDO::PARAM_STR);
+$success = $stmt->execute();
+if (!$success) {
+  die($db->error);
+}
+$this_year_classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// var_dump($this_year_classes);
+
 ?>
 
 <!DOCTYPE html>
@@ -128,29 +152,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <input type="text" name="first_name" size="35" maxlength="255" value="<?php echo h($form['first_name']); ?>" />
             </dd>
 
-            <dt>学年<span class="required">（必須）</span></dt>
-            <?php if (isset($error['grade']) && $error['grade'] === 'blank') : ?>
-              <p class="error">* 学年を入力してください</p>
-            <?php endif; ?>
-            <dd>
-              <select name="grade">
-                <option value="0">-</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-              </select>
-            </dd>
-
             <dt>クラス<span class="required">（必須）</span></dt>
             <?php if (isset($error['class']) && $error['class'] === 'blank') : ?>
               <p class="error">* クラスを入力してください</p>
             <?php endif; ?>
             <dd>
-              <select name="class">
+              <select size="1" name="class_id">
                 <option value="0">-</option>
-                <option value="1">A</option>
-                <option value="2">B</option>
-                <option value="3">C</option>
+                <?php foreach ($this_year_classes as $class) : ?>
+                  <option value="<?php $class['id']; ?>"><?php print "{$class['grade']} - {$class['class']}"; ?></option>
+                <?php endforeach; ?>
               </select>
             </dd>
 
