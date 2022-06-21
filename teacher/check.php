@@ -28,8 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $get_image_id->execute();
     $image_id_str = $get_image_id->fetch(PDO::FETCH_COLUMN);
     $image_id = intval($image_id_str);
-    // var_dump($image_id);
-    // var_dump($form['image']);
     unset($stmt);
   } else {
     // 画像がない場合
@@ -49,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   unset($_SESSION['form']);
   header('Location: home.php');
 }
+var_dump($form['image']);
 ?>
 
 <!DOCTYPE html>
@@ -88,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <img src="../teacher_pictures/<?php echo h($form['image']); ?>" width="100" alt="" />
           </dd>
         </dl>
-        <div><a href="index.php?action=rewrite">&laquo;&nbsp;書き直す</a> | <input type="submit" value="登録する" /></div>
+        <div><a href="sign_up.php?action=rewrite">&laquo;&nbsp;書き直す</a> | <input type="submit" value="登録する" /></div>
       </form>
     </div>
 
