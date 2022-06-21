@@ -36,7 +36,7 @@ $cnt = count($classes_info);
 // 学年ごとにクラスのデータを配列で取得
 $classes_array = get_classes($classes_info);
 
-echo ('<pre>');
+// echo ('<pre>');
 // var_dump(get_classes($classes_info));
 // echo ('<pre>');
 // var_dump($classes_array[1]['A']['class']);
@@ -62,7 +62,7 @@ echo ('<pre>');
       <div style="text-align: right"><a href="register_class.php">クラス登録</a></div>
       <div style="text-align: right"><a href="create_submission.php">提出物登録</a></div>
       <div style="text-align: left">
-        <img src="../teacher_pictures/<?php echo h($pic_info['path']); ?>" width="48" height="48" alt="" />
+        <img src="../teacher_pictures/<?php echo h($pic_info['path']); ?>" width="100" height="100" alt="" />
         <?php echo $last_name ?> <?php echo $first_name . ' 先生' ?>
       </div>
 

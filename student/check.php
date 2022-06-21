@@ -85,10 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     die($db->error);
   }
   unset($_SESSION['form']);
-  header('Location: sign_up.php');
+  header('Location: home.php');
 }
-
-var_dump($form['student_num']);
 ?>
 
 <!DOCTYPE html>

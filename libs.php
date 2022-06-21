@@ -9,6 +9,10 @@ function h($value)
     return htmlspecialchars($value, ENT_QUOTES);
 }
 
+// student/home.phpでclass_idから学年、クラスの情報を取得する
+
+
+// teacher/home.phpでクラス一覧を表示する
 function get_classes($classes_info){
   $classes_array = array();
   foreach($classes_info as $a){

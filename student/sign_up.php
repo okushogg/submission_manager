@@ -63,60 +63,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
 
-// パスワードのチェック
-$form['password'] = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
-if ($form['password'] === '') {
-  $error['password'] = 'blank';
-} elseif (strlen($form['password']) < 4) {
-  $error['password'] = 'length';
-}
-
-// 画像のチェック
-$image = $_FILES['image'];
-if ($image['name'] !== '' && $image['error'] === 0) {
-  $type = mime_content_type($image['tmp_name']);
-  if ($type !== 'image/png' && $type !== 'image/jpeg') {
-    $error['image'] = 'type';
+  // パスワードのチェック
+  $form['password'] = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+  if ($form['password'] === '') {
+    $error['password'] = 'blank';
+  } elseif (strlen($form['password']) < 4) {
+    $error['password'] = 'length';
   }
-}
 
-// 学年とクラスのチェック
-$form['class_id'] = filter_input(INPUT_POST, 'class_id', FILTER_SANITIZE_NUMBER_INT);
-if ($form['class_id'] == 0) {
-  $error['class_id'] = 'blank';
-}
-
-// 出席番号のチェック
-$form['student_num'] = filter_input(INPUT_POST, 'student_num', FILTER_SANITIZE_NUMBER_INT);
-if ($form['student_num'] == 0) {
-  $error['student_num'] = 'blank';
-}
-
-
-// 性別のチェック
-$form['sex'] = filter_input(INPUT_POST, 'sex', FILTER_SANITIZE_STRING);
-if ($form['sex'] === '') {
-  $error['sex'] = 'blank';
-}
-
-if (empty($error)) {
-  $_SESSION['form'] = $form;
-
-  // 画像のアップロード
-  if ($image['name'] !== '') {
-    $filename = date('Ymdhis') . '_' . $image['name'];
-    if (!move_uploaded_file($image['tmp_name'], '../student_pictures/' . $filename)) {
-      die('ファイルのアップロードに失敗しました');
+  // 画像のチェック
+  $image = $_FILES['image'];
+  if ($image['name'] !== '' && $image['error'] === 0) {
+    $type = mime_content_type($image['tmp_name']);
+    if ($type !== 'image/png' && $type !== 'image/jpeg') {
+      $error['image'] = 'type';
     }
-    $_SESSION['form']['image'] = $filename;
-  } else {
-    $_SESSION['form']['image'] = '';
   }
 
-  header('Location: check.php');
-  exit();
-}
+  // 学年とクラスのチェック
+  $form['class_id'] = filter_input(INPUT_POST, 'class_id', FILTER_SANITIZE_NUMBER_INT);
+  if ($form['class_id'] == 0) {
+    $error['class_id'] = 'blank';
+  }
 
+  // 出席番号のチェック
+  $form['student_num'] = filter_input(INPUT_POST, 'student_num', FILTER_SANITIZE_NUMBER_INT);
+  if ($form['student_num'] == 0) {
+    $error['student_num'] = 'blank';
+  }
+
+
+  // 性別のチェック
+  $form['sex'] = filter_input(INPUT_POST, 'sex', FILTER_SANITIZE_STRING);
+  if ($form['sex'] === '') {
+    $error['sex'] = 'blank';
+  }
+
+  if (empty($error)) {
+    $_SESSION['form'] = $form;
+
+    // 画像のアップロード
+    if ($image['name'] !== '') {
+      $filename = date('Ymdhis') . '_' . $image['name'];
+      if (!move_uploaded_file($image['tmp_name'], '../student_pictures/' . $filename)) {
+        die('ファイルのアップロードに失敗しました');
+      }
+      $_SESSION['form']['image'] = $filename;
+    } else {
+      $_SESSION['form']['image'] = '';
+    }
+
+    header('Location: check.php');
+    exit();
+  }
 }
 
 // 本年度のクラスを求める
@@ -154,6 +153,7 @@ $this_year_classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </div>
 
       <div id="content">
+        <p>&raquo;<a href="log_in.php">ログインページ</a></p>
         <p>次のフォームに必要事項をご記入ください。</p>
         <form action="" method="post" enctype="multipart/form-data">
           <dl>

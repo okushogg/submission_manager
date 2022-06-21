@@ -114,6 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
 
       <div id="content">
+        <p>&raquo;<a href="log_in.php">ログインページ</a></p>
         <p>次のフォームに必要事項をご記入ください。</p>
         <form action="" method="post" enctype="multipart/form-data">
           <dl>
