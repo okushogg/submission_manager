@@ -12,7 +12,6 @@ if (isset($_GET['action']) && isset($_SESSION['form'])) {
     'email' => '',
     'password' => '',
     'image_id' => '',
-    'password_reset_token' => '',
     'is_active' => true
   ];
 }

@@ -1,5 +1,18 @@
 <?php
 require('dbconnect.php');
+require('config.php');
+require('logger.php');
+
+// エラーログ
+// $log = Logger::getInstance();
+// $log->error('error log.');
+// $log->warn('warn log.');
+// $log->info('info log.');
+// $log->debug('debug log.');
+
+// タイムゾーン
+date_default_timezone_set('asia/bangkok');
+
 // 画像がないユーザー用のimagesレコード
 $no_image_id = 69;
 

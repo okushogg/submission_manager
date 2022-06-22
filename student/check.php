@@ -79,7 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (!$stmt_belongs) {
     die($db->error);
   }
-  var_dump($student_id,$class_id_int,$student_num_int);
   $success_belongs =$stmt_belongs->execute(array($student_id,$class_id_int,$student_num_int));
   if (!$success_belongs) {
     die($db->error);
