@@ -132,6 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $stmt->bindValue(':teacher_id', $teacher_id, PDO::PARAM_INT);
       $stmt->bindValue(':student_id', $student_id, PDO::PARAM_INT);
       $success = $stmt->execute();
+      eval(\Psy\sh());
       if (!$success) {
         die($db->error);
       }
@@ -159,8 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <div id="content">
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
-      <div style="text-align: right"><a href="register_class.php">クラス登録</a></div>
-      <div style="text-align: right"><a href="create_submission.php">提出物登録</a></div>
+      <div style="text-align: right"><a href="home.php">ホーム</a></div>
       <div style="text-align: left">
         <img src="../teacher_pictures/<?php echo h($pic_info['path']); ?>" width="100" height="100" alt="" />
         <?php echo $last_name ?> <?php echo $first_name . ' 先生' ?>

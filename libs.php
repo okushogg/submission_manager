@@ -1,17 +1,5 @@
 <?php
 require('dbconnect.php');
-require('config.php');
-require('logger.php');
-
-// エラーログ
-// $log = Logger::getInstance();
-// $log->error('error log.');
-// $log->warn('warn log.');
-// $log->info('info log.');
-// $log->debug('debug log.');
-
-// タイムゾーン
-date_default_timezone_set('asia/bangkok');
 
 // 画像がないユーザー用のimagesレコード
 $no_image_id = 69;
@@ -34,10 +22,10 @@ function get_classes($classes_info){
   return $classes_array;
 }
 
-//日本時間を求める
+//バンコクの時間を求める
 function jp_time(){
-  date_default_timezone_set('Asia/Tokyo');
-  $jp_time = date('Y-m-d H:i:s');
-  return $jp_time;
+  date_default_timezone_set('asia/bangkok');
+  $bkk_time = date('Y-m-d H:i:s');
+  return $bkk_time;
 }
 ?>

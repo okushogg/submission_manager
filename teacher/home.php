@@ -69,25 +69,25 @@ $classes_array = get_classes($classes_info);
       <div>
 
         <div class="box">
-          <?php foreach ($classes_array['1'] as $a): ?>
+          <?php foreach ($classes_array['1'] as $a) : ?>
             <div class="box">
-              <?php echo "{$a['grade']} - {$a['class']}";?>
+              <a href="index_submission.php?class_id=<?php echo h($a['id']); ?>"><?php echo "{$a['grade']} - {$a['class']}"; ?></a>
             </div>
           <?php endforeach; ?>
         </div>
 
         <div class="box">
-          <?php foreach ($classes_array['2'] as $a): ?>
+          <?php foreach ($classes_array['2'] as $a) : ?>
             <div class="box">
-              <?php echo "{$a['grade']} - {$a['class']}";?>
+              <a href="index_submission.php?class_id=<?php echo h($a['id']); ?>"><?php echo "{$a['grade']} - {$a['class']}"; ?></a>
             </div>
           <?php endforeach; ?>
         </div>
 
         <div class="box">
-          <?php foreach ($classes_array['3'] as $a): ?>
+          <?php foreach ($classes_array['3'] as $a) : ?>
             <div class="box">
-              <?php echo "{$a['grade']} - {$a['class']}";?>
+              <a href="index_submission.php?class_id=<?php echo h($a['id']); ?>"><?php echo "{$a['grade']} - {$a['class']}"; ?></a>
             </div>
           <?php endforeach; ?>
         </div>
