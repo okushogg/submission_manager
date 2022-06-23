@@ -85,10 +85,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // 提出期限の確認
   $form['dead_line'] = filter_input(INPUT_POST, 'dead_line', FILTER_SANITIZE_NUMBER_INT);
   $dead_line = $form['dead_line'];
-  var_dump($dead_line);
   if ($form['dead_line'] === '') {
     $error['dead_line'] = 'blank';
-  } elseif($today > $dead_line) {
+  } elseif ($today > $dead_line) {
     $error['dead_line'] = 'not_future_date';
   }
 
@@ -97,8 +96,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // 指定されたclass_idを持つ全てのstudent_idを求める(除籍済を除く)
   $student_stmt = $db->prepare("SELECT b.student_id
-  FROM belongs AS b INNER JOIN students AS s ON b.student_id = s.id
-  WHERE class_id = :class_id AND s.is_active = 1");
+                                FROM belongs AS b
+                                INNER JOIN students AS s
+                                ON b.student_id = s.id
+                                WHERE class_id = :class_id AND s.is_active = 1");
   $student_stmt->bindParam(':class_id', $class_id, PDO::PARAM_INT);
   $student_stmt->execute();
   $all_student_id = $student_stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -106,40 +107,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // 入力に問題がない場合
   if (empty($error)) {
     $_SESSION['form'] = $form;
-    // 指定したクラスの生徒全員分のsubmissionsレコードを作成
-    foreach ($all_student_id as $student) {
-      $student_id = intval($student['student_id']);
-      var_dump($form['submission_name'], $class_id, $subject_id, $dead_line, $teacher_id, $student_id);
-      $stmt = $db->prepare("INSERT INTO submissions(name,
+    // submissionsレコードを作成
+    $stmt = $db->prepare("INSERT INTO submissions(name,
                                                     class_id,
                                                     subject_id,
                                                     dead_line,
-                                                    teacher_id,
-                                                    student_id)
-                                            values(:name,
+                                                    teacher_id)
+                                            VALUES(:name,
                                                    :class_id,
                                                    :subject_id,
                                                    :dead_line,
-                                                   :teacher_id,
-                                                   :student_id)");
-      if (!$stmt) {
+                                                   :teacher_id)");
+    if (!$stmt) {
+      die($db->error);
+    }
+    $stmt->bindValue(':name', $form['submission_name'], PDO::PARAM_STR);
+    $stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
+    $stmt->bindValue(':subject_id', $subject_id, PDO::PARAM_INT);
+    $stmt->bindValue(':dead_line', $dead_line, PDO::PARAM_STR);
+    $stmt->bindValue(':teacher_id', $teacher_id, PDO::PARAM_INT);
+    $success = $stmt->execute();
+    if (!$success) {
+      die($db->error);
+    }
+
+    // 作成したsubmissionsレコードに紐付く該当クラス全生徒のstudent_submissionsレコードを作成
+    $submission_id = $db->lastInsertId();
+    var_dump($submission_id);
+    foreach ($all_student_id as $student_id) {
+      $submission_stmt = $db->prepare("INSERT INTO student_submissions(student_id,
+                                                                         submission_id)
+                                                                  VALUES(:student_id,
+                                                                         :submission_id)");
+      if (!$submission_stmt) {
         die($db->error);
       }
-      $stmt->bindValue(':name', $form['submission_name'], PDO::PARAM_STR);
-      $stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
-      $stmt->bindValue(':subject_id', $subject_id, PDO::PARAM_INT);
-      $stmt->bindValue(':dead_line', $dead_line, PDO::PARAM_STR);
-      $stmt->bindValue(':teacher_id', $teacher_id, PDO::PARAM_INT);
-      $stmt->bindValue(':student_id', $student_id, PDO::PARAM_INT);
-      $success = $stmt->execute();
-      eval(\Psy\sh());
-      if (!$success) {
+      $submission_stmt->bindValue(':student_id', $student_id['student_id'], PDO::PARAM_INT);
+      $submission_stmt->bindValue(':submission_id', $submission_id, PDO::PARAM_INT);
+      $submission_success = $submission_stmt->execute();
+      if (!$submission_success) {
         die($db->error);
       }
     }
-    header('Location: home.php');
-    exit();
   }
+  header('Location: home.php');
+  exit();
 }
 ?>
 
@@ -206,7 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <dt>提出期限<span class="required">（必須）</span></dt>
             <?php if (isset($error['dead_line']) && $error['dead_line'] === 'blank') : ?>
               <p class="error">* 提出期限を入力してください</p>
-            <?php elseif(isset($error['dead_line']) && $error['dead_line'] === 'not_future_date'): ?>
+            <?php elseif (isset($error['dead_line']) && $error['dead_line'] === 'not_future_date') : ?>
               <p class="error">* 提出期限は本日以降の日付を入力してください</p>
             <?php endif; ?>
             <dd>

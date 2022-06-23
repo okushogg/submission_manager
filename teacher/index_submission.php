@@ -5,7 +5,7 @@ require('../libs.php');
 
 // class_id
 $class_id = filter_input(INPUT_GET, 'class_id', FILTER_SANITIZE_NUMBER_INT);
-var_dump($class_id);
+// var_dump($class_id);
 
 // 今日の日付
 $today = date('Y-m-d');
@@ -35,10 +35,25 @@ $pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
 // var_dump($pic_info);
 
 // 該当クラスの課題を求める
-$stmt = $db->prepare("select id, year, grade, class from classes where year=:year");
-$stmt->bindParam(':year', $year, PDO::PARAM_STR);
-$stmt->execute();
-$submission_info = $classes_stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $db->prepare("SELECT submissions.id, submissions.name, submissions.dead_line,
+                             subjects.name, teachers.first_name, teachers.last_name
+                      FROM submissions
+                      LEFT JOIN subjects
+                      ON submissions.subject_id = subjects.id
+                      LEFT JOIN teachers
+                      ON submissions.teacher_id = teachers.id
+                      WHERE submissions.class_id = :class_id");
+if (!$stmt) {
+  die($db->error);
+}
+$stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
+$success = $stmt->execute();
+if (!$success) {
+  die($db->error);
+}
+$submission_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
+var_dump($submission_info);
+
 ?>
 
 <!DOCTYPE html>
