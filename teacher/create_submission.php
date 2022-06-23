@@ -133,7 +133,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 作成したsubmissionsレコードに紐付く該当クラス全生徒のstudent_submissionsレコードを作成
     $submission_id = $db->lastInsertId();
-    var_dump($submission_id);
     foreach ($all_student_id as $student_id) {
       $submission_stmt = $db->prepare("INSERT INTO student_submissions(student_id,
                                                                          submission_id)

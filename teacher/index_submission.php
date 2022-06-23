@@ -35,14 +35,15 @@ $pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
 // var_dump($pic_info);
 
 // 該当クラスの課題を求める
-$stmt = $db->prepare("SELECT submissions.id, submissions.name, submissions.dead_line,
-                             subjects.name, teachers.first_name, teachers.last_name
+$stmt = $db->prepare("SELECT submissions.id, submissions.name as submission_name, submissions.dead_line,
+                             subjects.name as subject_name, teachers.first_name, teachers.last_name
                       FROM submissions
                       LEFT JOIN subjects
                       ON submissions.subject_id = subjects.id
                       LEFT JOIN teachers
                       ON submissions.teacher_id = teachers.id
-                      WHERE submissions.class_id = :class_id");
+                      WHERE submissions.class_id = :class_id
+                      ORDER BY id DESC");
 if (!$stmt) {
   die($db->error);
 }
@@ -84,27 +85,23 @@ var_dump($submission_info);
 
       <!-- 課題一覧 -->
       <div>
-        <table class="XXX">
+        <table class="">
           <tr>
-            <th>A</th>
-            <th>B</th>
-            <th>C</th>
+            <th>課題名</th>
+            <th>教科名</th>
+            <th>提出期限</th>
           </tr>
-          <tr>
-            <td>D</td>
-            <td>E</td>
-            <td>F</td>
-          </tr>
-          <tr>
-            <td>G</td>
-            <td>H</td>
-            <td>I</td>
-          </tr>
-          <tr>
-            <td>J</td>
-            <td>K</td>
-            <td>L</td>
-          </tr>
+          <?php foreach ($submission_info as $submission) : ?>
+            <tr>
+              <td>
+                <a href="show_submission.php?submission_id=<?php echo h($submission['id']); ?>">
+                  <?php echo $submission['submission_name'] ?>
+                </a>
+              </td>
+              <td><?php echo $submission['subject_name'] ?></td>
+              <td><?php echo $submission['dead_line'] ?></td>
+            </tr>
+          <?php endforeach; ?>
         </table>
       </div>
 
