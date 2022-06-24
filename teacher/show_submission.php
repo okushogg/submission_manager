@@ -3,12 +3,19 @@ session_start();
 require('../dbconnect.php');
 require('../libs.php');
 
+// フォームの初期化
+$form = [
+  'score' => ''
+];
+
 // submission_id
 $submission_id = filter_input(INPUT_GET, 'submission_id', FILTER_SANITIZE_NUMBER_INT);
-// var_dump($class_id);
 
 // 今日の日付
 $today = date('Y-m-d');
+
+// 現在のバンコクの時刻
+$current_time = bkk_time();
 
 // ログイン情報がないとログインページへ移る
 if (isset($_SESSION['id']) && isset($_SESSION['last_name']) && isset($_SESSION['first_name'])) {
@@ -56,7 +63,7 @@ if (!$student_success) {
   die($db->error);
 }
 $students_who_have_submission = $student_stmt->fetchAll(PDO::FETCH_ASSOC);
-var_dump($students_who_have_submission);
+// var_dump($students_who_have_submission);
 
 // 課題の情報を求める
 $submission_stmt = $db->prepare("SELECT submissions.name, submissions.dead_line,
@@ -81,12 +88,41 @@ $submission_info = $submission_stmt->fetch(PDO::FETCH_ASSOC);
 
 // scoreの値
 $scoreList = array(
-  "" => '',
+  "-" => 99,
   "A" => 3,
   "B" => 2,
   "C" => 1,
   "未提出" => 0
 );
+
+// var_dump($form['score']);
+
+// 評価を更新をクリック
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $form['score'] = filter_input(INPUT_POST, 'score', FILTER_SANITIZE_NUMBER_INT);
+  foreach ($students_who_have_submission as $homework) {
+    if ($homework['score'] !== $form['score']) {
+      $homework_stmt = $db->prepare("UPDATE student_submissions
+                                        SET score = :score,
+                                            approved_date = :approved_date,
+                                            updated_at = :updated_at
+                                     WHERE id = :homework_id");
+      if (!$homework_stmt) {
+        die($db->error);
+      }
+      $homework_stmt->bindValue(':score', $homework['score'], PDO::PARAM_INT);
+      $homework_stmt->bindValue(':approved_date', $today, PDO::PARAM_STR);
+      $homework_stmt->bindValue(':updated_at', $current_time, PDO::PARAM_STR);
+      $homework_stmt->bindValue(':homework_id', $homework['homework_id'], PDO::PARAM_INT);
+      $homework_success = $homework_stmt->execute();
+      if (!$homework_success) {
+        die($db->error);
+      }
+    }
+  }
+  header("Location: show_submission.php?submission_id={$submission_id}");
+  exit();
+}
 
 ?>
 
@@ -159,15 +195,15 @@ $scoreList = array(
               <td>
                 <select size="1" name="score">
                   <?php
-                    foreach($scoreList as $key => $value){
-                      if(isset($student['score'])){
-                        $student_score_int = intval($student['score']);
-                        echo "<option value={$student_score_int} selected>".$key."</option>";
-                      } else {
-                        echo "<option value='$value'>".$key."</option>";
-                      }
+                  foreach ($scoreList as $key => $value) {
+                    $student_score_int = intval($student['score']);
+                    if (isset($student['score']) && $value === $student_score_int) {
+                      echo "<option value={$value} selected>" . $key . "</option>";
+                    } else {
+                      echo "<option value='$value'>" . $key . "</option>";
                     }
-                    ?>
+                  }
+                  ?>
                 </select>
               </td>
               </tr>

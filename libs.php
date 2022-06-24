@@ -23,7 +23,7 @@ function get_classes($classes_info){
 }
 
 //バンコクの時間を求める
-function jp_time(){
+function bkk_time(){
   date_default_timezone_set('asia/bangkok');
   $bkk_time = date('Y-m-d H:i:s');
   return $bkk_time;
