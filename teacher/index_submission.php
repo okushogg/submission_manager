@@ -53,7 +53,7 @@ if (!$success) {
   die($db->error);
 }
 $submission_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
-var_dump($submission_info);
+// var_dump($submission_info);
 
 ?>
 
