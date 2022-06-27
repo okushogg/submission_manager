@@ -5,6 +5,7 @@ require('../libs.php');
 $error = [];
 $email = '';
 $password = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
   $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
@@ -22,18 +23,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       die($db->error);
     }
     $student_info = $stmt->fetch(PDO::FETCH_ASSOC);
-    // var_dump($student_info['password']);
-
-    if (password_verify($password, $student_info['password'])) {
-      // ログイン成功
-      session_regenerate_id();
-      $_SESSION['id'] = $student_info['id'];
-      $_SESSION['last_name'] = $student_info['last_name'];
-      $_SESSION['first_name'] = $student_info['first_name'];
-      $_SESSION['image_id'] = $student_info['image_id'];
-      $_SESSION['class_id'] = $student_info['class_id'];
-      header('Location: home.php');
-      exit();
+    if ($student_info) {
+      if (isset($student_info) && password_verify($password, $student_info['password'])) {
+        // ログイン成功
+        session_regenerate_id();
+        $_SESSION['id'] = $student_info['id'];
+        $_SESSION['last_name'] = $student_info['last_name'];
+        $_SESSION['first_name'] = $student_info['first_name'];
+        $_SESSION['image_id'] = $student_info['image_id'];
+        $_SESSION['class_id'] = $student_info['class_id'];
+        header('Location: home.php');
+        exit();
+      } else {
+        // ログイン失敗
+        $error['login'] = 'failed';
+      }
     } else {
       // ログイン失敗
       $error['login'] = 'failed';

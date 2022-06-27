@@ -165,7 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form action="" , method="post">
           <table class="">
             <tr>
-              <th>h_id</th>
+              <!-- <th>h_id</th> -->
               <th>No.</th>
               <th>生徒名</th>
               <th>受領日</th>
@@ -174,9 +174,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php foreach ($students_who_have_submission as $student) : ?>
 
               <!-- student_submissions_id -->
-              <td>
+              <!-- <td>
                 <?php echo $student['student_submissions_id']; ?>
-              </td>
+              </td> -->
 
               <!-- 出席番号 -->
               <td>

@@ -85,7 +85,7 @@ $all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC);
         <p>教科一覧</p>
         <?php foreach ($all_subjects as $subject) : ?>
           <div style="display: flex;">
-            <a href="/"><?php echo $subject['name']; ?></a>
+            <a href="show_submission.php?student_id=<?php echo h($submission['id']); ?>"><?php echo $subject['name']; ?></a>
           </div>
         <?php endforeach; ?>
       </div>
