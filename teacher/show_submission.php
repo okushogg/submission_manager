@@ -5,7 +5,9 @@ require('../libs.php');
 
 // フォームの初期化
 $form = [
-  'score' => ''
+  array(
+    'homework_id' => 'score'
+  )
 ];
 
 // submission_id
@@ -39,7 +41,6 @@ if (!$success) {
   die($db->error);
 }
 $pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
-// var_dump($pic_info);
 
 // 該当の課題が与えられた全ての生徒を求める
 $student_stmt = $db->prepare("SELECT student_submissions.id as homework_id, student_submissions.student_id,
@@ -63,7 +64,6 @@ if (!$student_success) {
   die($db->error);
 }
 $students_who_have_submission = $student_stmt->fetchAll(PDO::FETCH_ASSOC);
-// var_dump($students_who_have_submission);
 
 // 課題の情報を求める
 $submission_stmt = $db->prepare("SELECT submissions.name, submissions.dead_line,
@@ -84,42 +84,41 @@ if (!$success) {
   die($db->error);
 }
 $submission_info = $submission_stmt->fetch(PDO::FETCH_ASSOC);
-// var_dump($submission_info);
 
 // scoreの値
 $scoreList = array(
-  "-" => 99,
+  "-" => null,
   "A" => 3,
   "B" => 2,
   "C" => 1,
   "未提出" => 0
 );
 
-// var_dump($form['score']);
-
 // 評価を更新をクリック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $form['score'] = filter_input(INPUT_POST, 'score', FILTER_SANITIZE_NUMBER_INT);
   foreach ($students_who_have_submission as $homework) {
-    if ($homework['score'] !== $form['score']) {
+    $score_array = $_POST['score'];
+    $h_id = $homework['homework_id'];
+    if ($homework['score'] !=  $score_array[$h_id]) {
       $homework_stmt = $db->prepare("UPDATE student_submissions
-                                        SET score = :score,
-                                            approved_date = :approved_date,
-                                            updated_at = :updated_at
-                                     WHERE id = :homework_id");
+                                      SET score = :score,
+                                          approved_date = :approved_date,
+                                          updated_at = :updated_at
+                                   WHERE id = :homework_id");
       if (!$homework_stmt) {
         die($db->error);
       }
-      $homework_stmt->bindValue(':score', $homework['score'], PDO::PARAM_INT);
+      $homework_stmt->bindValue(':score', $score_array[$h_id], PDO::PARAM_INT);
       $homework_stmt->bindValue(':approved_date', $today, PDO::PARAM_STR);
       $homework_stmt->bindValue(':updated_at', $current_time, PDO::PARAM_STR);
-      $homework_stmt->bindValue(':homework_id', $homework['homework_id'], PDO::PARAM_INT);
+      $homework_stmt->bindValue(':homework_id', $h_id, PDO::PARAM_INT);
       $homework_success = $homework_stmt->execute();
       if (!$homework_success) {
         die($db->error);
       }
     }
   }
+
   header("Location: show_submission.php?submission_id={$submission_id}");
   exit();
 }
@@ -166,12 +165,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form action="" , method="post">
           <table class="">
             <tr>
+              <!-- <th>h_id</th> -->
               <th>No.</th>
               <th>生徒名</th>
               <th>受領日</th>
               <th>評価</th>
             </tr>
             <?php foreach ($students_who_have_submission as $student) : ?>
+              
+              <!-- student_submissions.id -->
+              <!-- <td>
+                <?php echo $student['homework_id']; ?>
+              </td> -->
+
               <!-- 出席番号 -->
               <td>
                 <a href="../student/home.php?student_id=<?php echo h($student['student_id']); ?>">
@@ -193,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
               <!-- スコア -->
               <td>
-                <select size="1" name="score">
+                <select size="1" name="score[<?php echo $student['homework_id']; ?>]">
                   <?php
                   foreach ($scoreList as $key => $value) {
                     $student_score_int = intval($student['score']);

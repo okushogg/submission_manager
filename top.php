@@ -50,4 +50,9 @@ $classes_info = array(
   foreach($classes_info as $a){
    $array[$a['grade']][$a['class']]=$a;
   }
- print_r($array);
+//  print_r($array);
+
+ $a = "1";
+ $b = 2;
+
+var_dump($a != $b);
