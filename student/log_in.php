@@ -27,10 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if (isset($student_info) && password_verify($password, $student_info['password'])) {
         // ログイン成功
         session_regenerate_id();
-        $_SESSION['id'] = $student_info['id'];
+        $_SESSION['student_id'] = $student_info['id'];
         $_SESSION['last_name'] = $student_info['last_name'];
         $_SESSION['first_name'] = $student_info['first_name'];
-        $_SESSION['image_id'] = $student_info['image_id'];
+        $_SESSION['student_image_id'] = $student_info['image_id'];
         $_SESSION['class_id'] = $student_info['class_id'];
         header('Location: home.php');
         exit();

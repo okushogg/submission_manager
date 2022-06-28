@@ -23,6 +23,19 @@ if (isset($_GET['action']) && isset($_SESSION['form'])) {
 // エラーの初期化
 $error = [];
 
+// 本年度のクラスを求める
+$year = (new \DateTime('-3 month'))->format('Y');
+$stmt = $db->prepare("select id, grade, class from classes where year=:year");
+if (!$stmt) {
+  die($db->error);
+}
+$stmt->bindParam(':year', $year, PDO::PARAM_STR);
+$success = $stmt->execute();
+if (!$success) {
+  die($db->error);
+}
+$this_year_classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// var_dump($this_year_classes);
 
 // フォームの内容をチェック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -117,21 +130,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
   }
 }
-
-// 本年度のクラスを求める
-$year = (new \DateTime('-3 month'))->format('Y');
-$stmt = $db->prepare("select id, grade, class from classes where year=:year");
-if (!$stmt) {
-  die($db->error);
-}
-$stmt->bindParam(':year', $year, PDO::PARAM_STR);
-$success = $stmt->execute();
-if (!$success) {
-  die($db->error);
-}
-$this_year_classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-// var_dump($this_year_classes);
-
 ?>
 
 <!DOCTYPE html>

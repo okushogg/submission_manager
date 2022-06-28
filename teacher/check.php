@@ -44,6 +44,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (!$success) {
     die($db->error);
   }
+  $teacher_id = $db->lastInsertId();
+
+  // セッションにstudentの情報を入れる
+  $_SESSION['teacher_id'] = $teacher_id;
+  $_SESSION['last_name'] = $form['last_name'];
+  $_SESSION['first_name'] = $form['first_name'];
+  $_SESSION['teacher_image_id'] = $image_id;
+
   unset($_SESSION['form']);
   header('Location: home.php');
 }

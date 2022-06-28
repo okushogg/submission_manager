@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if (password_verify($password, $teacher_info['password'])) {
         // ログイン成功
         session_regenerate_id();
-        $_SESSION['id'] = $teacher_info['id'];
+        $_SESSION['teacher_id'] = $teacher_info['id'];
         $_SESSION['last_name'] = $teacher_info['last_name'];
         $_SESSION['first_name'] = $teacher_info['first_name'];
         $_SESSION['image_id'] = $teacher_info['image_id'];

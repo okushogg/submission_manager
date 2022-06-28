@@ -6,9 +6,11 @@ require('../libs.php');
 // 今年度
 $this_year = (new \DateTime('-3 month'))->format('Y');
 
-// teacherがstudent/を閲覧した場合
-if (isset($_GET['student_id'])) {
-  $_SESSION['student_id'] = $_GET['student_id'];
+// 選択した教科のidを求める
+if (isset($_GET['subject_id'])) {
+  $subject_id = $_GET['subject_id'];
+} else {
+  header('Location: log_in.php');
 }
 
 // ログイン情報がないとログインページへ移る
@@ -30,7 +32,6 @@ $student_stmt = $db->prepare("SELECT first_name as student_first_name,
 $student_stmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
 $student_stmt->execute();
 $student_info = $student_stmt->fetch(PDO::FETCH_ASSOC);
-var_dump($student_info);
 
 
 // 生徒の画像情報を取得
@@ -65,18 +66,34 @@ $classes_stmt = $db->prepare("SELECT c.grade, b.id, b.class_id, c.grade, c.year,
                               ORDER BY c.year ASC");
 $classes_stmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
 $classes_stmt->execute();
-$belonged_classes = $classes_stmt->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_UNIQUE);
-// echo ('<pre>');
-// var_dump($belonged_classes);
-// echo ('<pre>');
-// var_dump(end($belonged_classes));
+$belonged_classes = $classes_stmt->fetchAll(PDO::FETCH_ASSOC | PDO::FETCH_UNIQUE);
 
 // 教科一覧
 $subjects_stmt = $db->prepare("SELECT id, name FROM subjects");
 $subjects_stmt->execute();
-$all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC);
-// var_dump($all_subjects);
+$all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC | PDO::FETCH_UNIQUE);
 
+// 生徒が持つ本年度の該当教科課題を求める
+$stmt = $db->prepare("SELECT student_submissions.id, submissions.name as submission_name, submissions.dead_line,
+                             COALESCE(student_submissions.approved_date,'-') as approved_date,
+                             COALESCE(student_submissions.score,NULL) as score
+                        FROM student_submissions
+                   LEFT JOIN submissions
+                          ON student_submissions.submission_id = submissions.id
+                       WHERE student_submissions.student_id = :student_id
+                         AND submissions.class_id = :class_id
+                         AND submissions.subject_id = :subject_id");
+if (!$stmt) {
+  die($db->error);
+}
+$stmt->bindValue(':student_id', $student_id, PDO::PARAM_INT);
+$stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
+$stmt->bindValue(':subject_id', $subject_id, PDO::PARAM_INT);
+$success = $stmt->execute();
+if (!$success) {
+  die($db->error);
+}
+$submission_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -85,14 +102,14 @@ $all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>生徒トップページ</title>
+  <title><?php echo h($all_subjects[$subject_id]['name']); ?>課題一覧</title>
   <link rel="stylesheet" href="../style.css" />
 </head>
 
 <body>
   <div id="wrap">
     <div id="head">
-      <h1>生徒トップページ</h1>
+      <h1><?php echo h($all_subjects[$subject_id]['name']); ?>課題一覧</h1>
     </div>
     <div id="content">
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
@@ -111,16 +128,46 @@ $all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php echo "{$student_info['student_last_name']} {$student_info['student_first_name']}" . ' さん' ?>
       </div>
 
+      <!-- 生徒一覧 -->
       <div>
-        <p>教科一覧</p>
-        <?php foreach ($all_subjects as $subject) : ?>
-          <div style="display: flex;">
-            <a href="index_submission.php?subject_id=<?php echo h($subject['id']); ?>">
-              <?php echo $subject['name']; ?>
-            </a>
-          </div>
-        <?php endforeach; ?>
-      </div>
+        <form action="" , method="post">
+          <table class="" style="text-align: center;">
+            <tr>
+              <!-- <th>h_id</th> -->
+              <th>課題名</th>
+              <th>提出期限</th>
+              <th>受領日</th>
+              <th>評価</th>
+            </tr>
+            <?php foreach ($submission_info as $submission) : ?>
+
+              <!-- student_submissions_id -->
+              <!-- <td>
+                <?php echo h($submission['student_submissions_id']); ?>
+              </td> -->
+
+              <!-- 課題名 -->
+              <td>
+                <?php echo h($submission['submission_name']); ?>
+              </td>
+
+              <!-- 提出期限 -->
+              <td>
+                <?php echo h($submission['dead_line']); ?>
+              </td>
+
+              <!-- 受領日 -->
+              <td>
+                <?php echo $submission['approved_date']; ?>
+              </td>
+
+              <!-- スコア -->
+              <td>
+                <?php echo h($submission['score']); ?>
+              </td>
+              </tr>
+            <?php endforeach; ?>
+          </table>
 
 
 </body>
