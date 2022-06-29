@@ -20,8 +20,8 @@ $today = date('Y-m-d');
 $current_time = bkk_time();
 
 // ログイン情報がないとログインページへ移る
-if (isset($_SESSION['id']) && isset($_SESSION['last_name']) && isset($_SESSION['first_name'])) {
-  $id = $_SESSION['id'];
+if (isset($_SESSION['teacher_id']) && isset($_SESSION['last_name']) && isset($_SESSION['first_name'])) {
+  $teacher_id = $_SESSION['teacher_id'];
   $last_name = $_SESSION['last_name'];
   $first_name = $_SESSION['first_name'];
   $image_id = $_SESSION['image_id'];
@@ -42,32 +42,10 @@ if (!$success) {
 }
 $pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// 該当の課題が与えられた全ての生徒を求める
-$student_stmt = $db->prepare("SELECT student_submissions.id as student_submissions_id, student_submissions.student_id,
-                                      COALESCE(student_submissions.approved_date,'-') as approved_date,
-                                      COALESCE(student_submissions.score,NULL) as score,
-                                     students.first_name, students.last_name,
-                                     belongs.student_num
-                              FROM student_submissions
-                              LEFT JOIN students
-                              ON student_submissions.student_id = students.id
-                              LEFT JOIN belongs
-                              ON belongs.student_id = students.id
-                              WHERE student_submissions.submission_id = :submission_id
-                              ORDER BY belongs.student_num");
-if (!$student_stmt) {
-  die($db->error);
-}
-$student_stmt->bindValue(':submission_id', $submission_id, PDO::PARAM_INT);
-$student_success = $student_stmt->execute();
-if (!$student_success) {
-  die($db->error);
-}
-$students_who_have_submission = $student_stmt->fetchAll(PDO::FETCH_ASSOC);
-
 // 課題の情報を求める
 $submission_stmt = $db->prepare("SELECT submissions.name, submissions.dead_line,
                                         subjects.name as subject_name,
+                                        submissions.class_id,
                                         classes.grade, classes.class
                                    FROM submissions
                                    LEFT JOIN subjects
@@ -84,6 +62,33 @@ if (!$success) {
   die($db->error);
 }
 $submission_info = $submission_stmt->fetch(PDO::FETCH_ASSOC);
+$class_id= $submission_info['class_id'];
+
+// 該当の課題が与えられた全ての生徒を求める
+$student_stmt = $db->prepare("SELECT student_submissions.id as student_submissions_id, student_submissions.student_id,
+                                     COALESCE(student_submissions.approved_date,'-') as approved_date,
+                                     COALESCE(student_submissions.score,NULL) as score,
+                                     students.first_name, students.last_name
+                              FROM student_submissions
+                              LEFT JOIN students
+                              ON student_submissions.student_id = students.id
+                              LEFT JOIN submissions
+                              ON student_submissions.submission_id = submissions.id
+                              WHERE student_submissions.submission_id = :submission_id
+                              AND submissions.class_id = :class_id");
+if (!$student_stmt) {
+  die($db->error);
+}
+$student_stmt->bindValue(':submission_id', $submission_id, PDO::PARAM_INT);
+$student_stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
+$student_success = $student_stmt->execute();
+if (!$student_success) {
+  die($db->error);
+}
+$students_who_have_submission = $student_stmt->fetchAll(PDO::FETCH_ASSOC);
+echo ('<pre>');
+var_dump($students_who_have_submission);
+echo ('<pre>');
 
 // scoreの値
 $scoreList = array(
@@ -166,7 +171,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <table class="">
             <tr>
               <!-- <th>h_id</th> -->
-              <th>No.</th>
               <th>生徒名</th>
               <th>受領日</th>
               <th>評価</th>
@@ -177,14 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <!-- <td>
                 <?php echo $student['student_submissions_id']; ?>
               </td> -->
-
-              <!-- 出席番号 -->
-              <td>
-                <a href="../student/home.php?student_id=<?php echo h($student['student_id']); ?>">
-                  <?php echo $student['student_num']; ?>
-                </a>
-              </td>
-
+              
               <!-- 生徒名 -->
               <td>
                 <a href="../student/home.php?student_id=<?php echo h($student['student_id']); ?>">

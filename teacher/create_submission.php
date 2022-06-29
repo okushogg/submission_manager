@@ -12,7 +12,7 @@ if (isset($_GET['action']) && isset($_SESSION['form'])) {
     'class_id' => '',
     'subject_id' => '',
     'dead_line' => '',
-    'teacher_id' => $_SESSION['id'],
+    'teacher_id' => $_SESSION['teacher_id'],
   ];
 }
 
@@ -23,8 +23,8 @@ $error = [];
 $today = date('Y-m-d');
 
 // ログイン情報がないとログインページへ移る
-if (isset($_SESSION['id']) && isset($_SESSION['last_name']) && isset($_SESSION['first_name'])) {
-  $id = $_SESSION['id'];
+if (isset($_SESSION['teacher_id']) && isset($_SESSION['last_name']) && isset($_SESSION['first_name'])) {
+  $teacher_id = $_SESSION['teacher_id'];
   $last_name = $_SESSION['last_name'];
   $first_name = $_SESSION['first_name'];
   $image_id = $_SESSION['image_id'];
@@ -95,14 +95,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $teacher_id = intval($form['teacher_id']);
 
   // 指定されたclass_idを持つ全てのstudent_idを求める(除籍済を除く)
-  $student_stmt = $db->prepare("SELECT b.student_id
+  $student_stmt = $db->prepare("SELECT b.student_id as student_id, b.student_num as student_num
                                 FROM belongs AS b
                                 INNER JOIN students AS s
                                 ON b.student_id = s.id
-                                WHERE class_id = :class_id AND s.is_active = 1");
-  $student_stmt->bindParam(':class_id', $class_id, PDO::PARAM_INT);
-  $student_stmt->execute();
+                                WHERE class_id = :class_id AND s.is_active = 1
+                                ORDER BY b.student_num");
+  $student_stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
+  $student_success = $student_stmt->execute();
+  if(!$student_success){
+    die($db->error);
+  }
   $all_student_id = $student_stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
   // 入力に問題がない場合
   if (empty($error)) {

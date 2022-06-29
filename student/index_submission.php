@@ -47,7 +47,8 @@ if (!$success) {
 $student_pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // 本年度のクラスを求める
-$this_year_class_stmt = $db->prepare("SELECT belongs.id, belongs.class_id, belongs.student_num
+$this_year_class_stmt = $db->prepare("SELECT belongs.id, belongs.class_id, belongs.student_num as student_num,
+                                             classes.class as class, classes.grade as grade
                                       FROM belongs
                                       LEFT JOIN classes
                                       ON belongs.class_id = classes.id
@@ -113,6 +114,7 @@ $submission_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
     <div id="content">
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
+      <div style="text-align: right"><a href="home.php">ホーム</a></div>
       <div style="text-align: left">
         <div>
           <p>クラス</p>
@@ -125,6 +127,7 @@ $submission_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <?php endforeach; ?>
         </div>
         <img src="../student_pictures/<?php echo h($student_pic_info['path']); ?>" width="100" height="100" alt="" />
+        <?php echo "{$this_year_class['grade']} - {$this_year_class['class']} No_{$this_year_class['student_num']}";?>
         <?php echo "{$student_info['student_last_name']} {$student_info['student_first_name']}" . ' さん' ?>
       </div>
 

@@ -5,8 +5,8 @@ require('../libs.php');
 $error = [];
 
 // ログイン情報がないとログインページへ移る
-if (isset($_SESSION['id']) && isset($_SESSION['last_name']) && isset($_SESSION['first_name'])) {
-  $id = $_SESSION['id'];
+if (isset($_SESSION['teacher_id']) && isset($_SESSION['last_name']) && isset($_SESSION['first_name'])) {
+  $teacher_id = $_SESSION['teacher_id'];
   $last_name = $_SESSION['last_name'];
   $first_name = $_SESSION['first_name'];
   $image_id = $_SESSION['image_id'];
