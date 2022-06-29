@@ -55,6 +55,18 @@ if (!$success) {
 $submission_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // var_dump($submission_info);
 
+// クラスの情報を求める
+$class_stmt = $db->prepare("SELECT id as class_id, year, grade, class
+                            FROM classes
+                            WHERE id = :class_id");
+$class_stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
+$class_success = $class_stmt->execute();
+if (!$class_success){
+  die($db->error);
+}
+$class_info = $class_stmt->fetch(PDO::FETCH_ASSOC);
+// var_dump($class_info);
+
 ?>
 
 <!DOCTYPE html>
@@ -63,14 +75,14 @@ $submission_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>課題一覧ページ</title>
+  <title><?php echo "{$class_info['grade']} - {$class_info['class']}" ;?> 課題一覧ページ</title>
   <link rel="stylesheet" href="../style.css" />
 </head>
 
 <body>
   <div id="wrap">
     <div id="head">
-      <h1><?php ?>課題一覧ページ</h1>
+      <h1><?php echo "{$class_info['grade']} - {$class_info['class']}";?> 課題一覧ページ</h1>
     </div>
     <div id="content">
       <!-- ナビゲーション -->
