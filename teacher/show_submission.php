@@ -62,7 +62,7 @@ if (!$success) {
   die($db->error);
 }
 $submission_info = $submission_stmt->fetch(PDO::FETCH_ASSOC);
-$class_id= $submission_info['class_id'];
+$class_id = $submission_info['class_id'];
 
 // 該当の課題が与えられた全ての生徒を求める
 $student_stmt = $db->prepare("SELECT student_submissions.id as student_submissions_id, student_submissions.student_id,
@@ -181,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <!-- <td>
                 <?php echo $student['student_submissions_id']; ?>
               </td> -->
-              
+
               <!-- 生徒名 -->
               <td>
                 <a href="../student/home.php?student_id=<?php echo h($student['student_id']); ?>">

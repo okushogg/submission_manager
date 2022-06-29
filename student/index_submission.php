@@ -95,6 +95,15 @@ if (!$success) {
   die($db->error);
 }
 $submission_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// scoreの値
+$scoreList = array(
+  null => "-",
+  3 => "A",
+  2 => "B",
+  1 => "C",
+  0 => "未提出"
+);
 ?>
 
 <!DOCTYPE html>
@@ -113,6 +122,9 @@ $submission_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <h1><?php echo h($all_subjects[$subject_id]['name']); ?>課題一覧</h1>
     </div>
     <div id="content">
+      <?php if (isset($_SESSION['teacher_id'])) : ?>
+        <div style="text-align: right"><a href="../teacher/home.php">教員ホームへ</a></div>
+      <?php endif; ?>
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
       <div style="text-align: right"><a href="home.php">ホーム</a></div>
       <div style="text-align: left">
@@ -127,7 +139,7 @@ $submission_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <?php endforeach; ?>
         </div>
         <img src="../student_pictures/<?php echo h($student_pic_info['path']); ?>" width="100" height="100" alt="" />
-        <?php echo "{$this_year_class['grade']} - {$this_year_class['class']} No_{$this_year_class['student_num']}";?>
+        <?php echo "{$this_year_class['grade']} - {$this_year_class['class']} No_{$this_year_class['student_num']}"; ?>
         <?php echo "{$student_info['student_last_name']} {$student_info['student_first_name']}" . ' さん' ?>
       </div>
 
@@ -166,7 +178,7 @@ $submission_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
               <!-- スコア -->
               <td>
-                <?php echo h($submission['score']); ?>
+                <?php echo $scoreList[$submission['score']]; ?>
               </td>
               </tr>
             <?php endforeach; ?>

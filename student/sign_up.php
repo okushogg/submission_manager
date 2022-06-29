@@ -24,12 +24,12 @@ if (isset($_GET['action']) && isset($_SESSION['form'])) {
 $error = [];
 
 // 本年度のクラスを求める
-$year = (new \DateTime('-3 month'))->format('Y');
-$stmt = $db->prepare("select id, grade, class from classes where year=:year");
+$this_year = (new \DateTime('-3 month'))->format('Y');
+$stmt = $db->prepare("SELECT id, grade, class FROM classes WHERE year=:year");
 if (!$stmt) {
   die($db->error);
 }
-$stmt->bindParam(':year', $year, PDO::PARAM_STR);
+$stmt->bindParam(':year', $this_year, PDO::PARAM_STR);
 $success = $stmt->execute();
 if (!$success) {
   die($db->error);

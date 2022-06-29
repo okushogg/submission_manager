@@ -45,7 +45,7 @@ if (!$success) {
 }
 $student_pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// 本年度のクラスを求める
+// 本年度の所属クラスを求める
 $this_year_class_stmt = $db->prepare("SELECT belongs.id, belongs.class_id, belongs.student_num as student_num,
                                              classes.class as class, classes.grade as grade
                                       FROM belongs
@@ -67,7 +67,7 @@ $classes_stmt = $db->prepare("SELECT c.grade, b.id, b.class_id, c.grade, c.year,
                               ORDER BY c.year ASC");
 $classes_stmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
 $classes_stmt->execute();
-$belonged_classes = $classes_stmt->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_UNIQUE);
+$belonged_classes = $classes_stmt->fetchAll(PDO::FETCH_ASSOC | PDO::FETCH_UNIQUE);
 // echo ('<pre>');
 // var_dump($belonged_classes);
 // echo ('<pre>');
@@ -77,7 +77,7 @@ $belonged_classes = $classes_stmt->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_UNIQUE);
 $subjects_stmt = $db->prepare("SELECT id, name FROM subjects");
 $subjects_stmt->execute();
 $all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC);
-// var_dump($all_subjects);
+// var_dump($teacher_id);
 
 ?>
 
@@ -97,6 +97,10 @@ $all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC);
       <h1>生徒トップページ</h1>
     </div>
     <div id="content">
+      <?php if(isset($_SESSION['teacher_id'])): ?>
+        <div style="text-align: right"><a href="../teacher/home.php">教員ホームへ</a></div>
+      <?php endif; ?>
+      <div style="text-align: right"><a href="edit_student.php">生徒情報編集ページ</a></div>
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
       <div style="text-align: left">
         <div>
@@ -110,7 +114,7 @@ $all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC);
           <?php endforeach; ?>
         </div>
         <img src="../student_pictures/<?php echo h($student_pic_info['path']); ?>" width="100" height="100" alt="" />
-        <?php echo "{$this_year_class['grade']} - {$this_year_class['class']} No_{$this_year_class['student_num']}";?>
+        <?php echo "{$this_year_class['grade']} - {$this_year_class['class']} No_{$this_year_class['student_num']}"; ?>
         <?php echo "{$student_info['student_last_name']} {$student_info['student_first_name']}" . ' さん' ?>
       </div>
 
