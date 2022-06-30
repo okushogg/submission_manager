@@ -24,7 +24,7 @@ if (isset($_SESSION['student_id']) && isset($_SESSION['last_name']) && isset($_S
 // studentの情報を求める
 $student_stmt = $db->prepare("SELECT first_name as student_first_name,
                                      last_name as student_last_name,
-                                     image_id
+                                     image_id, is_active
                               FROM students
                               WHERE id=:student_id");
 $student_stmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
@@ -116,6 +116,9 @@ $all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC);
         <img src="../student_pictures/<?php echo h($student_pic_info['path']); ?>" width="100" height="100" alt="" />
         <?php echo "{$this_year_class['grade']} - {$this_year_class['class']} No_{$this_year_class['student_num']}"; ?>
         <?php echo "{$student_info['student_last_name']} {$student_info['student_first_name']}" . ' さん' ?>
+        <?php if($student_info['is_active'] == 0):?>
+          <p style="color: red;">除籍済</p>
+        <?php endif; ?>
       </div>
 
       <div>
