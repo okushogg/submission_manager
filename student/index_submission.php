@@ -3,8 +3,6 @@ session_start();
 require('../dbconnect.php');
 require('../libs.php');
 
-// 今年度
-$this_year = (new \DateTime('-3 month'))->format('Y');
 
 // 選択した教科のidを求める
 if (isset($_GET['subject_id'])) {
@@ -143,7 +141,7 @@ $scoreList = array(
         <?php echo "{$student_info['student_last_name']} {$student_info['student_first_name']}" . ' さん' ?>
       </div>
 
-      <!-- 生徒一覧 -->
+      <!-- 課題一覧 -->
       <div>
         <form action="" , method="post">
           <table class="" style="text-align: center;">
