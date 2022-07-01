@@ -86,9 +86,9 @@ if (!$student_success) {
   die($db->error);
 }
 $students_who_have_submission = $student_stmt->fetchAll(PDO::FETCH_ASSOC);
-echo ('<pre>');
-var_dump($students_who_have_submission);
-echo ('<pre>');
+// echo ('<pre>');
+// var_dump($students_who_have_submission);
+// echo ('<pre>');
 
 // scoreの値
 $scoreList = array(
@@ -150,6 +150,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div id="content">
       <!-- ナビゲーション -->
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
+      <div style="text-align: right"><a href="edit_submission.php?submission_id=<?php echo $submission_id; ?>">課題編集</a></div>
+      <div style="text-align: right"><a href="delete_submission.php?submission_id=<?php echo $submission_id; ?>">課題削除</a></div>
       <div style="text-align: right"><a href="home.php">ホーム</a></div>
 
       <!-- ユーザー情報 -->

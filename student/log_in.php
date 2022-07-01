@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       die($db->error);
     }
     $student_info = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($student_info && $student_info['is_active']) {
+    if ($student_info) {
       if (isset($student_info) && password_verify($password, $student_info['password'])) {
         // ログイン成功
         session_regenerate_id();

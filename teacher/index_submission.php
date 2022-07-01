@@ -43,6 +43,7 @@ $stmt = $db->prepare("SELECT submissions.id, submissions.name as submission_name
                       LEFT JOIN teachers
                       ON submissions.teacher_id = teachers.id
                       WHERE submissions.class_id = :class_id
+                      AND is_deleted = 0
                       ORDER BY id DESC");
 if (!$stmt) {
   die($db->error);

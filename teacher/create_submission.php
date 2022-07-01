@@ -207,7 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </dd>
 
             <dt>教科<span class="required">（必須）</span></dt>
-            <?php if (isset($error['class_id']) && $error['class_id'] === 'blank') : ?>
+            <?php if (isset($error['subject_id']) && $error['subject_id'] === 'blank') : ?>
               <p class="error">* 教科を入力してください</p>
             <?php endif; ?>
             <dd>
@@ -233,7 +233,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <input type="hidden" name="teacher_id" value=$id />
             </dd>
           </dl>
-          <div><input type="submit" value="課題を作成する" /></div>
+          <div><input type="submit" value="課題を作成" /></div>
         </form>
       </div>
 

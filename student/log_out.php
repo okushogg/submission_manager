@@ -10,3 +10,4 @@ unset($_SESSION['this_year_grade']);
 unset($_SESSION['this_year_class']);
 header('Location: log_in.php');
 exit();
+：
