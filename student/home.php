@@ -201,12 +201,12 @@ $scoreList = array(
               </td>
 
               <!-- スコア -->
-              <?php if ($submission['score']) : ?>
-                <td>
+              <?php if ($submission['score']==0 || null) : ?>
+                <td style="color: red;">
                   <?php echo $scoreList[$submission['score']]; ?>
                 </td>
               <?php else : ?>
-                <td style="color: red;">
+                <td>
                   <?php echo $scoreList[$submission['score']]; ?>
                 </td>
               <?php endif; ?>
