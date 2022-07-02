@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       die($db->error);
     }
     $student_info = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($student_info) {
+    if ($student_info && $student_info['is_active'] == 0) {
       if (isset($student_info) && password_verify($password, $student_info['password'])) {
         // ログイン成功
         session_regenerate_id();
@@ -65,6 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p>メールアドレスとパスワードを記入してログインしてください。</p>
         <p>登録がまだの方はこちらからどうぞ。</p>
         <p>&raquo;<a href="sign_up.php">登録手続きをする</a></p>
+        <p>パスワードをお忘れの方はこちら。</p>
+        <p>&raquo;<a href="reset_password.php">パスワードの再設定</a></p>
       </div>
       <form action="" method="post">
         <dl>

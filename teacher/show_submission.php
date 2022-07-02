@@ -68,6 +68,7 @@ $class_id = $submission_info['class_id'];
 $student_stmt = $db->prepare("SELECT student_submissions.id as student_submissions_id, student_submissions.student_id,
                                      COALESCE(student_submissions.approved_date,'-') as approved_date,
                                      COALESCE(student_submissions.score,NULL) as score,
+                                     submissions.dead_line as dead_line,
                                      students.first_name, students.last_name
                               FROM student_submissions
                               LEFT JOIN students
@@ -174,6 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <tr>
               <!-- <th>h_id</th> -->
               <th>生徒名</th>
+              <th>提出期限</th>
               <th>受領日</th>
               <th>評価</th>
             </tr>
@@ -190,6 +192,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   <?php echo $student['last_name'] . $student['first_name']; ?>
                 </a>
               </td>
+
+              <!-- 提出期限 -->
+              <?php if ($student['dead_line'] <= $today && $student['score'] == null || 0) : ?>
+                <td style="color: red;">
+                  <?php echo $student['dead_line']; ?>
+                </td>
+              <?php else : ?>
+                <td>
+                  <?php echo $student['dead_line']; ?>
+                </td>
+              <?php endif; ?>
 
               <!-- 受領日 -->
               <td>
