@@ -26,20 +26,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
   $account_holder = $stmt->fetch(PDO::FETCH_ASSOC);
   if ($account_holder) {
-    // password reset token生成し、メールを送信
-    $password_reset_token = bin2hex(random_bytes(32));
-
+    // password reset token生成
+    $password_reset_token = bin2hex(random_bytes(18));
+    // メールを送信
     $mail_sent_success = send_mail($account_holder['email'], $password_reset_token);
     if ($mail_sent_success) {
       // メールが送信されたらpassword_reset_tokenをstudentsテーブルへ保存
       $pw_reset_stmt = $db->prepare("UPDATE students
-                                     SET password_reset_token = :password_rest_token,
+                                     SET password_reset_token = :password_reset_token,
                                          updated_at = :updated_at
                                    WHERE id = :student_id ");
       $pw_reset_stmt->bindValue(':password_reset_token', $password_reset_token, PDO::PARAM_STR);
       $pw_reset_stmt->bindValue(':updated_at', $current_time, PDO::PARAM_STR);
       $pw_reset_stmt->bindValue(':student_id', $account_holder['student_id'], PDO::PARAM_INT);
       $success_pw_reset = $pw_reset_stmt->execute();
+      var_dump($password_reset_token, $current_time, $account_holder['student_id']);
       if (!$success_pw_reset) {
         $db->error;
       }
@@ -49,14 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: log_in.php');
     exit();
   };
-
-  // password_reset_tokenをカラムに保存
-
-  // メールを送信
-
-  // ログインページへ
-  // header('Location: log_in.php');
-  // exit();
 }
 ?>
 
