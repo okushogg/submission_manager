@@ -40,10 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $pw_reset_stmt->bindValue(':updated_at', $current_time, PDO::PARAM_STR);
       $pw_reset_stmt->bindValue(':student_id', $account_holder['student_id'], PDO::PARAM_INT);
       $success_pw_reset = $pw_reset_stmt->execute();
-      var_dump($password_reset_token, $current_time, $account_holder['student_id']);
       if (!$success_pw_reset) {
         $db->error;
       }
+      // ログインページへ
+      header('Location: log_in.php');
+      exit();
     }
   } else {
     // ログインページへ

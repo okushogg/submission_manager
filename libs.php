@@ -41,17 +41,16 @@ function send_mail($to, $password_reset_token)
   mb_language("Japanese");
   mb_internal_encoding("UTF-8");
 
-  $url = "localhost::8888/submissions_manager/student/reset_password_form.php?token={$password_reset_token}";
+  $url = "localhost::8888/submissions_manager/student/reset_password_form.php?password_reset_token={$password_reset_token}";
 
   $subject =  'パスワードリセット用URLをお送りします';
 
   $body = <<<EOD
-    下記URLへアクセスし、パスワードの変更を完了してください。
-    {$url}
+    下記URLへアクセスし、パスワードの変更を完了してください。<br>
+    <a href="{$url}">{$url}</a>
     EOD;
 
   $headers = "From : hoge@hoge.com\n";
-  
   $headers .= "Content-Type : text/html";
 
   $is_sent = mb_send_mail($to, $subject, $body, $headers);

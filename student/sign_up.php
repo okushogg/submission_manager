@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
   // パスワードのチェック
-  $form['password'] = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+  $form['password'] = filter_input(INPUT_POST, 'password');
   if ($form['password'] === '') {
     $error['password'] = 'blank';
   } elseif (strlen($form['password']) < 4) {
