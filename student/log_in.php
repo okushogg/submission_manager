@@ -12,8 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($email === '' || $password === '') {
     $error['login'] = 'blank';
   } else {
-    //  ログイン情報チェック
-    $stmt = $db->prepare('select * from students where email=:email limit 1');
+    //  ログイン情報チェッ_ク
+    $stmt = $db->prepare("SELECT id, last_name, first_name, email, password, image_id
+                           FROM students
+                           WHERE email=:email
+                           LIMIT 1");
     if (!$stmt) {
       die($db->error);
     }
@@ -31,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['last_name'] = $student_info['last_name'];
         $_SESSION['first_name'] = $student_info['first_name'];
         $_SESSION['student_image_id'] = $student_info['image_id'];
-        $_SESSION['class_id'] = $student_info['class_id'];
+        // $_SESSION['class_id'] = $student_info['class_id'];
         header('Location: home.php');
         exit();
       } else {

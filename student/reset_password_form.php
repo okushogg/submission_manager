@@ -49,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: log_in.php");
     exit();
   }
+  var_dump($password);
 };
 ?>
 
