@@ -103,7 +103,7 @@ if (!$submission_success) {
   die($db->error);
 }
 $submission_info = $submission_stmt->fetchAll(PDO::FETCH_ASSOC);
-var_dump($_SESSION);
+// var_dump($_SESSION);
 
 // scoreの値
 $scoreList = array(

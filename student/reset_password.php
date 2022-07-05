@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // password reset token生成
     $password_reset_token = bin2hex(random_bytes(18));
     // メールを送信
-    $mail_sent_success = send_mail($account_holder['email'], $password_reset_token);
+    $mail_sent_success = send_mail($account_holder['email'], $password_reset_token, "student");
     if ($mail_sent_success) {
       // メールが送信されたらpassword_reset_tokenをstudentsテーブルへ保存
       $pw_reset_stmt = $db->prepare("UPDATE students

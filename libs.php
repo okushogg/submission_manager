@@ -36,17 +36,17 @@ function bkk_time()
 }
 
 // パスワードリセット用のメール
-function send_mail($to, $password_reset_token)
+function send_mail($to, $password_reset_token, $type)
 {
   mb_language("Japanese");
   mb_internal_encoding("UTF-8");
 
-  $url = "http://localhost::8888/submissions_manager/student/reset_password_form.php?password_reset_token={$password_reset_token}";
+  $url = "http://localhost::8888/submissions_manager/{$type}/reset_password_form.php?password_reset_token={$password_reset_token}";
 
-  $subject =  'パスワードリセット用URLをお送りします';
+  $subject =  "{$type}用パスワードリセットURLをお送りします";
 
   $body = <<<EOD
-  24時間以内に下記URLへアクセスし、パスワードの変更を完了してください。<br>
+  下記URLへアクセスし、パスワードの変更を完了してください。<br>
   <a href="{$url}">{$url}</a>
   EOD;
 
