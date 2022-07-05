@@ -2,6 +2,15 @@
 session_start();
 require('../dbconnect.php');
 require('../libs.php');
+
+$form = [
+  "last_name" => '',
+  "first_name" => '',
+  "year" => '',
+  "grade" => '',
+  "class" => ''
+];
+
 // ログイン情報がないとログインページへ移る
 if (isset($_SESSION['teacher_id']) && isset($_SESSION['last_name']) && isset($_SESSION['first_name'])) {
   $teacher_id = $_SESSION['teacher_id'];
@@ -12,6 +21,7 @@ if (isset($_SESSION['teacher_id']) && isset($_SESSION['last_name']) && isset($_S
   header('Location: log_in.php');
   exit();
 }
+
 // 画像の情報を取得
 $stmt = $db->prepare("select path from images where id=:id");
 if (!$stmt) {
@@ -23,23 +33,16 @@ if (!$success) {
   die($db->error);
 }
 $pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
-// var_dump($pic_info);
 
-// 該当年度の年度のクラスを取得する
-$year = (new \DateTime('-3 month'))->format('Y');
+// 今年度のクラスを取得する
 $classes_stmt = $db->prepare("select id, year, grade, class from classes where year=:year");
-$classes_stmt->bindParam(':year', $year, PDO::PARAM_STR);
+$classes_stmt->bindParam(':year', $this_year, PDO::PARAM_STR);
 $classes_stmt->execute();
 $classes_info = $classes_stmt->fetchAll(PDO::FETCH_ASSOC);
 $cnt = count($classes_info);
 
 // 学年ごとにクラスのデータを配列で取得
 $classes_array = get_classes($classes_info);
-
-// echo ('<pre>');
-// var_dump(get_classes($classes_info));
-// echo ('<pre>');
-// var_dump($classes_array[1]['A']['class']);
 ?>
 
 <!DOCTYPE html>
@@ -59,6 +62,7 @@ $classes_array = get_classes($classes_info);
     </div>
     <div id="content">
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
+      <div style="text-align: right"><a href="search_student.php">生徒検索</a></div>
       <div style="text-align: right"><a href="register_class.php">クラス登録</a></div>
       <div style="text-align: right"><a href="create_submission.php">提出物登録</a></div>
       <div style="text-align: left">
@@ -67,7 +71,6 @@ $classes_array = get_classes($classes_info);
       </div>
 
       <div>
-
         <div class="box">
           <?php foreach ($classes_array['1'] as $a) : ?>
             <div class="box">

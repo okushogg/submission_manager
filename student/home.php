@@ -169,50 +169,49 @@ $scoreList = array(
 
       <!-- 課題一覧 -->
       <div style="margin: 15px;">
-        <form action="" , method="post">
-          <table class="" style="text-align: center;">
-            <tr>
-              <!-- <th>h_id</th> -->
-              <th>課題名</th>
-              <th>提出期限</th>
-              <th>受領日</th>
-              <th>評価</th>
-            </tr>
-            <?php foreach ($submission_info as $submission) : ?>
+        <table class="" style="text-align: center;">
+          <tr>
+            <!-- <th>h_id</th> -->
+            <th>課題名</th>
+            <th>提出期限</th>
+            <th>受領日</th>
+            <th>評価</th>
+          </tr>
+          <?php foreach ($submission_info as $submission) : ?>
 
-              <!-- student_submissions_id -->
-              <!-- <td>
+            <!-- student_submissions_id -->
+            <!-- <td>
                 <?php echo h($submission['student_submissions_id']); ?>
               </td> -->
 
-              <!-- 課題名 -->
-              <td>
-                <?php echo h($submission['submission_name']); ?>
-              </td>
+            <!-- 課題名 -->
+            <td>
+              <?php echo h($submission['submission_name']); ?>
+            </td>
 
-              <!-- 提出期限 -->
-              <td>
-                <?php echo h($submission['dead_line']); ?>
-              </td>
+            <!-- 提出期限 -->
+            <td>
+              <?php echo h($submission['dead_line']); ?>
+            </td>
 
-              <!-- 受領日 -->
-              <td>
-                <?php echo $submission['approved_date']; ?>
-              </td>
+            <!-- 受領日 -->
+            <td>
+              <?php echo $submission['approved_date']; ?>
+            </td>
 
-              <!-- スコア -->
-              <?php if ($submission['score']==0 || null) : ?>
-                <td style="color: red;">
-                  <?php echo $scoreList[$submission['score']]; ?>
-                </td>
-              <?php else : ?>
-                <td>
-                  <?php echo $scoreList[$submission['score']]; ?>
-                </td>
-              <?php endif; ?>
-              </tr>
-            <?php endforeach; ?>
-          </table>
+            <!-- スコア -->
+            <?php if ($submission['score'] == 0 || null) : ?>
+              <td style="color: red;">
+                <?php echo $scoreList[$submission['score']]; ?>
+              </td>
+            <?php else : ?>
+              <td>
+                <?php echo $scoreList[$submission['score']]; ?>
+              </td>
+            <?php endif; ?>
+            </tr>
+          <?php endforeach; ?>
+        </table>
 
 
 </body>
