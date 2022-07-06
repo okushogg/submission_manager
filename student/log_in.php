@@ -92,6 +92,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <input type="submit" value="ログインする" />
         </div>
       </form>
+      <div style="text-align: right; margin: 10px;"><a href="../teacher/log_in.php">>教員用ログインページ</a></div>
+
     </div>
   </div>
 </body>

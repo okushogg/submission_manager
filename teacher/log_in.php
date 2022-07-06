@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       die($db->error);
     }
     $teacher_info = $stmt->fetch(PDO::FETCH_ASSOC);
-    if($teacher_info){
+    if ($teacher_info) {
       if (password_verify($password, $teacher_info['password'])) {
         // ログイン成功
         session_regenerate_id();
@@ -42,7 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // var_dump($teacher_info['password']);
   }
-
 }
 
 ?>
@@ -89,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <input type="submit" value="ログインする" />
         </div>
       </form>
+      <div style="text-align: right; margin: 10px;"><a href="../student/log_in.php">>生徒用ログインページ</a></div>
     </div>
   </div>
 </body>
