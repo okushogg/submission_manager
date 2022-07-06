@@ -3,6 +3,16 @@ session_start();
 require('../dbconnect.php');
 require('../libs.php');
 
+$form =[
+  'year' => $this_year
+];
+
+// 変更ボタン押下時
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $form['year'] = filter_input(INPUT_POST, 'year');
+
+}
+
 // teacherがstudent/を閲覧した場合
 if (isset($_GET['student_id'])) {
   $_SESSION['student_id'] = $_GET['student_id'];
@@ -51,7 +61,7 @@ $this_year_class_stmt = $db->prepare("SELECT belongs.id, belongs.class_id, belon
                                       WHERE belongs.student_id = :student_id
                                         AND classes.year = :year");
 $this_year_class_stmt->bindValue(':student_id', $student_id, PDO::PARAM_INT);
-$this_year_class_stmt->bindValue(':year', $this_year, PDO::PARAM_INT);
+$this_year_class_stmt->bindValue(':year', $form['year'], PDO::PARAM_INT);
 $this_year_class_stmt->execute();
 $this_year_class = $this_year_class_stmt->fetch(PDO::FETCH_ASSOC);
 $class_id = $this_year_class['class_id'];
@@ -135,80 +145,95 @@ $scoreList = array(
       <div style="text-align: right"><a href="edit_student.php">生徒情報編集ページ</a></div>
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
       <div style="text-align: left">
-        <div>
+
+        <!-- 所属クラス -->
+        <div style="margin-top: 10px; margin-bottom: 10px;">
           <p>所属クラス</p>
-          <?php foreach ($belonged_classes as $belonged_class) : ?>
-            <div style="display: flex;">
-              <a href="/">
-                <?php echo "{$belonged_class['year']}年度{$belonged_class['grade']} 年 {$belonged_class['class']}組"; ?>
+          <form action="" method="post">
+          <select size="1" name="year">
+            <?php
+            foreach ($belonged_classes as $belonged_class) {
+              if ($belonged_class['year'] == $form['year']) {
+                echo "<option value={$belonged_class['year']} selected>" .
+                  "{$belonged_class['year']}年度{$belonged_class['grade']}年{$belonged_class['class']}組"
+                  . "</option>";
+              } else {
+                echo "<option value={$belonged_class['year']}>" .
+                  "{$belonged_class['year']}年度{$belonged_class['grade']}年{$belonged_class['class']}組"
+                  . "</option>";
+              }
+            }
+            ?>
+          </select>
+          <input type="submit" value="変更" />
+          </form>
+        </div>
+        <!-- 生徒情報 -->
+        <div>
+          <img src="../student_pictures/<?php echo h($student_pic_info['path']); ?>" width="100" height="100" alt="" />
+          <?php echo "{$this_year_class['grade']} - {$this_year_class['class']} No_{$this_year_class['student_num']}"; ?>
+          <?php echo "{$student_info['student_last_name']} {$student_info['student_first_name']}" . ' さん' ?>
+          <?php if ($student_info['is_active'] == 0) : ?>
+            <p style="color: red;">除籍済</p>
+          <?php endif; ?>
+        </div>
+
+        <div>
+          <p> 各教科 課題一覧</p>
+          <?php foreach ($all_subjects as $subject) : ?>
+            <span style="margin: 15px;">
+              <a href="index_submission.php?subject_id=<?php echo h($subject['id']); ?>">
+                <?php echo $subject['name']; ?>
               </a>
-            </div>
+            </span>
           <?php endforeach; ?>
         </div>
-        <img src="../student_pictures/<?php echo h($student_pic_info['path']); ?>" width="100" height="100" alt="" />
-        <?php echo "{$this_year_class['grade']} - {$this_year_class['class']} No_{$this_year_class['student_num']}"; ?>
-        <?php echo "{$student_info['student_last_name']} {$student_info['student_first_name']}" . ' さん' ?>
-        <?php if ($student_info['is_active'] == 0) : ?>
-          <p style="color: red;">除籍済</p>
-        <?php endif; ?>
-      </div>
 
-      <div>
-        <p> 各教科 課題一覧</p>
-        <?php foreach ($all_subjects as $subject) : ?>
-          <span style="margin: 15px;">
-            <a href="index_submission.php?subject_id=<?php echo h($subject['id']); ?>">
-              <?php echo $subject['name']; ?>
-            </a>
-          </span>
-        <?php endforeach; ?>
-      </div>
+        <!-- 課題一覧 -->
+        <div style="margin: 15px;">
+          <table class="" style="text-align: center;">
+            <tr>
+              <!-- <th>h_id</th> -->
+              <th>課題名</th>
+              <th>提出期限</th>
+              <th>受領日</th>
+              <th>評価</th>
+            </tr>
+            <?php foreach ($submission_info as $submission) : ?>
 
-      <!-- 課題一覧 -->
-      <div style="margin: 15px;">
-        <table class="" style="text-align: center;">
-          <tr>
-            <!-- <th>h_id</th> -->
-            <th>課題名</th>
-            <th>提出期限</th>
-            <th>受領日</th>
-            <th>評価</th>
-          </tr>
-          <?php foreach ($submission_info as $submission) : ?>
-
-            <!-- student_submissions_id -->
-            <!-- <td>
+              <!-- student_submissions_id -->
+              <!-- <td>
                 <?php echo h($submission['student_submissions_id']); ?>
               </td> -->
 
-            <!-- 課題名 -->
-            <td>
-              <?php echo h($submission['submission_name']); ?>
-            </td>
-
-            <!-- 提出期限 -->
-            <td>
-              <?php echo h($submission['dead_line']); ?>
-            </td>
-
-            <!-- 受領日 -->
-            <td>
-              <?php echo $submission['approved_date']; ?>
-            </td>
-
-            <!-- スコア -->
-            <?php if ($submission['score'] == 0 || null) : ?>
-              <td style="color: red;">
-                <?php echo $scoreList[$submission['score']]; ?>
-              </td>
-            <?php else : ?>
+              <!-- 課題名 -->
               <td>
-                <?php echo $scoreList[$submission['score']]; ?>
+                <?php echo h($submission['submission_name']); ?>
               </td>
-            <?php endif; ?>
-            </tr>
-          <?php endforeach; ?>
-        </table>
+
+              <!-- 提出期限 -->
+              <td>
+                <?php echo h($submission['dead_line']); ?>
+              </td>
+
+              <!-- 受領日 -->
+              <td>
+                <?php echo $submission['approved_date']; ?>
+              </td>
+
+              <!-- スコア -->
+              <?php if ($submission['score'] == 0 || null) : ?>
+                <td style="color: red;">
+                  <?php echo $scoreList[$submission['score']]; ?>
+                </td>
+              <?php else : ?>
+                <td>
+                  <?php echo $scoreList[$submission['score']]; ?>
+                </td>
+              <?php endif; ?>
+              </tr>
+            <?php endforeach; ?>
+          </table>
 
 
 </body>
