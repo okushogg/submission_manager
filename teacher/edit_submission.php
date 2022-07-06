@@ -129,9 +129,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$success) {
       die($db->error);
     }
+    header("Location: index_submission.php?class_id={$class_id}");
+    exit();
   }
-  header("Location: index_submission.php?class_id={$class_id}");
-  exit();
 }
 ?>
 

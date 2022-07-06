@@ -200,9 +200,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <dd>
               <select size="1" name="class_id">
                 <option value="0">-</option>
-                <?php foreach ($classes_info as $class) : ?>
-                  <option value="<?php echo $class['id']; ?>"><?php print "{$class['grade']} - {$class['class']}"; ?></option>
-                <?php endforeach; ?>
+                <?php
+                foreach ($classes_info as $class) {
+                  if ($form['class_id'] == $class['id']) {
+                    echo "<option value={$class['id']} selected> {$class['grade']} - {$class['class']}</option>";
+                  } else {
+                    echo "<option value={$class['id']}> {$class['grade']} - {$class['class']}</option>";
+                  }
+                }
+                ?>
               </select>
             </dd>
 
@@ -213,9 +219,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <dd>
               <select size="1" name="subject_id">
                 <option value="0">-</option>
-                <?php foreach ($all_subjects as $subject) : ?>
-                  <option value="<?php echo $subject['id']; ?>"><?php echo $subject['name']; ?></option>
-                <?php endforeach; ?>
+                <?php
+                foreach ($all_subjects as $subject) {
+                  if ($form['subject_id'] == $subject['id']) {
+                    echo "<option value={$subject['id']} selected> {$subject['name']} </option>";
+                  } else {
+                    echo "<option value={$subject['id']}> {$subject['name']} </option>";
+                  }
+                }
+                ?>
               </select>
             </dd>
 
