@@ -126,13 +126,11 @@ $scoreList = array(
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
       <div style="text-align: right"><a href="home.php">ホーム</a></div>
       <div style="text-align: left">
-        <div>
+        <div style="margin: 10px;">
           <p>クラス</p>
           <?php foreach ($belonged_classes as $c) : ?>
             <div style="display: flex;">
-              <a href="/">
                 <?php echo "{$c['year']}年度{$c['grade']} 年 {$c['class']}組"; ?>
-              </a>
             </div>
           <?php endforeach; ?>
         </div>

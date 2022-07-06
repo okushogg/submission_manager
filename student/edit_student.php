@@ -135,8 +135,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $form['is_active'] = filter_input(INPUT_POST, 'is_active');
 
   if (empty($error)) {
-    var_dump($form);
-    var_dump($this_year_class['belongs_id']);
+    // var_dump($form);
+    // var_dump($this_year_class['belongs_id']);
     // 画像のアップロード
     if ($image['name'] !== '') {
       $filename = date('Ymdhis') . '_' . $image['name'];
@@ -222,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die($db->error);
       }
     }
-
+    
     // セッション内のフォーム内容を破棄してstudent/home.phpへ
     unset($_SESSION['form']);
     header('Location: home.php');
@@ -278,11 +278,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <p class="error">* 性別を入力してください</p>
             <?php endif; ?>
             <dd>
-              <select size="1" name="sex">
-                <option value="">-</option>
-                <option value="男">男</option>
-                <option value="女">女</option>
-              </select>
+              <input type="radio" name="sex" value="男" <?php if($student_info['sex'] == "男") echo 'checked'; ?>>男
+              <input type="radio" name="sex" value="女" <?php if($student_info['sex'] == "女") echo 'checked'; ?>>女
             </dd>
           <?php else : ?>
             <dd>
@@ -326,13 +323,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
           <dt>パスワード</dt>
           <dd>
-            <p>パスワードの変更は<a href="/">こちら</a>から。</p>
+            <p>パスワードの変更は<a href="reset_password.php">こちら</a>から。</p>
           </dd>
-          <?php if (isset($error['password']) && $error['password'] === 'blank') : ?>
-            <p class="error">* パスワードを入力してください</p>
-          <?php elseif (isset($error['password']) && $error['password'] === 'length') : ?>
-            <p class="error">* パスワードは4文字以上で入力してください</p>
-          <?php endif; ?>
 
           <?php if (isset($_SESSION['teacher_id']) || $this_year > $this_year_class['year']) : ?>
             <dt>写真など</dt>
@@ -348,8 +340,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <?php if (isset($_SESSION['teacher_id'])) : ?>
             <dt>在籍情報</dt>
             <dd>
-              <input type="radio" name="is_active" value=0>除籍
-              <input type="radio" name="is_active" value=1>在籍
+              <input type="radio" name="is_active" value=0 <?php if($student_info['is_active'] == 0) echo 'checked'; ?>>除籍
+              <input type="radio" name="is_active" value=1 <?php if($student_info['is_active'] == 1) echo 'checked'; ?>>在籍
             </dd>
           <?php endif; ?>
         </dl>

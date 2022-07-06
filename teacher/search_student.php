@@ -94,9 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   $stmt = $db->query($sql);
-  var_dump($sql);
+  // var_dump($sql);
   $student_search_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-  var_dump($student_search_result);
+  // var_dump($student_search_result);
 }
 ?>
 

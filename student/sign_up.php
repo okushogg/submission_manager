@@ -155,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p>次のフォームに必要事項をご記入ください。</p>
         <form action="" method="post" enctype="multipart/form-data">
           <dl>
-            <dt>姓<span class="required">（必須）</span></dt>
+            <dt>氏<span class="required">（必須）</span></dt>
             <?php if (isset($error['last_name']) && $error['first_name'] === 'blank') : ?>
               <p class="error">* 苗字を入力してください</p>
             <?php endif; ?>
@@ -176,11 +176,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <p class="error">* 性別を入力してください</p>
             <?php endif; ?>
             <dd>
-              <select size="1" name="sex">
-                <option value="">-</option>
-                <option value="男">男</option>
-                <option value="女">女</option>
-              </select>
+              <input type="radio" name="sex" value="男" <?php if ($form['sex'] == "男") echo 'checked'; ?>>男
+              <input type="radio" name="sex" value="女" <?php if ($form['sex'] == "女") echo 'checked'; ?>>女
             </dd>
 
             <dt>クラス<span class="required">（必須）</span></dt>
@@ -190,9 +187,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <dd>
               <select size="1" name="class_id">
                 <option value="0">-</option>
-                <?php foreach ($this_year_classes as $class) : ?>
-                  <option value="<?php echo $class['id']; ?>"><?php print "{$class['grade']} - {$class['class']}"; ?></option>
-                <?php endforeach; ?>
+                <?php
+                foreach ($this_year_classes as $class) {
+                  if ($form['class_id'] == $class['id']) {
+                    echo "<option value={$class['id']} selected> {$class['grade']} - {$class['class']}</option>";
+                  } else {
+                    echo "<option value={$class['id']}> {$class['grade']} - {$class['class']}</option>";
+                  }
+                }
+                ?>
               </select>
             </dd>
 
@@ -212,22 +215,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <input type="text" name="email" size="35" maxlength="255" value="<?php echo h($form['email']); ?>" />
 
             <dt>パスワード<span class="required">（必須）</span></dt>
-            <dd>
-              <input type="password" name="password" size="10" maxlength="20" value="<?php echo h($form['password']); ?>" />
-            </dd>
             <?php if (isset($error['password']) && $error['password'] === 'blank') : ?>
               <p class="error">* パスワードを入力してください</p>
             <?php elseif (isset($error['password']) && $error['password'] === 'length') : ?>
               <p class="error">* パスワードは4文字以上で入力してください</p>
             <?php endif; ?>
+            <dd>
+              <input type="password" name="password" size="10" maxlength="20" value="<?php echo h($form['password']); ?>" />
+            </dd>
 
             <dt>写真など</dt>
             <dd>
-              <input type="file" name="image" size="35" value="" />
               <?php if (isset($error['image']) && $error['image'] === 'type') : ?>
                 <p class="error">* 写真などは「.png」または「.jpg」の画像を指定してください</p>
                 <p class="error">* 恐れ入りますが、画像を改めて指定してください</p>
               <?php endif; ?>
+              <input type="file" name="image" size="35" value="" />
             </dd>
 
             <dd>
