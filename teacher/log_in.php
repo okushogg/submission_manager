@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       die($db->error);
     }
     $teacher_info = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($teacher_info) {
+    if ($teacher_info && $teacher_info['is_active'] == 1) {
       if (password_verify($password, $teacher_info['password'])) {
         // ログイン成功
         session_regenerate_id();

@@ -13,10 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $error['login'] = 'blank';
   } else {
     //  ログイン情報チェッ_ク
-    $stmt = $db->prepare("SELECT id, last_name, first_name, email, password, image_id
-                           FROM students
-                           WHERE email=:email
-                           LIMIT 1");
+    $stmt = $db->prepare('select * from students where email=:email limit 1');
     if (!$stmt) {
       die($db->error);
     }
@@ -26,8 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       die($db->error);
     }
     $student_info = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($student_info && $student_info['is_active'] == 0) {
-      if (isset($student_info) && password_verify($password, $student_info['password'])) {
+    if ($student_info && $student_info['is_active'] == 1) {
+      if (password_verify($password, $student_info['password'])) {
         // ログイン成功
         session_regenerate_id();
         $_SESSION['student_id'] = $student_info['id'];

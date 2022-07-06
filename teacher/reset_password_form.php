@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // フォームに入力されたパスワードをハッシュ化
     $password = password_hash($form['password'], PASSWORD_DEFAULT);
 
-    // password_reset_tokenが一致しているstudentのpasswordを変更
+    // password_reset_tokenが一致しているteacherのpasswordを変更
     $stmt = $db->prepare("UPDATE teachers
                            SET password = :password,
                                updated_at = :updated_at,
@@ -49,8 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: log_in.php");
     exit();
   }
-  var_dump($password);
-};
+}
 ?>
 
 <!DOCTYPE html>
