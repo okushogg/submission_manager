@@ -98,6 +98,7 @@ $class_info = $class_stmt->fetch(PDO::FETCH_ASSOC);
 
       <!-- 課題一覧 -->
       <div>
+      <?php if ($submission_info) : ?>
         <table class="">
           <tr>
             <th>課題名</th>
@@ -116,6 +117,9 @@ $class_info = $class_stmt->fetch(PDO::FETCH_ASSOC);
             </tr>
           <?php endforeach; ?>
         </table>
+        <?php else : ?>
+            <p>課題はありません</p>
+        <?php endif; ?>
       </div>
 
 

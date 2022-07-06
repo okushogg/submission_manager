@@ -81,7 +81,8 @@ $stmt = $db->prepare("SELECT student_submissions.id, submissions.name as submiss
                           ON student_submissions.submission_id = submissions.id
                        WHERE student_submissions.student_id = :student_id
                          AND submissions.class_id = :class_id
-                         AND submissions.subject_id = :subject_id");
+                         AND submissions.subject_id = :subject_id
+                         AND submissions.is_deleted = 0");
 if (!$stmt) {
   die($db->error);
 }
@@ -130,7 +131,7 @@ $scoreList = array(
           <p>クラス</p>
           <?php foreach ($belonged_classes as $c) : ?>
             <div style="display: flex;">
-                <?php echo "{$c['year']}年度{$c['grade']} 年 {$c['class']}組"; ?>
+              <?php echo "{$c['year']}年度{$c['grade']} 年 {$c['class']}組"; ?>
             </div>
           <?php endforeach; ?>
         </div>
@@ -141,44 +142,48 @@ $scoreList = array(
 
       <!-- 課題一覧 -->
       <div>
-        <form action="" , method="post">
-          <table class="" style="text-align: center;">
-            <tr>
-              <!-- <th>h_id</th> -->
-              <th>課題名</th>
-              <th>提出期限</th>
-              <th>受領日</th>
-              <th>評価</th>
-            </tr>
-            <?php foreach ($submission_info as $submission) : ?>
+        <?php if ($submission_info) : ?>
+          <form action="" , method="post">
+            <table class="" style="text-align: center;">
+              <tr>
+                <!-- <th>h_id</th> -->
+                <th>課題名</th>
+                <th>提出期限</th>
+                <th>受領日</th>
+                <th>評価</th>
+              </tr>
+              <?php foreach ($submission_info as $submission) : ?>
 
-              <!-- student_submissions_id -->
-              <!-- <td>
+                <!-- student_submissions_id -->
+                <!-- <td>
                 <?php echo h($submission['student_submissions_id']); ?>
               </td> -->
 
-              <!-- 課題名 -->
-              <td>
-                <?php echo h($submission['submission_name']); ?>
-              </td>
+                <!-- 課題名 -->
+                <td>
+                  <?php echo $submission['submission_name']; ?>
+                </td>
 
-              <!-- 提出期限 -->
-              <td>
-                <?php echo h($submission['dead_line']); ?>
-              </td>
+                <!-- 提出期限 -->
+                <td>
+                  <?php echo h($submission['dead_line']); ?>
+                </td>
 
-              <!-- 受領日 -->
-              <td>
-                <?php echo $submission['approved_date']; ?>
-              </td>
+                <!-- 受領日 -->
+                <td>
+                  <?php echo $submission['approved_date']; ?>
+                </td>
 
-              <!-- スコア -->
-              <td>
-                <?php echo $scoreList[$submission['score']]; ?>
-              </td>
-              </tr>
-            <?php endforeach; ?>
-          </table>
+                <!-- スコア -->
+                <td>
+                  <?php echo $scoreList[$submission['score']]; ?>
+                </td>
+                </tr>
+              <?php endforeach; ?>
+            </table>
+          <?php else : ?>
+            <p>課題はありません</p>
+          <?php endif; ?>
 
 
 </body>

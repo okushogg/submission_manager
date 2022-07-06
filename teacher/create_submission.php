@@ -153,9 +153,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die($db->error);
       }
     }
+    header('Location: home.php');
+    exit();
   }
-  header('Location: home.php');
-  exit();
 }
 ?>
 

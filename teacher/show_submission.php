@@ -153,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
       <div style="text-align: right"><a href="edit_submission.php?submission_id=<?php echo $submission_id; ?>">課題編集</a></div>
       <div style="text-align: right"><a href="delete_submission.php?submission_id=<?php echo $submission_id; ?>">課題削除</a></div>
-      <div style="text-align: right"><a href="home.php">ホーム</a></div>
+      <div style="text-align: right"><a href="index_submission.php?class_id=<?php echo $class_id; ?>">課題一覧へ</a></div>
 
       <!-- ユーザー情報 -->
       <div style="text-align: left">
