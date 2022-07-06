@@ -11,6 +11,20 @@ $form = [
   "class" => ''
 ];
 
+$grades = [
+  "-" => 0,
+  "1" => 1,
+  "2" => 2,
+  "3" => 3
+];
+
+$classes = [
+  "-" => 0,
+  "A" => "A",
+  "B" => "B",
+  "C" => "C"
+];
+
 // ログイン情報がないとログインページへ移る
 if (isset($_SESSION['teacher_id']) && isset($_SESSION['last_name']) && isset($_SESSION['first_name'])) {
   $teacher_id = $_SESSION['teacher_id'];
@@ -56,13 +70,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $sql .= 'classes.year = "' . $form['year'] . '"';
 
   // 学年が選択されている場合
-  if ($form['grade'] !== 0) {
+  if ($form['grade'] != 0) {
     $sql .= " AND ";
     $sql .= 'classes.grade = "' . $form['grade'] . '"';
   }
 
   //クラスが選択されている場合
-  if ($form['class'] !== 0) {
+  if ($form['class'] != 0) {
     $sql .= " AND ";
     $sql .= 'classes.class = "' . $form['class'] . '"';
   }
@@ -84,9 +98,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $student_search_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
   var_dump($student_search_result);
 }
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -128,21 +139,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </select>
 
         <span>学年</span>
-        <select size="1" name="grade">>
-          <option value=0>-</option>
-          <option value=1>1</option>
-          <option value=2>2</option>
-          <option value=3>3</option>
+        <select size="1" name="grade">
+          <?php
+          foreach ($grades as $key => $value) {
+            if ($value == $form['grade']) {
+              echo "<option value=$value selected>" . $key . "</option>";
+            } else {
+              echo "<option value=$value>" . $key . "</option>";
+            }
+          }
+          ?>
         </select>
 
         <span>クラス</span>
-        <select size="1" name="class">>
-          <option value=0>-</option>
-          <option value="A">A</option>
-          <option value="B">B</option>
-          <option value="C">C</option>
+        <select size="1" name="class">
+        <?php
+          foreach ($classes as $key => $value) {
+            if ($value == $form['class']) {
+              echo "<option value=$value selected>" . $key . "</option>";
+            } else {
+              echo "<option value=$value>" . $key . "</option>";
+            }
+          }
+          ?>
         </select>
-
         <br>
         <span>氏</span>
         <input type="text" name="last_name" size="20" maxlength="20" value="<?php echo $form['last_name']; ?>" />

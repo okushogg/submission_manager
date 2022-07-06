@@ -3,9 +3,6 @@ session_start();
 require('../dbconnect.php');
 require('../libs.php');
 
-// 今年度
-$this_year = (new \DateTime('-3 month'))->format('Y');
-
 // teacherがstudent/を閲覧した場合
 if (isset($_GET['student_id'])) {
   $_SESSION['student_id'] = $_GET['student_id'];
@@ -79,7 +76,7 @@ $subjects_stmt->execute();
 $all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC);
 // var_dump($teacher_id);
 
-// 生徒が持つ課題を求める
+// 生徒が持つ課題を求める（提出期限の前後1週間のもの）
 $a_week_ago = date("Y-m-d", strtotime("-1 week"));
 $a_week_later = date("Y-m-d", strtotime("+1 week"));
 $submission_stmt = $db->prepare("SELECT student_submissions.id, submissions.name as submission_name, submissions.dead_line,
@@ -140,10 +137,10 @@ $scoreList = array(
       <div style="text-align: left">
         <div>
           <p>所属クラス</p>
-          <?php foreach ($belonged_classes as $c) : ?>
+          <?php foreach ($belonged_classes as $belonged_class) : ?>
             <div style="display: flex;">
               <a href="/">
-                <?php echo "{$c['year']}年度{$c['grade']} 年 {$c['class']}組"; ?>
+                <?php echo "{$belonged_class['year']}年度{$belonged_class['grade']} 年 {$belonged_class['class']}組"; ?>
               </a>
             </div>
           <?php endforeach; ?>
