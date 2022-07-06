@@ -65,7 +65,8 @@ $submission_info = $submission_stmt->fetch(PDO::FETCH_ASSOC);
 $class_id = $submission_info['class_id'];
 
 // 該当の課題が与えられた全ての生徒を求める
-$student_stmt = $db->prepare("SELECT student_submissions.id as student_submissions_id, student_submissions.student_id,
+$student_stmt = $db->prepare("SELECT student_submissions.id as student_submissions_id,
+                                     student_submissions.student_id as student_id,
                                      COALESCE(student_submissions.approved_date,'-') as approved_date,
                                      COALESCE(student_submissions.score,NULL) as score,
                                      submissions.dead_line as dead_line,
@@ -87,9 +88,14 @@ if (!$student_success) {
   die($db->error);
 }
 $students_who_have_submission = $student_stmt->fetchAll(PDO::FETCH_ASSOC);
-// echo ('<pre>');
-// var_dump($students_who_have_submission);
-// echo ('<pre>');
+
+// 課題が与えられた生徒のclass_idからbelongsを求める
+$belong_stmt = $db->prepare("SELECT student_id, student_num
+                             FROM belongs
+                             WHERE class_id = $class_id");
+$belong_stmt->execute();
+$student_num_array = $belong_stmt->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_UNIQUE);
+var_dump($student_num_array);
 
 // scoreの値
 $scoreList = array(
@@ -174,6 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <table class="">
             <tr>
               <!-- <th>h_id</th> -->
+              <th>No.</th>
               <th>生徒名</th>
               <th>提出期限</th>
               <th>受領日</th>
@@ -185,6 +192,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <!-- <td>
                 <?php echo $student['student_submissions_id']; ?>
               </td> -->
+
+              <!-- 出席番号 -->
+              <td>
+                <?php echo $student_num_array[$student['student_id']]['student_num'] ; ?>
+              </td>
 
               <!-- 生徒名 -->
               <td>
