@@ -3,9 +3,6 @@ session_start();
 require('../libs.php');
 require('../dbconnect.php');
 
-// 今年度
-$this_year = (new \DateTime('-3 month'))->format('Y');
-
 // 今日の日付
 $today = date('Y-m-d');
 

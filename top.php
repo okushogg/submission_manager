@@ -1,58 +1,62 @@
-<?php
-$classes_info = array(
-  '0' => array(
-    'id' => "1",
-    'year' => "2022",
-    'grade' => "1",
-    'class' => "A"
-  ),
+<html>
 
-  '1' => array(
-    'id' => "2",
-    'year' => "2022",
-    'grade' => "1",
-    'class' => "B"
-  ),
+<head>
+  <title>JavaScript select</title>
+  <script type="text/javascript">
+    function dispType() {
 
-  '2' => array(
-    'id' => "3",
-    'year' => "2022",
-    'grade' => "2",
-    'class' => "A"
-  ),
+      var f = document.fm.type;
 
-  '3' => array(
-    'id' => "4",
-    'year' => "2022",
-    'grade' => "2",
-    'class' => "B"
-  ),
+      for (var i = 0; i < f.options.length; i++) {
+        if (f.options[i].selected) {
+          alert('選択した血液型：' + f.options[i].value);
+        }
+      }
+    }
 
-  '4' => array(
-    'id' => "5",
-    'year' => "2022",
-    'grade' => "3",
-    'class' => "A"
-  ),
-
-  '5' => array(
-    'id' => "6",
-    'year' => "2022",
-    'grade' => "3",
-    'class' => "B"
-  )
-
-);
+    function createSelectBox() {
+      var classes = [{
+          val: 1,
+          txt: "1-A"
+        },
+        {
+          val: 2,
+          txt: "1-B"
+        },
+        {
+          val: 3,
+          txt: "2-A"
+        },
+        {
+          val: 4,
+          txt: "2-B"
+        },
+        {
+          val: 5,
+          txt: "3-A"
+        },
+        {
+          val: 6,
+          txt: "3-B"
+        }
+      ];
 
 
-  $array = array();
-  // $array = array();
-  foreach($classes_info as $a){
-   $array[$a['grade']][$a['class']]=$a;
-  }
-//  print_r($array);
+      for (var i = 0; i < classes.length; i++) {
+        let op = document.createElement("option");
+        op.value = classes[i].val;
+        op.text = classes[i].txt;
+        document.getElementById('sel1').appendChild(op);
+      }
+    }
+  </script>
+</head>
 
- $a = "1";
- $b = 2;
+<body>
 
-var_dump($a != $b);
+
+  <select id="sel1"></select>
+    <input type="button" value=" ボタン " onclick="createSelectBox();" />
+</body>
+
+</html>

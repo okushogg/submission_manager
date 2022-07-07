@@ -47,12 +47,12 @@ $pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
 // var_dump($pic_info);
 
 // 該当年度の年度のクラスを取得する
-$year = (new \DateTime('-3 month'))->format('Y');
 $classes_stmt = $db->prepare("select id, year, grade, class from classes where year=:year");
-$classes_stmt->bindParam(':year', $year, PDO::PARAM_STR);
+$classes_stmt->bindParam(':year', $this_year, PDO::PARAM_STR);
 $classes_stmt->execute();
 $classes_info = $classes_stmt->fetchAll(PDO::FETCH_ASSOC);
 $cnt = count($classes_info);
+var_dump($classes_info);
 
 // 教科一覧
 $subjects_stmt = $db->prepare("SELECT id, name FROM subjects");
@@ -60,7 +60,7 @@ $subjects_stmt->execute();
 $all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
-//「課題を作成する」をクリックしたら
+//「課題を作成する」をクリック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // 課題名の確認
   $form['submission_name'] = filter_input(INPUT_POST, 'submission_name', FILTER_SANITIZE_STRING);
@@ -156,6 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: home.php');
     exit();
   }
+  // var_dump($form);
 }
 ?>
 
@@ -198,7 +199,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <p class="error">* クラスを入力してください</p>
             <?php endif; ?>
             <dd>
-              <select size="1" name="class_id">
+              <div id="class_select">
+              <select id="class_0" size="1" name="class_id">
                 <option value="0">-</option>
                 <?php
                 foreach ($classes_info as $class) {
@@ -210,7 +212,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 ?>
               </select>
+              </div>
             </dd>
+            <!-- <div style="margin-top: 10px; margin-bottom: 10px; padding: 2px;">
+              <input  type="button" value="クラス追加" onclick="addForm()">
+            </div> -->
 
             <dt>教科<span class="required">（必須）</span></dt>
             <?php if (isset($error['subject_id']) && $error['subject_id'] === 'blank') : ?>
@@ -249,7 +255,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
       </div>
 
-
+<script type="text/javascript" src="../submission.js"></script>
 </body>
 
 </html>

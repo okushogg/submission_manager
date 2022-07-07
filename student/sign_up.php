@@ -24,7 +24,6 @@ if (isset($_GET['action']) && isset($_SESSION['form'])) {
 $error = [];
 
 // 本年度のクラスを求める
-$this_year = (new \DateTime('-3 month'))->format('Y');
 $stmt = $db->prepare("SELECT id, grade, class FROM classes WHERE year=:year");
 if (!$stmt) {
   die($db->error);

@@ -27,8 +27,6 @@ if (!$success) {
 $pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
 // var_dump($pic_info);
 
-// 年度を求める
-$year = (new \DateTime('-3 month'))->format('Y');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // 学年入力チェック
@@ -48,20 +46,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$stmt) {
      die($db->error);
    }
-   $success = $stmt->execute(array($year, $grade, $class));
+   $success = $stmt->execute(array($this_year, $grade, $class));
    if (!$success) {
      die($db->error);
    }
    header('Location: home.php');
    }
 }
-
-
-
-// var_dump($grade);
-// var_dump($form);
-// var_dump($error['class']);
-
 ?>
 
 <!DOCTYPE html>
