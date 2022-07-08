@@ -88,6 +88,7 @@ $class_info = $class_stmt->fetch(PDO::FETCH_ASSOC);
     <div id="content">
       <!-- ナビゲーション -->
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
+      <div style="text-align: right"><a href="create_submission.php">課題作成</a></div>
       <div style="text-align: right"><a href="home.php">ホーム</a></div>
 
       <!-- ユーザー情報 -->

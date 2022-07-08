@@ -19,7 +19,7 @@ $grades = [
 ];
 
 $classes = [
-  "-" => 0,
+  "-" => '',
   "A" => "A",
   "B" => "B",
   "C" => "C"
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   //クラスが選択されている場合
-  if ($form['class'] != 0) {
+  if ($form['class'] != '' ) {
     $sql .= " AND ";
     $sql .= 'classes.class = "' . $form['class'] . '"';
   }
@@ -94,9 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   $stmt = $db->query($sql);
-  // var_dump($sql);
+  var_dump($sql);
   $student_search_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-  // var_dump($student_search_result);
+  var_dump($form);
 }
 ?>
 

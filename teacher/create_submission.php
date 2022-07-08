@@ -52,7 +52,7 @@ $classes_stmt->bindParam(':year', $this_year, PDO::PARAM_STR);
 $classes_stmt->execute();
 $classes_info = $classes_stmt->fetchAll(PDO::FETCH_ASSOC);
 $cnt = count($classes_info);
-var_dump($classes_info);
+// var_dump($classes_info);
 
 // 教科一覧
 $subjects_stmt = $db->prepare("SELECT id, name FROM subjects");
