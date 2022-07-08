@@ -8,7 +8,8 @@ $form = [
   "first_name" => '',
   "year" => '',
   "grade" => '',
-  "class" => ''
+  "class" => '',
+  "is_active" => ''
 ];
 
 $grades = [
@@ -19,10 +20,10 @@ $grades = [
 ];
 
 $classes = [
-  "-" => '',
-  "A" => "A",
-  "B" => "B",
-  "C" => "C"
+  "-" => '-',
+  "A" => 'A',
+  "B" => 'B',
+  "C" => 'C'
 ];
 
 // ログイン情報がないとログインページへ移る
@@ -57,9 +58,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $form['year'] = filter_input(INPUT_POST, 'year');
   $form['grade'] = filter_input(INPUT_POST, 'grade');
   $form['class'] = filter_input(INPUT_POST, 'class');
+  $form['is_active'] = filter_input(INPUT_POST, 'is_active');
   $form['last_name'] = filter_input(INPUT_POST, 'last_name');
   $form['first_name'] = filter_input(INPUT_POST, 'first_name');
-
+ var_dump(gettype($form['class']));
   $sql = "SELECT students.id as student_id, students.first_name, students.last_name, students.sex,
                    belongs.class_id, classes.year, classes.grade,
                    classes.class, belongs.student_num, students.is_active
@@ -76,9 +78,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   //クラスが選択されている場合
-  if ($form['class'] != '' ) {
+  if ($form['class'] != '-') {
     $sql .= " AND ";
     $sql .= 'classes.class = "' . $form['class'] . '"';
+  }
+
+   //在籍状況が選択されている場合
+   if ($form['is_active'] != '' ) {
+    $sql .= " AND ";
+    $sql .= 'students.is_active = "' . $form['is_active'] . '"';
   }
 
   //氏が記入されている場合
@@ -94,9 +102,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   $stmt = $db->query($sql);
-  var_dump($sql);
+  // var_dump($sql);
   $student_search_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-  var_dump($form);
+  // var_dump($form);
 }
 ?>
 
@@ -129,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <select size="1" name="year">
           <?php
           foreach ($all_years as $y) {
-            if ($y['year'] == $this_year) {
+            if ($y['year'] == $form['year']) {
               echo "<option value={$y['year']} selected>" . $y['year'] . "</option>";
             } else {
               echo "<option value={$y['year']}>" . $y['year'] . "</option>";
@@ -163,6 +171,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           }
           ?>
         </select>
+        <input type="radio" name="is_active" value=0 <?php if ($form['is_active'] === "0") echo 'checked'; ?>>除籍
+        <input type="radio" name="is_active" value=1 <?php if ($form['is_active'] === "1") echo 'checked'; ?>>在籍
         <br>
         <span>氏</span>
         <input type="text" name="last_name" size="20" maxlength="20" value="<?php echo $form['last_name']; ?>" />

@@ -77,7 +77,8 @@ $student_stmt = $db->prepare("SELECT student_submissions.id as student_submissio
                               LEFT JOIN submissions
                               ON student_submissions.submission_id = submissions.id
                               WHERE student_submissions.submission_id = :submission_id
-                              AND submissions.class_id = :class_id");
+                              AND submissions.class_id = :class_id
+                              AND students.is_active = 1;");
 if (!$student_stmt) {
   die($db->error);
 }
