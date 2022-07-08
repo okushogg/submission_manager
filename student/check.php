@@ -134,7 +134,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </dd>
           <dt>顔写真</dt>
           <dd>
+            <?php if($form['image']):?>
             <img src="../student_pictures/<?php echo h($form['image']); ?>" width="100" alt="" />
+            <?php else :?>
+              <img src="../student_pictures/no_image.jpg" width="100" alt="" />
+            <?php endif; ?>
           </dd>
         </dl>
         <div><a href="sign_up.php?action=rewrite">&laquo;&nbsp;書き直す</a> | <input type="submit" value="登録する" /></div>

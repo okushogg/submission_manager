@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$success) {
       die($db->error);
     }
-    $get_image_id = $db->prepare("select id from images where path = '". $form['image']."'");
+    $get_image_id = $db->prepare("select id from images where path = '" . $form['image'] . "'");
     $get_image_id->execute();
     $image_id_str = $get_image_id->fetch(PDO::FETCH_COLUMN);
     $image_id = intval($image_id_str);
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   unset($_SESSION['form']);
   header('Location: home.php');
 }
-var_dump($form['image']);
+// var_dump($form['image']);
 ?>
 
 <!DOCTYPE html>
@@ -92,7 +92,11 @@ var_dump($form['image']);
           </dd>
           <dt>顔写真</dt>
           <dd>
-            <img src="../teacher_pictures/<?php echo h($form['image']); ?>" width="100" alt="" />
+            <?php if ($form['image']) : ?>
+              <img src="../teacher_pictures/<?php echo h($form['image']); ?>" width="100" alt="" />
+            <?php else : ?>
+              <img src="../teacher_pictures/no_image.jpg" width="100" alt="" />
+            <?php endif; ?>
           </dd>
         </dl>
         <div><a href="sign_up.php?action=rewrite">&laquo;&nbsp;書き直す</a> | <input type="submit" value="登録する" /></div>

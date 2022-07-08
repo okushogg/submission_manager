@@ -96,7 +96,7 @@ $belong_stmt = $db->prepare("SELECT student_id, student_num
                              WHERE class_id = $class_id");
 $belong_stmt->execute();
 $student_num_array = $belong_stmt->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_UNIQUE);
-var_dump($student_num_array);
+// var_dump($student_num_array);
 
 // scoreの値
 $scoreList = array(
