@@ -3,7 +3,7 @@ require('dbconnect.php');
 
 // 今年度
 // $this_year = (new \DateTime('-3 month'))->format('Y');
-$this_year = 2020;
+$this_year = 2021;
 
 // 今日の日付
 $today = date('Y-m-d');

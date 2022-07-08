@@ -165,7 +165,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       // 画像を指定しない場合は以前の写真を使用
       $image_id = $student_info['image_id'];
     }
-
     // 情報をテーブルに保存
     $stmt = $db->prepare("UPDATE students
                            SET first_name = :first_name,
@@ -192,13 +191,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 所属クラスと出席番号の情報をbelongsテーブルに保存
     // 進学した後新しいクラスを登録する場合
+    var_dump($student_id, $form['student_num'], $form['class_id']);
     if ($this_year > $this_year_class['year']) {
-      $stmt_belongs = $db->prepare("INSERT belongs
-                                    INTO belongs(student_id, class_id, student_num)
-                                  VALUES (:student_id, :class_id, :student_num)");
-      $stmt->bindValue(':student_id', $form['student_id'], PDO::PARAM_INT);
-      $stmt->bindValue(':class_id', $form['class_id'], PDO::PARAM_INT);
-      $stmt->bindValue(':student_num', $this_year_class['student_num'], PDO::PARAM_INT);
+      $stmt_belongs = $db->prepare("INSERT INTO belongs(student_id, class_id, student_num)
+                                  VALUES ($student_id, :class_id, :student_num)");
+      $stmt_belongs->bindValue(':class_id', $form['class_id'], PDO::PARAM_INT);
+      $stmt_belongs->bindValue(':student_num', $form['student_num'], PDO::PARAM_INT);
       $success = $stmt_belongs->execute();
       if (!$success) {
         die($db->error);
@@ -219,7 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die($db->error);
       }
     }
-    
+
     // セッション内のフォーム内容を破棄してstudent/home.phpへ
     unset($_SESSION['form']);
     header('Location: home.php');
@@ -275,11 +273,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <p class="error">* 性別を入力してください</p>
             <?php endif; ?>
             <dd>
-              <input type="radio" name="sex" value="男" <?php if($student_info['sex'] == "男") echo 'checked'; ?>>男
-              <input type="radio" name="sex" value="女" <?php if($student_info['sex'] == "女") echo 'checked'; ?>>女
+              <input type="radio" name="sex" value="男" <?php if ($student_info['sex'] == "男") echo 'checked'; ?>>男
+              <input type="radio" name="sex" value="女" <?php if ($student_info['sex'] == "女") echo 'checked'; ?>>女
             </dd>
           <?php else : ?>
             <dd>
+              <input type="hidden" name="sex" value=<?php echo $student_info['sex'] ?> />
               <?php echo h($student_info['sex']); ?>
             </dd>
           <?php endif; ?>
@@ -301,6 +300,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               }
               ?>
             </select>
+            <?php if ($this_year > $this_year_class['year']) : ?>
+              <span class="required">要新規登録</span>
+            <?php endif; ?>
           </dd>
 
           <dt>出席番号</dt>
@@ -308,7 +310,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p class="error">* 出席番号を入力してください</p>
           <?php endif; ?>
           <dd>
-            <input type="number" min="1" max="40" name="student_num" value="<?php echo h($this_year_class['student_num']); ?>" />
+            <?php if ($this_year > $this_year_class['year']) : ?>
+              <input  type="number" min="1" max="40" name="student_num" /><span class="required">要新規登録</span>
+            <?php else : ?>
+              <input type="number" min="1" max="40" name="student_num" value="<?php echo $this_year_class['student_num']; ?>" />
+            <?php endif; ?>
           </dd>
 
           <dt>メールアドレス</dt>
@@ -317,7 +323,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <?php endif; ?>
           <dd>
             <input type="text" name="email" size="35" maxlength="255" value="<?php echo h($student_info['email']); ?>" />
-
+          </dd>
           <dt>パスワード</dt>
           <dd>
             <p>パスワードの変更は<a href="reset_password.php">こちら</a>から。</p>
@@ -334,12 +340,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </dd>
           <?php endif ?>
 
+
+
           <?php if (isset($_SESSION['teacher_id'])) : ?>
             <dt>在籍情報</dt>
             <dd>
-              <input type="radio" name="is_active" value=0 <?php if($student_info['is_active'] == 0) echo 'checked'; ?>>除籍
-              <input type="radio" name="is_active" value=1 <?php if($student_info['is_active'] == 1) echo 'checked'; ?>>在籍
+              <input type="radio" name="is_active" value=0 <?php if ($student_info['is_active'] == 0) echo 'checked'; ?>>除籍
+              <input type="radio" name="is_active" value=1 <?php if ($student_info['is_active'] == 1) echo 'checked'; ?>>在籍
             </dd>
+          <?php else : ?>
+            <input type="hidden" name="is_active" value=<?php echo $student_info['is_active'] ?> />
           <?php endif; ?>
         </dl>
         <div><input type="submit" value="生徒情報を更新" /></div>

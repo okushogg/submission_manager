@@ -3,9 +3,14 @@ session_start();
 require('../dbconnect.php');
 require('../libs.php');
 
-$form = [
+// index_submissionから戻ってきた際に年度の情報を引き継ぐ
+if(isset($_GET['year'])){
+  $form = [ 'year' => $_GET['year']];
+} else {
+  $form = [
   'year' => $this_year
 ];
+}
 
 // 変更ボタン押下時
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -63,8 +68,12 @@ $this_year_class_stmt->bindValue(':student_id', $student_id, PDO::PARAM_INT);
 $this_year_class_stmt->bindValue(':year', $form['year'], PDO::PARAM_INT);
 $this_year_class_stmt->execute();
 $this_year_class = $this_year_class_stmt->fetch(PDO::FETCH_ASSOC);
-$class_id = $this_year_class['class_id'];
-// var_dump($this_year_class);
+if ($this_year_class) {
+  $class_id = $this_year_class['class_id'];
+} else {
+  $class_id = null;
+}
+
 
 //生徒が所属していたクラスを求める
 $classes_stmt = $db->prepare("SELECT c.grade, b.id, b.class_id, c.grade, c.year,  c.class, b.student_num
@@ -83,7 +92,7 @@ $belonged_classes = $classes_stmt->fetchAll(PDO::FETCH_ASSOC | PDO::FETCH_UNIQUE
 $subjects_stmt = $db->prepare("SELECT id, id as subject_id, name FROM subjects");
 $subjects_stmt->execute();
 $all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC | PDO::FETCH_UNIQUE);
-var_dump($all_subjects);
+// var_dump($all_subjects);
 
 // 生徒が持つ課題を求める（提出期限の前後1週間のもの）
 $a_week_ago = date("Y-m-d", strtotime("-1 week"));
@@ -142,7 +151,14 @@ $scoreList = array(
       <?php if (isset($_SESSION['teacher_id'])) : ?>
         <div style="text-align: right"><a href="../teacher/home.php">教員ホームへ</a></div>
       <?php endif; ?>
-      <div style="text-align: right"><a href="edit_student.php">生徒情報編集ページ</a></div>
+
+      <div style="text-align: right">
+        <?php if (!$this_year_class) : ?>
+          <span class="required">要新規登録</span>
+        <?php endif ?>
+        <a href="edit_student.php">生徒情報編集ページ</a>
+      </div>
+
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
       <div style="text-align: left">
 
@@ -171,78 +187,83 @@ $scoreList = array(
         <!-- 生徒情報 -->
         <div>
           <img src="../student_pictures/<?php echo h($student_pic_info['path']); ?>" width="100" height="100" alt="" />
-          <?php echo "{$this_year_class['grade']} - {$this_year_class['class']} No_{$this_year_class['student_num']}"; ?>
+          <?php if ($this_year_class) : ?>
+            <?php echo "{$this_year_class['grade']} - {$this_year_class['class']} No_{$this_year_class['student_num']}"; ?>
+          <?php endif; ?>
           <?php echo "{$student_info['student_last_name']} {$student_info['student_first_name']}" . ' さん' ?>
           <?php if ($student_info['is_active'] == 0) : ?>
             <p style="color: red;">除籍済</p>
           <?php endif; ?>
         </div>
 
-        <div>
-          <p> 各教科 課題一覧</p>
-          <?php foreach ($all_subjects as $subject) : ?>
-            <span style="margin: 15px;">
-              <a href="index_submission.php?subject_id=<?php echo $subject['subject_id']; ?>">
-                <?php echo $subject['name']; ?>
-              </a>
-            </span>
-          <?php endforeach; ?>
-        </div>
+        <?php if ($this_year_class) : ?>
+          <div>
+            <p> 各教科 課題一覧</p>
+            <?php foreach ($all_subjects as $subject) : ?>
+              <span style="margin: 15px;">
+                <a href="index_submission.php?subject_id=<?php echo $subject['subject_id']; ?>&class_id=<?php echo $class_id; ?>">
+                  <?php echo $subject['name']; ?>
+                </a>
+              </span>
+            <?php endforeach; ?>
+          </div>
 
-        <?php if ($submission_info) : ?>
-          <!-- 課題一覧 -->
-          <div style="margin: 15px;">
-            <table class="" style="text-align: center;">
-              <tr>
-                <!-- <th>h_id</th> -->
-                <th>教科</th>
-                <th>課題名</th>
-                <th>提出期限</th>
-                <th>受領日</th>
-                <th>評価</th>
-              </tr>
-              <?php foreach ($submission_info as $submission) : ?>
+          <?php if ($submission_info) : ?>
+            <!-- 課題一覧 -->
+            <div style="margin: 15px;">
+              <table class="" style="text-align: center;">
+                <tr>
+                  <!-- <th>h_id</th> -->
+                  <th>教科</th>
+                  <th>課題名</th>
+                  <th>提出期限</th>
+                  <th>受領日</th>
+                  <th>評価</th>
+                </tr>
+                <?php foreach ($submission_info as $submission) : ?>
 
-                <!-- student_submissions_id -->
-                <!-- <td>
+                  <!-- student_submissions_id -->
+                  <!-- <td>
                 <?php echo $submission['student_submissions_id']; ?>
               </td> -->
 
-                <!-- 教科 -->
-                <td>
-                  <?php echo $all_subjects[$submission['subject_id']]['name']; ?>
-                </td>
-
-                <!-- 課題名 -->
-                <td>
-                  <?php echo $submission['submission_name']; ?>
-                </td>
-
-                <!-- 提出期限 -->
-                <td>
-                  <?php echo h($submission['dead_line']); ?>
-                </td>
-
-                <!-- 受領日 -->
-                <td>
-                  <?php echo $submission['approved_date']; ?>
-                </td>
-
-                <!-- スコア -->
-                <?php if ($submission['score'] === 0) : ?>
-                  <td style="color: red;">
-                    <?php echo $scoreList[$submission['score']]; ?>
-                  </td>
-                <?php else : ?>
+                  <!-- 教科 -->
                   <td>
-                    <?php echo $scoreList[$submission['score']]; ?>
+                    <?php echo $all_subjects[$submission['subject_id']]['name']; ?>
                   </td>
-                <?php endif; ?>
-                </tr>
-              <?php endforeach; ?>
-            </table>
-          <?php else : ?>
-            <p>期限の近い課題はありません</p>
+
+                  <!-- 課題名 -->
+                  <td>
+                    <?php echo $submission['submission_name']; ?>
+                  </td>
+
+                  <!-- 提出期限 -->
+                  <td>
+                    <?php echo h($submission['dead_line']); ?>
+                  </td>
+
+                  <!-- 受領日 -->
+                  <td>
+                    <?php echo $submission['approved_date']; ?>
+                  </td>
+
+                  <!-- スコア -->
+                  <?php if ($submission['score'] === 0) : ?>
+                    <td style="color: red;">
+                      <?php echo $scoreList[$submission['score']]; ?>
+                    </td>
+                  <?php else : ?>
+                    <td>
+                      <?php echo $scoreList[$submission['score']]; ?>
+                    </td>
+                  <?php endif; ?>
+                  </tr>
+                <?php endforeach; ?>
+              </table>
+            <?php else : ?>
+              <p>期限の近い課題はありません</p>
+            <?php endif; ?>
+
           <?php endif; ?>
 
 
