@@ -100,14 +100,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $error['email'] = 'blank';
   }
 
-  // 画像のチェック
-  $image = $_FILES['image'];
-  if ($image['name'] !== '' && $image['error'] === 0) {
-    $type = mime_content_type($image['tmp_name']);
-    if ($type !== 'image/png' && $type !== 'image/jpeg') {
-      $error['image'] = 'type';
+  if ($form['image']) {
+    // 画像のチェック
+    $image = $_FILES['image'];
+    if ($image['name'] !== '' && $image['error'] === 0) {
+      $type = mime_content_type($image['tmp_name']);
+      if ($type !== 'image/png' && $type !== 'image/jpeg') {
+        $error['image'] = 'type';
+      }
     }
   }
+
 
   // 学年とクラスのチェック
   $form['class_id'] = filter_input(INPUT_POST, 'class_id', FILTER_SANITIZE_NUMBER_INT);
@@ -135,35 +138,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // var_dump($form);
     // var_dump($this_year_class['belongs_id']);
     // 画像のアップロード
-    if ($image['name'] !== '') {
-      $filename = date('Ymdhis') . '_' . $image['name'];
-      if (!move_uploaded_file($image['tmp_name'], '../student_pictures/' . $filename)) {
-        die('ファイルのアップロードに失敗しました');
-      }
-      $_SESSION['form']['image'] = $filename;
-    } else {
-      $_SESSION['form']['image'] = '';
-    }
+    if ($form['image']) {
 
-    // 画像がある場合
-    if ($form['image'] !== '') {
-      $stmt = $db->prepare('insert into images(path) VALUES(:path)');
-      if (!$stmt) {
-        die($db->error);
+      if ($image['name'] !== '') {
+        $filename = date('Ymdhis') . '_' . $image['name'];
+        if (!move_uploaded_file($image['tmp_name'], '../student_pictures/' . $filename)) {
+          die('ファイルのアップロードに失敗しました');
+        }
+        $_SESSION['form']['image'] = $filename;
+      } else {
+        $_SESSION['form']['image'] = '';
       }
-      $stmt->bindValue(':path', $form['image'], PDO::PARAM_STR);
-      $success = $stmt->execute();
-      if (!$success) {
-        die($db->error);
+
+      // 画像がある場合
+      if ($form['image'] != '') {
+        $stmt = $db->prepare('insert into images(path) VALUES(:path)');
+        if (!$stmt) {
+          die($db->error);
+        }
+        $stmt->bindValue(':path', $form['image'], PDO::PARAM_STR);
+        $success = $stmt->execute();
+        if (!$success) {
+          die($db->error);
+        }
+        $get_image_id = $db->prepare("select id from images where path = '" . $form['image'] . "'");
+        $get_image_id->execute();
+        $image_id_str = $get_image_id->fetch(PDO::FETCH_COLUMN);
+        $image_id = intval($image_id_str);
+        unset($stmt);
+      } else {
+        // 画像を指定しない場合は以前の写真を使用
+        $image_id = $student_info['image_id'];
       }
-      $get_image_id = $db->prepare("select id from images where path = '" . $form['image'] . "'");
-      $get_image_id->execute();
-      $image_id_str = $get_image_id->fetch(PDO::FETCH_COLUMN);
-      $image_id = intval($image_id_str);
-      unset($stmt);
-    } else {
-      // 画像を指定しない場合は以前の写真を使用
-      $image_id = $student_info['image_id'];
     }
     // 情報をテーブルに保存
     $stmt = $db->prepare("UPDATE students
@@ -311,7 +317,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <?php endif; ?>
           <dd>
             <?php if ($this_year > $this_year_class['year']) : ?>
-              <input  type="number" min="1" max="40" name="student_num" /><span class="required">要新規登録</span>
+              <input type="number" min="1" max="40" name="student_num" /><span class="required">要新規登録</span>
             <?php else : ?>
               <input type="number" min="1" max="40" name="student_num" value="<?php echo $this_year_class['student_num']; ?>" />
             <?php endif; ?>

@@ -27,7 +27,7 @@ if (isset($_SESSION['teacher_id']) && isset($_SESSION['last_name']) && isset($_S
   $teacher_id = $_SESSION['teacher_id'];
   $last_name = $_SESSION['last_name'];
   $first_name = $_SESSION['first_name'];
-  $image_id = $_SESSION['image_id'];
+  $image_id = $_SESSION['teacher_image_id'];
 } else {
   header('Location: log_in.php');
   exit();

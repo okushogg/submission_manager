@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['teacher_id'] = $teacher_info['id'];
         $_SESSION['last_name'] = $teacher_info['last_name'];
         $_SESSION['first_name'] = $teacher_info['first_name'];
-        $_SESSION['image_id'] = $teacher_info['image_id'];
+        $_SESSION['teacher_image_id'] = $teacher_info['image_id'];
         header('Location: home.php');
         exit();
       } else {
