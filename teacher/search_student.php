@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $form['is_active'] = filter_input(INPUT_POST, 'is_active');
   $form['last_name'] = filter_input(INPUT_POST, 'last_name');
   $form['first_name'] = filter_input(INPUT_POST, 'first_name');
- var_dump(gettype($form['class']));
+//  var_dump($db_user);
   $sql = "SELECT students.id as student_id, students.first_name, students.last_name, students.sex,
                    belongs.class_id, classes.year, classes.grade,
                    classes.class, belongs.student_num, students.is_active

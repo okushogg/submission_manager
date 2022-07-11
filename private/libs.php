@@ -53,17 +53,20 @@ function send_mail($to, $password_reset_token, $type)
 {
   mb_language("Japanese");
   mb_internal_encoding("UTF-8");
+  // 環境変数にてパスワードリセットURLとメールアドレスを管理
+  $url = getenv('PASSWORD_RESET_URL');
+  $mail_address = getenv('MAIL_ADDRESS');
 
-  $url = "http://localhost::8888/submissions_manager/{$type}/reset_password_form.php?password_reset_token={$password_reset_token}";
+  $password_reset_url = "{$url}/{$type}/{$password_reset_token}";
 
   $subject =  "{$type}用パスワードリセットURLをお送りします";
 
   $body = <<<EOD
   下記URLへアクセスし、パスワードの変更を完了してください。<br>
-  <a href="{$url}">{$url}</a>
+  <a href="{$password_reset_url}">{$password_reset_url}</a>
   EOD;
 
-  $headers = "From : hoge@hoge.com\n";
+  $headers = "From : {$mail_address} \n";
   $headers .= "Content-Type : text/html";
 
   $is_sent = mb_send_mail($to, $subject, $body, $headers);
