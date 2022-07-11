@@ -59,7 +59,7 @@ $class_stmt = $db->prepare("SELECT belongs.id, belongs.class_id, belongs.student
                                         AND belongs.class_id = $class_id");
 $class_stmt->execute();
 $chosen_class = $class_stmt->fetch(PDO::FETCH_ASSOC);
-var_dump($student_id, $class_id, $chosen_class);
+// var_dump($student_id, $class_id, $chosen_class);
 
 
 // 教科一覧
