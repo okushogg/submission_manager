@@ -1,7 +1,7 @@
 <?php
 session_start();
-require('../dbconnect.php');
-require('../libs.php');
+require('../private/libs.php');
+require('../private/dbconnect.php');
 
 // フォームの中身を確認、内容がなければ初期化
 if (isset($_GET['action']) && isset($_SESSION['form'])) {

@@ -1,7 +1,7 @@
 <?php
 session_start();
-require('../dbconnect.php');
-require('../libs.php');
+require('../private/libs.php');
+require('../private/dbconnect.php');
 
 $form = [
   "last_name" => '',

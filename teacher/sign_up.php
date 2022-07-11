@@ -1,7 +1,7 @@
 <?php
 session_start();
-require('../libs.php');
-require('../dbconnect.php');
+require('../private/libs.php');
+require('../private/dbconnect.php');
 
 if (isset($_GET['action']) && isset($_SESSION['form'])) {
   $form = $_SESSION['form'];
@@ -51,8 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $cnt = intval($cnt_string);
     // var_dump($cnt);
 
-    if($cnt > 0){
-        $error['email'] = 'duplicate';
+    if ($cnt > 0) {
+      $error['email'] = 'duplicate';
     }
   }
 

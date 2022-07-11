@@ -1,7 +1,7 @@
 <?php
 session_start();
-require('../dbconnect.php');
-require('../libs.php');
+require('../private/libs.php');
+require('../private/dbconnect.php');
 
 // class_id
 $class_id = filter_input(INPUT_GET, 'class_id', FILTER_SANITIZE_NUMBER_INT);

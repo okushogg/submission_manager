@@ -1,7 +1,7 @@
 <?php
 session_start();
-require('../libs.php');
-require('../dbconnect.php');
+require('../private/libs.php');
+require('../private/dbconnect.php');
 
 // 直接check.phpに飛ばないようにする
 if (isset($_SESSION['form'])) {

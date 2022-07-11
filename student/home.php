@@ -1,7 +1,7 @@
 <?php
 session_start();
-require('../dbconnect.php');
-require('../libs.php');
+require('../private/libs.php');
+require('../private/dbconnect.php');
 
 // index_submissionから戻ってきた際に年度の情報を引き継ぐ
 if(isset($_GET['year'])){

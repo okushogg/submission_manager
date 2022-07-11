@@ -1,7 +1,7 @@
 <?php
 session_start();
-require('../libs.php');
-require('../dbconnect.php');
+require('../private/libs.php');
+require('../private/dbconnect.php');
 
 // 今日の日付
 $today = date('Y-m-d');
@@ -10,8 +10,8 @@ $today = date('Y-m-d');
 $current_time = bkk_time();
 
 // ログイン情報のない生徒、教員は編集ページに入れない
-if (isset($_SESSION['teacher']) || isset($_SESSION['student_id'])) {
-  $student_id = intval($_SESSION['student_id']);
+if (isset($_SESSION['teacher_id']) || isset($_SESSION['student_id'])) {
+  $student_id = $_SESSION['student_id'];
 } else {
   header('Location: log_in.php');
   exit();
