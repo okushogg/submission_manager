@@ -9,13 +9,11 @@ $today = date('Y-m-d');
 // 現在の時刻
 $current_time = bkk_time();
 
-// ログイン情報のない生徒、教員は編集ページに入れない
-if (isset($_SESSION['teacher_id']) || isset($_SESSION['student_id'])) {
-  $student_id = $_SESSION['student_id'];
-} else {
-  header('Location: log_in.php');
-  exit();
-}
+// ログイン情報がないとログインページへ移る
+login_check();
+
+// 生徒がログインしていた場合
+$student_id = $_SESSION['auth']['student_id'];
 
 // フォームの初期化
 $form = [

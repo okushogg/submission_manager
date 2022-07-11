@@ -85,10 +85,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   // セッションにstudentの情報を入れる
-  $_SESSION['student_id'] = $student_id;
-  $_SESSION['last_name'] = $form['last_name'];
-  $_SESSION['first_name'] = $form['first_name'];
-  $_SESSION['student_image_id'] = $image_id;
+  $_SESSION['auth']['login'] = true;
+  $_SESSION['auth']['student_id'] = $student_id;
+  $_SESSION['auth']['last_name'] = $form['last_name'];
+  $_SESSION['auth']['first_name'] = $form['first_name'];
+  $_SESSION['auth']['student_image_id'] = $image_id;
 
   // セッション内のフォーム内容を破棄してstudent/home.phpへ
   unset($_SESSION['form']);

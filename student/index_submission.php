@@ -17,14 +17,10 @@ if (isset($_GET['subject_id'])) {
 $class_id = $_GET['class_id'];
 
 // ログイン情報がないとログインページへ移る
-if (isset($_SESSION['student_id']) && isset($_SESSION['last_name']) && isset($_SESSION['first_name'])) {
-  $student_id = intval($_SESSION['student_id']);
-  $last_name = $_SESSION['last_name'];
-  $first_name = $_SESSION['first_name'];
-} else {
-  header('Location: log_in.php');
-  exit();
-}
+login_check();
+
+// 生徒がログインしていた場合
+$student_id = $_SESSION['auth']['student_id'];
 
 // studentの情報を求める
 $student_stmt = $db->prepare("SELECT first_name as student_first_name,

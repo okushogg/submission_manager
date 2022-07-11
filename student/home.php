@@ -3,6 +3,12 @@ session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
 
+// ログイン情報がないとログインページへ移る
+login_check();
+
+// 生徒がログインしていた場合
+$student_id = $_SESSION['auth']['student_id'];
+
 // index_submissionから戻ってきた際に年度の情報を引き継ぐ
 if(isset($_GET['year'])){
   $form = [ 'year' => $_GET['year']];
@@ -19,17 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // teacherがstudent/を閲覧した場合
 if (isset($_GET['student_id'])) {
-  $_SESSION['student_id'] = $_GET['student_id'];
-}
-
-// ログイン情報がないとログインページへ移る
-if (isset($_SESSION['student_id']) && isset($_SESSION['last_name']) && isset($_SESSION['first_name'])) {
-  $student_id = intval($_SESSION['student_id']);
-  $last_name = $_SESSION['last_name'];
-  $first_name = $_SESSION['first_name'];
-} else {
-  header('Location: log_in.php');
-  exit();
+  $_SESSION['auth']['student_id'] = $_GET['student_id'];
 }
 
 // studentの情報を求める
@@ -148,7 +144,7 @@ $scoreList = array(
       <h1>生徒トップページ</h1>
     </div>
     <div id="content">
-      <?php if (isset($_SESSION['teacher_id'])) : ?>
+      <?php if (isset($_SESSION['auth']['teacher_id'])) : ?>
         <div style="text-align: right"><a href="../teacher/home.php">教員ホームへ</a></div>
       <?php endif; ?>
 

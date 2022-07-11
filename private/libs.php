@@ -22,6 +22,13 @@ function get_years($db)
   return $all_years;
 }
 
+// ログインチェック
+function login_check(){
+  if (!$_SESSION['auth']['login']) {
+    header('Location: log_in.php');
+    exit();
+  }
+}
 
 //不正な文字列をチェック
 function h($value)

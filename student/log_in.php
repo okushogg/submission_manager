@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($email === '' || $password === '') {
     $error['login'] = 'blank';
   } else {
-    //  ログイン情報チェッ_ク
+    //  ログイン情報チェック
     $stmt = $db->prepare('select * from students where email=:email limit 1');
     if (!$stmt) {
       die($db->error);
@@ -27,11 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if (password_verify($password, $student_info['password'])) {
         // ログイン成功
         session_regenerate_id();
-        $_SESSION['student_id'] = $student_info['id'];
-        $_SESSION['last_name'] = $student_info['last_name'];
-        $_SESSION['first_name'] = $student_info['first_name'];
-        $_SESSION['student_image_id'] = $student_info['image_id'];
-        // $_SESSION['class_id'] = $student_info['class_id'];
+        $_SESSION['auth']['login'] = true;
+        $_SESSION['auth']['student_id'] = $student_info['id'];
+        $_SESSION['auth']['last_name'] = $student_info['last_name'];
+        $_SESSION['auth']['first_name'] = $student_info['first_name'];
+        $_SESSION['auth']['student_image_id'] = $student_info['image_id'];
         header('Location: home.php');
         exit();
       } else {
