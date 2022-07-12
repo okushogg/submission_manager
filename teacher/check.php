@@ -46,16 +46,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
   $teacher_id = $db->lastInsertId();
 
-  // セッションにstudentの情報を入れる
-  $_SESSION['teacher_id'] = $teacher_id;
-  $_SESSION['last_name'] = $form['last_name'];
-  $_SESSION['first_name'] = $form['first_name'];
-  $_SESSION['teacher_image_id'] = $image_id;
+  // セッションにteacherの情報を入れる
+  $_SESSION['auth']['is_login'] = true;
+  $_SESSION['auth']['teacher_id'] = $teacher_id;
+  $_SESSION['auth']['last_name'] = $form['last_name'];
+  $_SESSION['auth']['first_name'] = $form['first_name'];
+  $_SESSION['auth']['teacher_image_id'] = $image_id;
 
   unset($_SESSION['form']);
   header('Location: home.php');
 }
-// var_dump($form['image']);
 ?>
 
 <!DOCTYPE html>

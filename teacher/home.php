@@ -12,15 +12,11 @@ $form = [
 ];
 
 // ログイン情報がないとログインページへ移る
-if (isset($_SESSION['teacher_id']) && isset($_SESSION['last_name']) && isset($_SESSION['first_name'])) {
-  $teacher_id = $_SESSION['teacher_id'];
-  $last_name = $_SESSION['last_name'];
-  $first_name = $_SESSION['first_name'];
-  $image_id = $_SESSION['teacher_image_id'];
-} else {
-  header('Location: log_in.php');
-  exit();
-}
+login_check();
+
+// 教員がログインしていた場合
+$teacher_id = $_SESSION['auth']['teacher_id'];
+$image_id = $_SESSION['auth']['teacher_image_id'];
 
 // 画像の情報を取得
 $stmt = $db->prepare("select path from images where id=:id");
@@ -67,7 +63,7 @@ $classes_array = get_classes($classes_info);
       <div style="text-align: right"><a href="create_submission.php">提出物登録</a></div>
       <div style="text-align: left">
         <img src="../teacher_pictures/<?php echo h($pic_info['path']); ?>" width="100" height="100" alt="" />
-        <?php echo $last_name ?> <?php echo $first_name . ' 先生' ?>
+        <?php echo $_SESSION['auth']['last_name'] ?> <?php echo $_SESSION['auth']['first_name'] . ' 先生' ?>
       </div>
 
       <div>

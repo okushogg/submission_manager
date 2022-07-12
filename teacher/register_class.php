@@ -4,16 +4,14 @@ require('../private/libs.php');
 require('../private/dbconnect.php');
 $error = [];
 
+
 // ログイン情報がないとログインページへ移る
-if (isset($_SESSION['teacher_id']) && isset($_SESSION['last_name']) && isset($_SESSION['first_name'])) {
-  $teacher_id = $_SESSION['teacher_id'];
-  $last_name = $_SESSION['last_name'];
-  $first_name = $_SESSION['first_name'];
-  $image_id = $_SESSION['teacher_image_id'];
-} else {
-  header('Location: log_in.php');
-  exit();
-}
+login_check();
+
+// 教員がログインしていた場合
+$teacher_id = $_SESSION['auth']['teacher_id'];
+$image_id = $_SESSION['auth']['teacher_image_id'];
+
 // 画像の情報を取得
 $stmt = $db->prepare("select path from images where id=:id");
 if (!$stmt) {
@@ -75,14 +73,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div style="text-align: right"><a href="home.php">トップページへ</a></div>
       <div style="text-align: left">
         <img src="../teacher_pictures/<?php echo h($pic_info['path']); ?>" width="48" height="48" alt="" />
-        <?php echo $last_name ?> <?php echo $first_name . ' 先生' ?>
+        <?php echo $_SESSION['auth']['last_name'] ?> <?php echo $_SESSION['auth']['first_name'] . ' 先生' ?>
       </div>
 
       <form action="" method="post">
         <dl>
           <dt>年度</dt>
           <dd>
-            <?php echo $year . '年度' ?>
+            <?php echo $this_year . '年度' ?>
           </dd>
 
           <dt>学年</dt>

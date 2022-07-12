@@ -12,7 +12,7 @@ if (isset($_GET['action']) && isset($_SESSION['form'])) {
     'class_id' => '',
     'subject_id' => '',
     'dead_line' => '',
-    'teacher_id' => $_SESSION['teacher_id'],
+    'teacher_id' => $_SESSION['auth']['teacher_id'],
   ];
 }
 
@@ -23,15 +23,11 @@ $error = [];
 $today = date('Y-m-d');
 
 // ログイン情報がないとログインページへ移る
-if (isset($_SESSION['teacher_id']) && isset($_SESSION['last_name']) && isset($_SESSION['first_name'])) {
-  $teacher_id = $_SESSION['teacher_id'];
-  $last_name = $_SESSION['last_name'];
-  $first_name = $_SESSION['first_name'];
-  $image_id = $_SESSION['teacher_image_id'];
-} else {
-  header('Location: log_in.php');
-  exit();
-}
+login_check();
+
+// 教員がログインしていた場合
+$teacher_id = $_SESSION['auth']['teacher_id'];
+$image_id = $_SESSION['auth']['teacher_image_id'];
 
 // 画像の情報を取得
 $stmt = $db->prepare("select path from images where id=:id");
@@ -103,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 ORDER BY b.student_num");
   $student_stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
   $student_success = $student_stmt->execute();
-  if(!$student_success){
+  if (!$student_success) {
     die($db->error);
   }
   $all_student_id = $student_stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -180,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div style="text-align: right"><a href="home.php">ホーム</a></div>
       <div style="text-align: left">
         <img src="../teacher_pictures/<?php echo h($pic_info['path']); ?>" width="100" height="100" alt="" />
-        <?php echo $last_name ?> <?php echo $first_name . ' 先生' ?>
+        <?php echo $_SESSION['auth']['last_name'] ?> <?php echo $_SESSION['auth']['first_name'] . ' 先生' ?>
       </div>
 
       <div>
@@ -200,18 +196,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
             <dd>
               <div id="class_select">
-              <select id="class_0" size="1" name="class_id">
-                <option value="0">-</option>
-                <?php
-                foreach ($classes_info as $class) {
-                  if ($form['class_id'] == $class['id']) {
-                    echo "<option value={$class['id']} selected> {$class['grade']} - {$class['class']}</option>";
-                  } else {
-                    echo "<option value={$class['id']}> {$class['grade']} - {$class['class']}</option>";
+                <select id="class_0" size="1" name="class_id">
+                  <option value="0">-</option>
+                  <?php
+                  foreach ($classes_info as $class) {
+                    if ($form['class_id'] == $class['id']) {
+                      echo "<option value={$class['id']} selected> {$class['grade']} - {$class['class']}</option>";
+                    } else {
+                      echo "<option value={$class['id']}> {$class['grade']} - {$class['class']}</option>";
+                    }
                   }
-                }
-                ?>
-              </select>
+                  ?>
+                </select>
               </div>
             </dd>
             <!-- <div style="margin-top: 10px; margin-bottom: 10px; padding: 2px;">
@@ -255,7 +251,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
       </div>
 
-<script type="text/javascript" src="../submission.js"></script>
+      <script type="text/javascript" src="../submission.js"></script>
 </body>
 
 </html>

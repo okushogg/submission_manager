@@ -27,10 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if (password_verify($password, $teacher_info['password'])) {
         // ログイン成功
         session_regenerate_id();
-        $_SESSION['teacher_id'] = $teacher_info['id'];
-        $_SESSION['last_name'] = $teacher_info['last_name'];
-        $_SESSION['first_name'] = $teacher_info['first_name'];
-        $_SESSION['teacher_image_id'] = $teacher_info['image_id'];
+        $_SESSION['auth']['is_login'] = true;
+        $_SESSION['auth']['teacher_id'] = $teacher_info['id'];
+        $_SESSION['auth']['last_name'] = $teacher_info['last_name'];
+        $_SESSION['auth']['first_name'] = $teacher_info['first_name'];
+        $_SESSION['auth']['teacher_image_id'] = $teacher_info['image_id'];
         header('Location: home.php');
         exit();
       } else {
@@ -40,8 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
       $error['login'] = 'failed';
     }
-
-    // var_dump($teacher_info['password']);
   }
 }
 
