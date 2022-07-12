@@ -15,7 +15,7 @@ $form = [
 ];
 
 // エラーの初期化
-$error =[];
+$error = [];
 
 // パスワード再設定をクリック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -81,9 +81,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p class="error">* パスワードは4文字以上で入力してください</p>
           <?php endif; ?>
           <input type="submit" value="送信" />
+      </form>
     </div>
-    </form>
-  </div>
+
   </div>
 </body>
 

@@ -183,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $stmt->bindValue(':first_name', $form['first_name'], PDO::PARAM_STR);
     $stmt->bindValue(':last_name', $form['last_name'], PDO::PARAM_STR);
-    $stmt->bindValue(':sex', $form['sex'], PDO::PARAM_STR);
+    $stmt->bindValue(':sex', $form['sex'], PDO::PARAM_INT);
     $stmt->bindValue(':email', $form['email'], PDO::PARAM_STR);
     $stmt->bindValue(':is_active', $form['is_active'], PDO::PARAM_INT);
     $stmt->bindValue(':updated_at', $current_time, PDO::PARAM_STR);
@@ -195,7 +195,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 所属クラスと出席番号の情報をbelongsテーブルに保存
     // 進学した後新しいクラスを登録する場合
-    var_dump($student_id, $form['student_num'], $form['class_id']);
     if ($this_year > $this_year_class['year']) {
       $stmt_belongs = $db->prepare("INSERT INTO belongs(student_id, class_id, student_num)
                                   VALUES ($student_id, :class_id, :student_num)");
@@ -248,7 +247,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <div id="content">
-      <?php if (isset($_SESSION['teacher_id'])) : ?>
+      <?php if (isset($_SESSION['auth']['teacher_id'])) : ?>
         <div style="text-align: right"><a href="../teacher/home.php">教員ホームへ</a></div>
       <?php endif; ?>
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
@@ -277,13 +276,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <p class="error">* 性別を入力してください</p>
             <?php endif; ?>
             <dd>
-              <input type="radio" name="sex" value="男" <?php if ($student_info['sex'] == "男") echo 'checked'; ?>>男
-              <input type="radio" name="sex" value="女" <?php if ($student_info['sex'] == "女") echo 'checked'; ?>>女
+              <input type="radio" name="sex" value=0 <?php if ($student_info['sex'] == 0) echo 'checked'; ?>>男
+              <input type="radio" name="sex" value=1 <?php if ($student_info['sex'] == 1) echo 'checked'; ?>>女
             </dd>
           <?php else : ?>
             <dd>
               <input type="hidden" name="sex" value=<?php echo $student_info['sex'] ?> />
-              <?php echo h($student_info['sex']); ?>
+              <?php display_sex($student_info['sex']); ?>
             </dd>
           <?php endif; ?>
 
@@ -346,7 +345,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-          <?php if (isset($_SESSION['teacher_id'])) : ?>
+          <?php if (isset($_SESSION['auth']['teacher_id'])) : ?>
             <dt>在籍情報</dt>
             <dd>
               <input type="radio" name="is_active" value=0 <?php if ($student_info['is_active'] == 0) echo 'checked'; ?>>除籍

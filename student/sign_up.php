@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
   // 性別のチェック
-  $form['sex'] = filter_input(INPUT_POST, 'sex', FILTER_SANITIZE_STRING);
+  $form['sex'] = filter_input(INPUT_POST, 'sex', FILTER_SANITIZE_NUMBER_INT);
   if ($form['sex'] === '') {
     $error['sex'] = 'blank';
   }
@@ -175,8 +175,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <p class="error">* 性別を入力してください</p>
             <?php endif; ?>
             <dd>
-              <input type="radio" name="sex" value="男" <?php if ($form['sex'] == "男") echo 'checked'; ?>>男
-              <input type="radio" name="sex" value="女" <?php if ($form['sex'] == "女") echo 'checked'; ?>>女
+              <input type="radio" name="sex" value=0 <?php if ($form['sex'] == 0) echo 'checked'; ?>>男
+              <input type="radio" name="sex" value=1 <?php if ($form['sex'] == 1) echo 'checked'; ?>>女
             </dd>
 
             <dt>クラス<span class="required">（必須）</span></dt>

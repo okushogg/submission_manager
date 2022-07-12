@@ -23,7 +23,8 @@ function get_years($db)
 }
 
 // ログインチェック
-function login_check(){
+function login_check()
+{
   if (!$_SESSION['auth']['login']) {
     header('Location: log_in.php');
     exit();
@@ -34,6 +35,19 @@ function login_check(){
 function h($value)
 {
   return htmlspecialchars($value, ENT_QUOTES);
+}
+
+// 性別の表示
+function display_sex($sex)
+{
+  switch ($sex) {
+    case 0;
+      echo "男";
+      break;
+    case 1;
+      echo "女";
+      break;
+  }
 }
 
 

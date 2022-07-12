@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <dt>名</dt>
           <dd><?php echo h($form['first_name']); ?></dd>
           <dt>性別</dt>
-          <dd><?php echo h($form['sex']); ?></dd>
+          <dd><?php echo display_sex($form['sex']); ?></dd>
           <dt>クラス</dt>
           <dd><?php echo "{$my_class['grade']} - {$my_class['class']}"; ?></dd>
           <dt>メールアドレス</dt>
