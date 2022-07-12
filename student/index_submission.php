@@ -66,7 +66,7 @@ $all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC | PDO::FETCH_UNIQUE);
 // 生徒が持つ本年度の該当教科課題を求める
 $stmt = $db->prepare("SELECT student_submissions.id, submissions.name as submission_name, submissions.dead_line,
                              COALESCE(student_submissions.approved_date,'-') as approved_date,
-                             COALESCE(student_submissions.score,NULL) as score
+                             COALESCE(student_submissions.score, '-') as score
                         FROM student_submissions
                    LEFT JOIN submissions
                           ON student_submissions.submission_id = submissions.id
@@ -88,7 +88,7 @@ $submission_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // scoreの値
 $scoreList = array(
-  null => "-",
+  '-' => "-",
   3 => "A",
   2 => "B",
   1 => "C",

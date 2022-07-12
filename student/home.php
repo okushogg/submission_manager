@@ -95,7 +95,7 @@ $a_week_ago = date("Y-m-d", strtotime("-1 week"));
 $a_week_later = date("Y-m-d", strtotime("+1 week"));
 $submission_stmt = $db->prepare("SELECT student_submissions.id, submissions.name as submission_name, submissions.dead_line,
                              COALESCE(student_submissions.approved_date,'-') as approved_date,
-                             COALESCE(student_submissions.score,NULL) as score, submissions.subject_id
+                             COALESCE(student_submissions.score, '-') as score, submissions.subject_id
                         FROM student_submissions
                    LEFT JOIN submissions
                           ON student_submissions.submission_id = submissions.id
@@ -119,7 +119,7 @@ $submission_info = $submission_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // scoreの値
 $scoreList = array(
-  null => "-",
+  '-' => "-",
   3 => "A",
   2 => "B",
   1 => "C",
