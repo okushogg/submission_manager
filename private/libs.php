@@ -50,17 +50,6 @@ function display_sex($sex)
   }
 }
 
-
-// teacher/home.phpでクラス一覧を表示する
-function get_classes($classes_info)
-{
-  $classes_array = array();
-  foreach ($classes_info as $a) {
-    $classes_array[$a['grade']][$a['class']] = $a;
-  }
-  return $classes_array;
-}
-
 //バンコクの時間を求める
 function bkk_time()
 {

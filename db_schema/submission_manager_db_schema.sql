@@ -51,7 +51,7 @@ CREATE TABLE `students` (
   `id` int(11) NOT NULL,
   `first_name` char(30) NOT NULL,
   `last_name` char(30) NOT NULL,
-  `sex` char(10) NOT NULL,
+  `sex` int(11) NOT NULL,
   `image_id` int(11) NOT NULL,
   `email` text NOT NULL,
   `password` text NOT NULL,

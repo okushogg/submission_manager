@@ -25,6 +25,19 @@ if (!$success) {
 $pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
 // var_dump($pic_info);
 
+$grades = [
+  "-" => 0,
+  "1" => 1,
+  "2" => 2,
+  "3" => 3
+];
+
+$classes = [
+  "-" => '-',
+  "A" => 'A',
+  "B" => 'B',
+  "C" => 'C'
+];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // 学年入力チェック
@@ -34,22 +47,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
   // クラス入力チェック
   $class = filter_input(INPUT_POST, 'class', FILTER_SANITIZE_STRING);
-  if ($class === '0') {
+  if ($class === '-') {
     $error['class'] = 'blank';
+  }
+
+  // 同じクラスがないかチェック
+  $stmt_check = $db->prepare("SELECT * FROM classes WHERE year = ? AND grade = ? AND class = ?");
+  $success_check = $stmt_check->execute(array($this_year, $grade, $class));
+  if (!$success_check) {
+    die($db->error);
+  }
+  $same_class_check = $stmt_check->fetchALL(PDO::FETCH_ASSOC);
+  if (count($same_class_check) >= 1) {
+    $error['class'] = 'same_class';
   }
 
   // 入力に問題がなければ
   if (empty($error)) {
     $stmt = $db->prepare("insert into classes(year, grade, class) values(?, ?, ?)");
     if (!$stmt) {
-     die($db->error);
-   }
-   $success = $stmt->execute(array($this_year, $grade, $class));
-   if (!$success) {
-     die($db->error);
-   }
-   header('Location: home.php');
-   }
+      die($db->error);
+    }
+    $success = $stmt->execute(array($this_year, $grade, $class));
+    if (!$success) {
+      die($db->error);
+    }
+    header('Location: home.php');
+  }
 }
 ?>
 
@@ -59,14 +83,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>教員トップページ</title>
+  <title>クラス登録</title>
   <link rel="stylesheet" href="../style.css" />
 </head>
 
 <body>
   <div id="wrap">
     <div id="head">
-      <h1>教員トップページ</h1>
+      <h1>クラス登録</h1>
     </div>
     <div id="content">
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
@@ -84,30 +108,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </dd>
 
           <dt>学年</dt>
+          <?php if (isset($error['grade'])) : ?>
+            <p class="error">* 学年を入力してください。</p>
+          <?php endif; ?>
           <dd>
             <select name="grade">
-              <option value=0>-</option>
-              <option value=1>1</option>
-              <option value=2>2</option>
-              <option value=3>3</option>
+              <?php
+              foreach ($grades as $key => $value) {
+                if ($value == $grade) {
+                  echo "<option value=$value selected>" . $key . "</option>";
+                } else {
+                  echo "<option value=$value>" . $key . "</option>";
+                }
+              }
+              ?>
             </select>
           </dd>
-          <?php if (isset($error['grade'])) : ?>
-              <p class="error">* 学年を入力してください。</p>
-          <?php endif; ?>
 
           <dt>クラス</dt>
+          <?php if (isset($error['class']) && $error['class'] === 'blank') : ?>
+            <p class="error">* クラスを入力してください。</p>
+          <?php elseif (isset($error['class']) && $error['class'] === 'same_class') : ?>
+            <p class="error">* 登録済のクラスです。</p>
+          <?php endif; ?>
           <dd>
             <select name="class">
-              <option value="0">-</option>
-              <option value="A">A</option>
-              <option value="B">B</option>
-              <option value="C">C</option>
+              <?php
+              foreach ($classes as $key => $value) {
+                if ($value == $class) {
+                  echo "<option value=$value selected>" . $key . "</option>";
+                } else {
+                  echo "<option value=$value>" . $key . "</option>";
+                }
+              }
+              ?>
             </select>
           </dd>
-          <?php if (isset($error['class'])) : ?>
-              <p class="error">* クラスを入力してください。</p>
-          <?php endif; ?>
         </dl>
         <div>
           <input type="submit" value="登録" />
