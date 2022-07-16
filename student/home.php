@@ -10,7 +10,7 @@ login_check();
 $student_id = $_SESSION['auth']['student_id'];
 
 // index_submissionから戻ってきた際に年度の情報を引き継ぐ
-if(isset($_GET['year'])){
+if(isset($_GET['year']) && $_GET['year']<= $this_year){
   $form = [ 'year' => $_GET['year']];
 } else {
   $form = [
@@ -79,10 +79,8 @@ $classes_stmt = $db->prepare("SELECT c.grade, b.id, b.class_id, c.grade, c.year,
 $classes_stmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
 $classes_stmt->execute();
 $belonged_classes = $classes_stmt->fetchAll(PDO::FETCH_ASSOC | PDO::FETCH_UNIQUE);
-// echo ('<pre>');
 // var_dump($belonged_classes);
-// echo ('<pre>');
-// var_dump(end($belonged_classes));
+
 
 // 教科一覧
 $subjects_stmt = $db->prepare("SELECT id, id as subject_id, name FROM subjects");
@@ -217,12 +215,6 @@ $scoreList = array(
                   <th>評価</th>
                 </tr>
                 <?php foreach ($submission_info as $submission) : ?>
-
-                  <!-- student_submissions_id -->
-                  <!-- <td>
-                <?php echo $submission['student_submissions_id']; ?>
-              </td> -->
-
                   <!-- 教科 -->
                   <td>
                     <?php echo $all_subjects[$submission['subject_id']]['name']; ?>

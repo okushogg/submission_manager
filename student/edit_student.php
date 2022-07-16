@@ -74,7 +74,7 @@ if (!$success) {
   die($db->error);
 }
 $selectable_classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-var_dump($current_time);
+// var_dump($current_time);
 
 
 
