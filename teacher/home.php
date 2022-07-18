@@ -3,6 +3,9 @@ session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
 
+require_once('../private/set_up.php');
+$smarty = new Smarty_submission_manager();
+
 $form = [
   "last_name" => '',
   "first_name" => '',
@@ -10,6 +13,11 @@ $form = [
   "grade" => '',
   "class" => ''
 ];
+
+// セッション内の情報
+$teacher_info = $_SESSION['auth'];
+$smarty->assign('teacher_info', $teacher_info);
+
 
 // ログイン情報がないとログインページへ移る
 login_check();
@@ -29,70 +37,22 @@ if (!$success) {
   die($db->error);
 }
 $pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
+$smarty->assign('pic_info', $pic_info);
+
 
 // 今年度のクラスを取得する
 $classes_stmt = $db->prepare("select id, year, grade, class from classes where year=:year");
 $classes_stmt->bindParam(':year', $this_year, PDO::PARAM_STR);
 $classes_stmt->execute();
 $classes_info = $classes_stmt->fetchAll(PDO::FETCH_ASSOC);
+$smarty->assign('classes_info', $classes_info);
 $cnt = count($classes_info);
 
 // 学年ごとにクラスのデータを配列で取得
 $classes_array = get_classes($classes_info);
+$smarty->assign('$classes_array', $classes_array);
+
+
+$smarty->caching = 0;
+$smarty->display('teacher/home.tpl');
 ?>
-
-<!DOCTYPE html>
-<html lang="jp">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>教員トップページ</title>
-  <link rel="stylesheet" href="../style.css" />
-</head>
-
-<body>
-  <div id="wrap">
-    <div id="head">
-      <h1>教員トップページ</h1>
-    </div>
-    <div id="content">
-      <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
-      <div style="text-align: right"><a href="search_student.php">生徒検索</a></div>
-      <div style="text-align: right"><a href="register_class.php">クラス登録</a></div>
-      <div style="text-align: right"><a href="create_submission.php">提出物登録</a></div>
-      <div style="text-align: left">
-        <img src="../teacher_pictures/<?php echo h($pic_info['path']); ?>" width="100" height="100" alt="" />
-        <?php echo $_SESSION['auth']['last_name'] ?> <?php echo $_SESSION['auth']['first_name'] . ' 先生' ?>
-      </div>
-
-      <div>
-        <div class="box">
-          <?php foreach ($classes_array['1'] as $a) : ?>
-            <div class="box">
-              <a href="index_submission.php?class_id=<?php echo h($a['id']); ?>"><?php echo "{$a['grade']} - {$a['class']}"; ?></a>
-            </div>
-          <?php endforeach; ?>
-        </div>
-
-        <div class="box">
-          <?php foreach ($classes_array['2'] as $a) : ?>
-            <div class="box">
-              <a href="index_submission.php?class_id=<?php echo h($a['id']); ?>"><?php echo "{$a['grade']} - {$a['class']}"; ?></a>
-            </div>
-          <?php endforeach; ?>
-        </div>
-
-        <div class="box">
-          <?php foreach ($classes_array['3'] as $a) : ?>
-            <div class="box">
-              <a href="index_submission.php?class_id=<?php echo h($a['id']); ?>"><?php echo "{$a['grade']} - {$a['class']}"; ?></a>
-            </div>
-          <?php endforeach; ?>
-        </div>
-      </div>
-
-
-</body>
-
-</html>

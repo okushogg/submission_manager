@@ -3,6 +3,9 @@ session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
 
+require_once('../private/set_up.php');
+$smarty = new Smarty_submission_manager();
+
 // 直接check.phpに飛ばないようにする
 if (isset($_SESSION['form'])) {
   $form = $_SESSION['form'];
@@ -12,6 +15,8 @@ if (isset($_SESSION['form'])) {
 }
 
 $form = $_SESSION['form'];
+$smarty->assign('form', $form);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // 画像がある場合
   if ($form['image'] !== '') {
@@ -56,54 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   unset($_SESSION['form']);
   header('Location: home.php');
 }
+
+$smarty->caching = 0;
+$smarty->display('teacher/check.tpl');
 ?>
-
-<!DOCTYPE html>
-<html lang="ja">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>教員登録確認</title>
-
-  <link rel="stylesheet" href="../style.css" />
-</head>
-
-<body>
-  <div id="wrap">
-    <div id="head">
-      <h1>教員登録確認</h1>
-    </div>
-
-    <div id="content">
-      <p>記入した内容を確認して、「登録する」ボタンをクリックしてください</p>
-      <form action="" method="post">
-        <dl>
-          <dt>姓</dt>
-          <dd><?php echo h($form['last_name']); ?></dd>
-          <dt>名</dt>
-          <dd><?php echo h($form['first_name']); ?></dd>
-          <dt>メールアドレス</dt>
-          <dd><?php echo h($form['email']); ?></dd>
-          <dt>パスワード</dt>
-          <dd>
-            【表示されません】
-          </dd>
-          <dt>顔写真</dt>
-          <dd>
-            <?php if ($form['image']) : ?>
-              <img src="../teacher_pictures/<?php echo h($form['image']); ?>" width="100" alt="" />
-            <?php else : ?>
-              <img src="../teacher_pictures/no_image.jpg" width="100" alt="" />
-            <?php endif; ?>
-          </dd>
-        </dl>
-        <div><a href="sign_up.php?action=rewrite">&laquo;&nbsp;書き直す</a> | <input type="submit" value="登録する" /></div>
-      </form>
-    </div>
-
-  </div>
-</body>
-
-</html>
