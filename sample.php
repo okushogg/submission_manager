@@ -7,6 +7,6 @@ $smarty = new Smarty();
 $smarty->template_dir = 'templates/';
 $smarty->compile_dir  = 'templates_c/';
 
-$smarty->assign('msg', 'Fucking stuck');
+$smarty->assign('msg', 'God! Plz help me from this stuck.');
 $smarty->display('sample.tpl');
 ?>
