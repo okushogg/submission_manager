@@ -2,8 +2,19 @@
 session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
+
+require_once('../private/set_up.php');
+$smarty = new Smarty_submission_manager();
+
+$form = [];
 $error = [];
 
+// this_year
+$smarty->assign('this_year', $this_year);
+
+// セッション内の情報
+$teacher_info = $_SESSION['auth'];
+$smarty->assign('teacher_info', $teacher_info);
 
 // ログイン情報がないとログインページへ移る
 login_check();
@@ -23,7 +34,7 @@ if (!$success) {
   die($db->error);
 }
 $pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
-// var_dump($pic_info);
+$smarty->assign('pic_info', $pic_info);
 
 $grades = [
   "-" => 0,
@@ -31,6 +42,7 @@ $grades = [
   "2" => 2,
   "3" => 3
 ];
+$smarty->assign('grades', $grades);
 
 $classes = [
   "-" => '-',
@@ -38,6 +50,8 @@ $classes = [
   "B" => 'B',
   "C" => 'C'
 ];
+$smarty->assign('classes', $classes);
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // 学年入力チェック
@@ -45,11 +59,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($grade === '0') {
     $error['grade'] = 'blank';
   }
+  $smarty->assign('grade', $grade);
+
   // クラス入力チェック
   $class = filter_input(INPUT_POST, 'class', FILTER_SANITIZE_STRING);
   if ($class === '-') {
     $error['class'] = 'blank';
   }
+  $smarty->assign('class', $class);
 
   // 同じクラスがないかチェック
   $stmt_check = $db->prepare("SELECT * FROM classes WHERE year = ? AND grade = ? AND class = ?");
@@ -74,85 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     header('Location: home.php');
   }
+  $smarty->assign('form',$form);
+  $smarty->assign('error',$error);
 }
-?>
-
-<!DOCTYPE html>
-<html lang="jp">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>クラス登録</title>
-  <link rel="stylesheet" href="../style.css" />
-</head>
-
-<body>
-  <div id="wrap">
-    <div id="head">
-      <h1>クラス登録</h1>
-    </div>
-    <div id="content">
-      <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
-      <div style="text-align: right"><a href="home.php">トップページへ</a></div>
-      <div style="text-align: left">
-        <img src="../teacher_pictures/<?php echo h($pic_info['path']); ?>" width="48" height="48" alt="" />
-        <?php echo $_SESSION['auth']['last_name'] ?> <?php echo $_SESSION['auth']['first_name'] . ' 先生' ?>
-      </div>
-
-      <form action="" method="post">
-        <dl>
-          <dt>年度</dt>
-          <dd>
-            <?php echo $this_year . '年度' ?>
-          </dd>
-
-          <dt>学年</dt>
-          <?php if (isset($error['grade'])) : ?>
-            <p class="error">* 学年を入力してください。</p>
-          <?php endif; ?>
-          <dd>
-            <select name="grade">
-              <?php
-              foreach ($grades as $key => $value) {
-                if ($value == $grade) {
-                  echo "<option value=$value selected>" . $key . "</option>";
-                } else {
-                  echo "<option value=$value>" . $key . "</option>";
-                }
-              }
-              ?>
-            </select>
-          </dd>
-
-          <dt>クラス</dt>
-          <?php if (isset($error['class']) && $error['class'] === 'blank') : ?>
-            <p class="error">* クラスを入力してください。</p>
-          <?php elseif (isset($error['class']) && $error['class'] === 'same_class') : ?>
-            <p class="error">* 登録済のクラスです。</p>
-          <?php endif; ?>
-          <dd>
-            <select name="class">
-              <?php
-              foreach ($classes as $key => $value) {
-                if ($value == $class) {
-                  echo "<option value=$value selected>" . $key . "</option>";
-                } else {
-                  echo "<option value=$value>" . $key . "</option>";
-                }
-              }
-              ?>
-            </select>
-          </dd>
-        </dl>
-        <div>
-          <input type="submit" value="登録" />
-        </div>
-      </form>
-    </div>
-  </div>
-
-
-</body>
-
-</html>
+$smarty->caching = 0;
+$smarty->display('teacher/register_class.tpl');
