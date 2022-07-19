@@ -77,7 +77,7 @@ function send_mail($to, $password_reset_token, $type)
   $url = getenv('PASSWORD_RESET_URL');
   $mail_address = getenv('MAIL_ADDRESS');
 
-  $password_reset_url = "{$url}/{$type}/{$password_reset_token}";
+  $password_reset_url = "{$url}/{$type}/password_reset_form.php?password_reset_token={$password_reset_token}";
 
   $subject =  "{$type}用パスワードリセットURLをお送りします";
 
