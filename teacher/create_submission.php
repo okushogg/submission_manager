@@ -3,6 +3,9 @@ session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
 
+require_once('../private/set_up.php');
+$smarty = new Smarty_submission_manager();
+
 // フォームの中身を確認、内容がなければ初期化
 if (isset($_GET['action']) && isset($_SESSION['form'])) {
   $form = $_SESSION['form'];
@@ -15,15 +18,22 @@ if (isset($_GET['action']) && isset($_SESSION['form'])) {
     'teacher_id' => $_SESSION['auth']['teacher_id'],
   ];
 }
+$smarty->assign('form',$form);
+
 
 // エラーの初期化
 $error = [];
+$smarty->assign('error',$error);
 
 // 今日の日付
 $today = date('Y-m-d');
 
 // ログイン情報がないとログインページへ移る
 login_check();
+
+// セッション内の情報
+$teacher_info = $_SESSION['auth'];
+$smarty->assign('teacher_info', $teacher_info);
 
 // 教員がログインしていた場合
 $teacher_id = $_SESSION['auth']['teacher_id'];
@@ -40,7 +50,7 @@ if (!$success) {
   die($db->error);
 }
 $pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
-// var_dump($pic_info);
+$smarty->assign('pic_info', $pic_info);
 
 // 該当年度の年度のクラスを取得する
 $classes_stmt = $db->prepare("select id, year, grade, class from classes where year=:year");
@@ -48,12 +58,13 @@ $classes_stmt->bindParam(':year', $this_year, PDO::PARAM_STR);
 $classes_stmt->execute();
 $classes_info = $classes_stmt->fetchAll(PDO::FETCH_ASSOC);
 $cnt = count($classes_info);
-// var_dump($classes_info);
+$smarty->assign('classes_info', $classes_info);
 
 // 教科一覧
 $subjects_stmt = $db->prepare("SELECT id, name FROM subjects");
 $subjects_stmt->execute();
 $all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC);
+$smarty->assign('all_subjects', $all_subjects);
 
 
 //「課題を作成する」をクリック
@@ -89,6 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // hiddenに入ったteacherのid
   $teacher_id = intval($form['teacher_id']);
+  $smarty->assign('teacher_id', $teacher_id);
 
   // 指定されたclass_idを持つ全てのstudent_idを求める(除籍済を除く)
   $student_stmt = $db->prepare("SELECT b.student_id as student_id, b.student_num as student_num
@@ -152,106 +164,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: home.php');
     exit();
   }
-  // var_dump($form);
+  $smarty->assign('form',$form);
+  $smarty->assign('error',$error);
 }
+$smarty->caching = 0;
+$smarty->display('teacher/create_submission.tpl');
 ?>
-
-<!DOCTYPE html>
-<html lang="jp">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>教員 課題作成ページ</title>
-  <link rel="stylesheet" href="../style.css" />
-</head>
-
-<body>
-  <div id="wrap">
-    <div id="head">
-      <h1>教員 課題作成ページ</h1>
-    </div>
-    <div id="content">
-      <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
-      <div style="text-align: right"><a href="home.php">ホーム</a></div>
-      <div style="text-align: left">
-        <img src="../teacher_pictures/<?php echo h($pic_info['path']); ?>" width="100" height="100" alt="" />
-        <?php echo $_SESSION['auth']['last_name'] ?> <?php echo $_SESSION['auth']['first_name'] . ' 先生' ?>
-      </div>
-
-      <div>
-        <form action="" method="post" enctype="multipart/form-data">
-          <dl>
-            <dt>課題名<span class="required">（必須）</span></dt>
-            <?php if (isset($error['submission_name']) && $error['submission_name'] === 'blank') : ?>
-              <p class="error">* 課題名を入力してください</p>
-            <?php endif; ?>
-            <dd>
-              <input type="text" name="submission_name" size="35" maxlength="255" value="<?php echo h($form['submission_name']); ?>" />
-            </dd>
-
-            <dt>クラス<span class="required">（必須）</span></dt>
-            <?php if (isset($error['class_id']) && $error['class_id'] === 'blank') : ?>
-              <p class="error">* クラスを入力してください</p>
-            <?php endif; ?>
-            <dd>
-              <div id="class_select">
-                <select id="class_0" size="1" name="class_id">
-                  <option value="0">-</option>
-                  <?php
-                  foreach ($classes_info as $class) {
-                    if ($form['class_id'] == $class['id']) {
-                      echo "<option value={$class['id']} selected> {$class['grade']} - {$class['class']}</option>";
-                    } else {
-                      echo "<option value={$class['id']}> {$class['grade']} - {$class['class']}</option>";
-                    }
-                  }
-                  ?>
-                </select>
-              </div>
-            </dd>
-            <!-- <div style="margin-top: 10px; margin-bottom: 10px; padding: 2px;">
-              <input  type="button" value="クラス追加" onclick="addForm()">
-            </div> -->
-
-            <dt>教科<span class="required">（必須）</span></dt>
-            <?php if (isset($error['subject_id']) && $error['subject_id'] === 'blank') : ?>
-              <p class="error">* 教科を入力してください</p>
-            <?php endif; ?>
-            <dd>
-              <select size="1" name="subject_id">
-                <option value="0">-</option>
-                <?php
-                foreach ($all_subjects as $subject) {
-                  if ($form['subject_id'] == $subject['id']) {
-                    echo "<option value={$subject['id']} selected> {$subject['name']} </option>";
-                  } else {
-                    echo "<option value={$subject['id']}> {$subject['name']} </option>";
-                  }
-                }
-                ?>
-              </select>
-            </dd>
-
-            <dt>提出期限<span class="required">（必須）</span></dt>
-            <?php if (isset($error['dead_line']) && $error['dead_line'] === 'blank') : ?>
-              <p class="error">* 提出期限を入力してください</p>
-            <?php elseif (isset($error['dead_line']) && $error['dead_line'] === 'not_future_date') : ?>
-              <p class="error">* 提出期限は本日以降の日付を入力してください</p>
-            <?php endif; ?>
-            <dd>
-              <input type="date" name="dead_line" value="<?php echo h($form['dead_line']); ?>" />
-            </dd>
-
-            <dd>
-              <input type="hidden" name="teacher_id" value=$id />
-            </dd>
-          </dl>
-          <div><input type="submit" value="課題を作成" /></div>
-        </form>
-      </div>
-
-      <script type="text/javascript" src="../submission.js"></script>
-</body>
-
-</html>
