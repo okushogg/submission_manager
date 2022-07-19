@@ -3,6 +3,13 @@ session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
 
+require_once('../private/set_up.php');
+$smarty = new Smarty_submission_manager();
+
+// セッション内の情報
+$teacher_info = $_SESSION['auth'];
+$smarty->assign('teacher_info', $teacher_info);
+
 $form = [
   "last_name" => '',
   "first_name" => '',
@@ -11,6 +18,7 @@ $form = [
   "class" => '',
   "is_active" => ''
 ];
+$smarty->assign('form', $form);
 
 $grades = [
   "-" => 0,
@@ -18,6 +26,7 @@ $grades = [
   "2" => 2,
   "3" => 3
 ];
+$smarty->assign('grades', $grades);
 
 $classes = [
   "-" => '-',
@@ -25,6 +34,8 @@ $classes = [
   "B" => 'B',
   "C" => 'C'
 ];
+$smarty->assign('classes', $classes);
+
 
 // ログイン情報がないとログインページへ移る
 login_check();
@@ -44,9 +55,11 @@ if (!$success) {
   die($db->error);
 }
 $pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
+$smarty->assign('pic_info', $pic_info);
 
 // 登録されている年度を全て取得
 $all_years = get_years($db);
+$smarty->assign('all_years', $all_years);
 
 // 検索ボタン押下時
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -57,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $form['is_active'] = filter_input(INPUT_POST, 'is_active');
   $form['last_name'] = filter_input(INPUT_POST, 'last_name');
   $form['first_name'] = filter_input(INPUT_POST, 'first_name');
-//  var_dump($db_user);
+  //  var_dump($db_user);
   $sql = "SELECT students.id as student_id, students.first_name, students.last_name, students.sex,
                    belongs.class_id, classes.year, classes.grade,
                    classes.class, belongs.student_num, students.is_active
@@ -79,8 +92,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sql .= 'classes.class = "' . $form['class'] . '"';
   }
 
-   //在籍状況が選択されている場合
-   if ($form['is_active'] != '' ) {
+  //在籍状況が選択されている場合
+  if ($form['is_active'] != '') {
     $sql .= " AND ";
     $sql .= 'students.is_active = "' . $form['is_active'] . '"';
   }
@@ -98,140 +111,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   $stmt = $db->query($sql);
-  // var_dump($sql);
   $student_search_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-  // var_dump($form);
+  $smarty->assign('student_search_result', $student_search_result);
+  $smarty->assign('form', $form);
 }
-?>
-
-<!DOCTYPE html>
-<html lang="jp">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>生徒検索ページ</title>
-  <link rel="stylesheet" href="../style.css" />
-</head>
-
-<body>
-  <div id="wrap">
-    <div id="head">
-      <h1>生徒検索ページ</h1>
-    </div>
-    <div id="content">
-      <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
-      <div style="text-align: right"><a href="home.php">ホーム</a></div>
-      <div style="text-align: left">
-        <img src="../teacher_pictures/<?php echo h($pic_info['path']); ?>" width="100" height="100" alt="" />
-        <?php echo $_SESSION['auth']['last_name'] ?> <?php echo $_SESSION['auth']['first_name'] . ' 先生' ?>
-      </div>
-
-      <p>生徒検索</p>
-      <form action="" method="post">
-        <span>年度</span>
-        <select size="1" name="year">
-          <?php
-          foreach ($all_years as $y) {
-            if ($y['year'] == $form['year']) {
-              echo "<option value={$y['year']} selected>" . $y['year'] . "</option>";
-            } else {
-              echo "<option value={$y['year']}>" . $y['year'] . "</option>";
-            }
-          }
-          ?>
-        </select>
-
-        <span>学年</span>
-        <select size="1" name="grade">
-          <?php
-          foreach ($grades as $key => $value) {
-            if ($value == $form['grade']) {
-              echo "<option value=$value selected>" . $key . "</option>";
-            } else {
-              echo "<option value=$value>" . $key . "</option>";
-            }
-          }
-          ?>
-        </select>
-
-        <span>クラス</span>
-        <select size="1" name="class">
-        <?php
-          foreach ($classes as $key => $value) {
-            if ($value == $form['class']) {
-              echo "<option value=$value selected>" . $key . "</option>";
-            } else {
-              echo "<option value=$value>" . $key . "</option>";
-            }
-          }
-          ?>
-        </select>
-        <input type="radio" name="is_active" value=0 <?php if ($form['is_active'] === "0") echo 'checked'; ?>>除籍
-        <input type="radio" name="is_active" value=1 <?php if ($form['is_active'] === "1") echo 'checked'; ?>>在籍
-        <br>
-        <span>氏</span>
-        <input type="text" name="last_name" size="20" maxlength="20" value="<?php echo $form['last_name']; ?>" />
-        <span>名</span>
-        <input type="text" name="first_name" size="20" maxlength="20" value="<?php $form['first_name']; ?>" />
-        <input type="submit" value="検索" />
-      </form>
-
-      <?php if (isset($student_search_result)) : ?>
-
-        <!-- 生徒検索結果一覧 -->
-        <div style="margin: 15px;">
-          <table class="" style="text-align: center;">
-            <tr>
-              <th>学年</th>
-              <th>クラス</th>
-              <th>出席番号</th>
-              <th>氏名</th>
-              <th>在籍状況</th>
-            </tr>
-
-            <?php foreach ($student_search_result as $student) : ?>
-
-              <!-- 学年 -->
-              <td>
-                <?php echo h($student['grade']); ?>
-              </td>
-
-              <!-- クラス -->
-              <td>
-                <?php echo h($student['class']); ?>
-              </td>
-
-              <!-- 出席番号 -->
-              <td>
-                <?php echo $student['student_num']; ?>
-              </td>
-
-              <!-- 生徒氏名 -->
-              <td>
-                <a href="../student/home.php?student_id=<?php echo h($student['student_id']); ?>">
-                  <?php echo $student['last_name'] . $student['first_name']; ?>
-                </a>
-              </td>
-
-              <!-- 在籍状況 -->
-              <?php if ($student['is_active'] == 0) : ?>
-                <td style="color: red;">
-                  除籍済
-                </td>
-              <?php else : ?>
-                <td>
-                  在籍
-                </td>
-              <?php endif; ?>
-              </tr>
-            <?php endforeach; ?>
-          </table>
-        </div>
-
-      <?php endif; ?>
-
-
-</body>
-
-</html>
+$smarty->caching = 0;
+$smarty->display('teacher/search_student.tpl');
