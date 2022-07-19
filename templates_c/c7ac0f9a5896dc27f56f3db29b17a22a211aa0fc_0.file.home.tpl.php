@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-19 02:43:36
+/* Smarty version 4.1.1, created on 2022-07-19 07:29:43
   from '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/home.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62d61a58a1cff1_04663127',
+  'unifunc' => 'content_62d65d67d13ec5_73684107',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'c7ac0f9a5896dc27f56f3db29b17a22a211aa0fc' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/home.tpl',
-      1 => 1658198614,
+      1 => 1658203538,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_62d61a58a1cff1_04663127 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62d65d67d13ec5_73684107 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!DOCTYPE html>
 <html lang="jp">
@@ -45,8 +45,9 @@ function content_62d61a58a1cff1_04663127 (Smarty_Internal_Template $_smarty_tpl)
       <div style="text-align: left">
         <img src="../teacher_pictures/<?php echo $_smarty_tpl->tpl_vars['pic_info']->value['path'];?>
 " width="100" height="100" alt="" />
-        <?php echo (($_smarty_tpl->tpl_vars['teacher_info']->value['last_name']).($_smarty_tpl->tpl_vars['teacher_info']->value['first_name'])).("先生");?>
-
+        <?php echo $_smarty_tpl->tpl_vars['teacher_info']->value['last_name'];?>
+ <?php echo $_smarty_tpl->tpl_vars['teacher_info']->value['first_name'];?>
+先生
       </div>
 
       <div>
