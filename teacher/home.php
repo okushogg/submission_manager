@@ -50,7 +50,9 @@ $cnt = count($classes_info);
 
 // 学年ごとにクラスのデータを配列で取得
 $classes_array = get_classes($classes_info);
-$smarty->assign('$classes_array', $classes_array);
+$smarty->assign('classes_array', $classes_array);
+
+
 
 
 $smarty->caching = 0;

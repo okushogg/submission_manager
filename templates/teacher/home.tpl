@@ -28,7 +28,7 @@
         <div class="box">
           {foreach $classes_array.1 as $a}
             <div class="box">
-              <a href="index_submission.php?class_id=$a.id">$a.grade "-" {$a.class}</a>
+              <a href="index_submission.php?class_id={$a.id}">{$a.grade}-{$a.class}</a>
             </div>
           {/foreach}
         </div>
@@ -36,7 +36,7 @@
         <div class="box">
           {foreach $classes_array.2 as $a}
             <div class="box">
-              <a href="index_submission.php?class_id={$a.id}">{$a.grade|cat: "-"$a.class}</a>
+              <a href="index_submission.php?class_id={$a.id}">{$a.grade}-{$a.class}</a>
             </div>
           {/foreach}
         </div>
@@ -44,7 +44,7 @@
         <div class="box">
           {foreach $classes_array.3 as $a}
             <div class="box">
-              <a href="index_submission.php?class_id={$a.id}">{$a.grade|cat: "-" $a.class}</a>
+              <a href="index_submission.php?class_id={$a.id}">{$a.grade}-{$a.class}</a>
             </div>
           {/foreach}
         </div>
