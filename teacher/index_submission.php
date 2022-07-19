@@ -3,9 +3,15 @@ session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
 
+require_once('../private/set_up.php');
+$smarty = new Smarty_submission_manager();
+
+// セッション内の情報
+$teacher_info = $_SESSION['auth'];
+$smarty->assign('teacher_info', $teacher_info);
+
 // class_id
 $class_id = filter_input(INPUT_GET, 'class_id', FILTER_SANITIZE_NUMBER_INT);
-// var_dump($class_id);
 
 // 今日の日付
 $today = date('Y-m-d');
@@ -28,7 +34,7 @@ if (!$success) {
   die($db->error);
 }
 $pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
-// var_dump($pic_info);
+$smarty->assign('pic_info', $pic_info);
 
 // 該当クラスの課題を求める
 $stmt = $db->prepare("SELECT submissions.id, submissions.name as submission_name, submissions.dead_line,
@@ -50,7 +56,7 @@ if (!$success) {
   die($db->error);
 }
 $submission_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
-// var_dump($submission_info);
+$smarty->assign('submission_info', $submission_info);
 
 // クラスの情報を求める
 $class_stmt = $db->prepare("SELECT id as class_id, year, grade, class
@@ -62,64 +68,9 @@ if (!$class_success){
   die($db->error);
 }
 $class_info = $class_stmt->fetch(PDO::FETCH_ASSOC);
-// var_dump($class_info);
+$smarty->assign('class_info', $class_info);
+
+$smarty->caching = 0;
+$smarty->display('teacher/index_submission.tpl');
 
 ?>
-
-<!DOCTYPE html>
-<html lang="jp">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?php echo "{$class_info['grade']} - {$class_info['class']}" ;?> 課題一覧ページ</title>
-  <link rel="stylesheet" href="../style.css" />
-</head>
-
-<body>
-  <div id="wrap">
-    <div id="head">
-      <h1><?php echo "{$class_info['grade']} - {$class_info['class']}";?> 課題一覧ページ</h1>
-    </div>
-    <div id="content">
-      <!-- ナビゲーション -->
-      <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
-      <div style="text-align: right"><a href="create_submission.php">課題作成</a></div>
-      <div style="text-align: right"><a href="home.php">ホーム</a></div>
-
-      <!-- ユーザー情報 -->
-      <div style="text-align: left">
-        <img src="../teacher_pictures/<?php echo h($pic_info['path']); ?>" width="100" height="100" alt="" />
-        <?php echo $_SESSION['auth']['last_name'] ?> <?php echo $_SESSION['auth']['first_name'] . ' 先生' ?>
-      </div>
-
-      <!-- 課題一覧 -->
-      <div>
-      <?php if ($submission_info) : ?>
-        <table class="">
-          <tr>
-            <th>課題名</th>
-            <th>教科名</th>
-            <th>提出期限</th>
-          </tr>
-          <?php foreach ($submission_info as $submission) : ?>
-            <tr>
-              <td>
-                <a href="show_submission.php?submission_id=<?php echo h($submission['id']); ?>">
-                  <?php echo $submission['submission_name'] ?>
-                </a>
-              </td>
-              <td><?php echo $submission['subject_name'] ?></td>
-              <td><?php echo $submission['dead_line'] ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </table>
-        <?php else : ?>
-            <p>課題はありません</p>
-        <?php endif; ?>
-      </div>
-
-
-</body>
-
-</html>

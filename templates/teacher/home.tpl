@@ -21,7 +21,7 @@
       <div style="text-align: right"><a href="create_submission.php">提出物登録</a></div>
       <div style="text-align: left">
         <img src="../teacher_pictures/{$pic_info.path}" width="100" height="100" alt="" />
-        {$teacher_info.last_name|cat: $teacher_info.first_name|cat:"先生"}
+        {$teacher_info.last_name} {$teacher_info.first_name}先生
       </div>
 
       <div>
