@@ -3,6 +3,9 @@ session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
 
+require_once('../private/set_up.php');
+$smarty = new Smarty_submission_manager();
+
 // 現在の時刻
 $current_time = bkk_time();
 
@@ -13,18 +16,25 @@ $form = [
   'dead_line' => '',
   'teacher_id' => $_SESSION['auth']['teacher_id'],
 ];
+$smarty->assign('form',$form);
 
 // エラーの初期化
 $error = [];
+$smarty->assign('error',$error);
 
 // submission_id
 $submission_id = filter_input(INPUT_GET, 'submission_id', FILTER_SANITIZE_NUMBER_INT);
+$smarty->assign('submission_id', $submission_id);
 
 // 今日の日付
 $today = date('Y-m-d');
 
 // ログイン情報がないとログインページへ移る
 login_check();
+
+// セッション内の情報
+$teacher_info = $_SESSION['auth'];
+$smarty->assign('teacher_info', $teacher_info);
 
 // 教員がログインしていた場合
 $teacher_id = $_SESSION['auth']['teacher_id'];
@@ -41,13 +51,14 @@ if (!$success) {
   die($db->error);
 }
 $pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
+$smarty->assign('pic_info', $pic_info);
 
 
 // 教科一覧
 $subjects_stmt = $db->prepare("SELECT id, name FROM subjects");
 $subjects_stmt->execute();
 $all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC);
-// var_dump($all_subjects);
+$smarty->assign('all_subjects', $all_subjects);
 
 // 課題の情報を求める
 $submission_stmt = $db->prepare("SELECT submissions.name, submissions.dead_line,
@@ -70,6 +81,7 @@ if (!$success) {
   die($db->error);
 }
 $submission_info = $submission_stmt->fetch(PDO::FETCH_ASSOC);
+$smarty->assign('submission_info',$submission_info);
 $class_id = $submission_info['class_id'];
 
 
@@ -128,87 +140,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: index_submission.php?class_id={$class_id}");
     exit();
   }
+
+  $smarty->assign('form',$form);
+  $smarty->assign('error',$error);
 }
+
+$smarty->caching = 0;
+$smarty->display('teacher/edit_submission.tpl');
 ?>
-
-<!DOCTYPE html>
-<html lang="jp">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>教員 課題編集ページ</title>
-  <link rel="stylesheet" href="../style.css" />
-</head>
-
-<body>
-  <div id="wrap">
-    <div id="head">
-      <h1>教員 課題編集ページ</h1>
-    </div>
-    <div id="content">
-      <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
-      <div style="text-align: right"><a href="home.php">ホーム</a></div>
-      <div style="text-align: left">
-        <img src="../teacher_pictures/<?php echo h($pic_info['path']); ?>" width="100" height="100" alt="" />
-        <?php echo $_SESSION['auth']['last_name'] ?> <?php echo $_SESSION['auth']['first_name'] . ' 先生' ?>
-      </div>
-
-      <div>
-        <form action="" method="post" enctype="multipart/form-data">
-          <dl>
-            <dt>課題名</dt>
-            <?php if (isset($error['submission_name']) && $error['submission_name'] === 'blank') : ?>
-              <p class="error">* 課題名を入力してください</p>
-            <?php endif; ?>
-            <dd>
-              <input type="text" name="submission_name" size="35" maxlength="255" value="<?php echo h($submission_info['name']); ?>" />
-            </dd>
-
-            <dt>クラス</dt>
-            <dd>
-              <?php echo "{$submission_info['grade']} - {$submission_info['class']}"; ?>
-            </dd>
-
-            <dt>教科</dt>
-            <?php if (isset($error['subject_id']) && $error['subject_id'] === 'blank') : ?>
-              <p class="error">* 教科を入力してください</p>
-            <?php endif; ?>
-            <dd>
-              <select size="1" name="subject_id">
-                <option value="0">-</option>
-                <?php
-                foreach ($all_subjects as $subject) {
-                  if ($submission_info['subject_id'] == $subject['id']) {
-                    echo "<option value={$subject['id']} selected> {$subject['name']} </option>";
-                  } else {
-                    echo "<option value={$subject['id']}> {$subject['name']} </option>";
-                  }
-                }
-                ?>
-              </select>
-            </dd>
-
-            <dt>提出期限</dt>
-            <?php if (isset($error['dead_line']) && $error['dead_line'] === 'blank') : ?>
-              <p class="error">* 提出期限を入力してください</p>
-            <?php elseif (isset($error['dead_line']) && $error['dead_line'] === 'not_future_date') : ?>
-              <p class="error">* 提出期限は本日以降の日付を入力してください</p>
-            <?php endif; ?>
-            <dd>
-              <input type="date" name="dead_line" value="<?php echo h($submission_info['dead_line']); ?>" />
-            </dd>
-
-            <dd>
-              <input type="hidden" name="teacher_id" value=$id />
-            </dd>
-          </dl>
-          <div><input type="submit" value="課題を編集" /></div>
-        </form>
-
-      </div>
-
-
-</body>
-
-</html>
