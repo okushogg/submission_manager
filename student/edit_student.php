@@ -3,6 +3,11 @@ session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
 
+require_once('../private/set_up.php');
+$smarty = new Smarty_submission_manager();
+
+$smarty->assign('this_year', $this_year);
+
 // 今日の日付
 $today = date('Y-m-d');
 
@@ -26,6 +31,7 @@ $form = [
   'image' => '',
   'is_active' => 1
 ];
+$smarty->assign('form', $form);
 
 // 生徒情報を取得
 $stmt = $db->prepare("SELECT first_name, last_name, sex, email, image_id, is_active
@@ -40,7 +46,7 @@ if (!$success) {
   die($db->error);
 }
 $student_info = $stmt->fetch(PDO::FETCH_ASSOC);
-// var_dump($student_info);
+$smarty->assign('student_info', $student_info);
 
 // 現在の所属クラスを求める
 $this_year_class_stmt = $db->prepare("SELECT belongs.id as belongs_id, belongs.class_id, belongs.student_num as student_num,
@@ -54,7 +60,8 @@ $this_year_class_stmt->bindValue(':student_id', $student_id, PDO::PARAM_INT);
 $this_year_class_stmt->execute();
 $this_year_class = $this_year_class_stmt->fetch(PDO::FETCH_ASSOC);
 $class_id = $this_year_class['class_id'];
-// var_dump($this_year_class);
+$smarty->assign('this_year_class', $this_year_class);
+
 
 //現在在籍する学年から選択可能なクラスを求める
 if ($this_year > $this_year_class['year']) {
@@ -74,9 +81,7 @@ if (!$success) {
   die($db->error);
 }
 $selectable_classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-// var_dump($current_time);
-
-
+$smarty->assign('selectable_classes', $selectable_classes);
 
 
 // 生徒情報を更新をクリック
@@ -109,7 +114,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   }
 
-
   // 学年とクラスのチェック
   $form['class_id'] = filter_input(INPUT_POST, 'class_id', FILTER_SANITIZE_NUMBER_INT);
   if ($form['class_id'] == 0) {
@@ -133,8 +137,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $form['is_active'] = filter_input(INPUT_POST, 'is_active');
 
   if (empty($error)) {
-    // var_dump($form);
-    // var_dump($this_year_class['belongs_id']);
     // 画像のアップロード
     if ($form['image']) {
 
@@ -225,140 +227,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     unset($_SESSION['form']);
     header('Location: home.php');
   }
+  $smarty->assign('form', $form);
+  $smarty->assign('error', $error);
 }
-?>
 
-<!DOCTYPE html>
-<html lang="ja">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>生徒登録確認</title>
-
-  <link rel="stylesheet" href="../style.css" />
-</head>
-
-<body>
-  <div id="wrap">
-    <div id="head">
-      <h1>生徒登録確認</h1>
-    </div>
-
-    <div id="content">
-      <?php if (isset($_SESSION['auth']['teacher_id'])) : ?>
-        <div style="text-align: right"><a href="../teacher/home.php">教員ホームへ</a></div>
-      <?php endif; ?>
-      <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
-      <div style="text-align: right"><a href="home.php">ホーム</a></div>
-      <p>記入した内容を確認して、「登録する」ボタンをクリックしてください</p>
-      <form action="" method="post" enctype="multipart/form-data">
-        <dl>
-          <dt>姓</dt>
-          <?php if (isset($error['last_name']) && $error['first_name'] === 'blank') : ?>
-            <p class="error">* 苗字を入力してください</p>
-          <?php endif; ?>
-          <dd>
-            <input type="text" name="last_name" size="35" maxlength="255" value="<?php echo h($student_info['last_name']); ?>" />
-          </dd>
-
-          <dt>名</dt>
-          <?php if (isset($error['first_name']) && $error['first_name'] === 'blank') : ?>
-            <p class="error">* 名前を入力してください</p>
-          <?php endif; ?>
-          <dd>
-            <input type="text" name="first_name" size="35" maxlength="255" value="<?php echo h($student_info['first_name']); ?>" />
-          </dd>
-          <dt>性別</dt>
-          <?php if (isset($_SESSION['teacher_id'])) : ?>
-            <?php if (isset($error['sex']) && $error['sex'] === 'blank') : ?>
-              <p class="error">* 性別を入力してください</p>
-            <?php endif; ?>
-            <dd>
-              <input type="radio" name="sex" value=0 <?php if ($student_info['sex'] == 0) echo 'checked'; ?>>男
-              <input type="radio" name="sex" value=1 <?php if ($student_info['sex'] == 1) echo 'checked'; ?>>女
-            </dd>
-          <?php else : ?>
-            <dd>
-              <input type="hidden" name="sex" value=<?php echo $student_info['sex'] ?> />
-              <?php display_sex($student_info['sex']); ?>
-            </dd>
-          <?php endif; ?>
-
-          <dt>クラス</dt>
-          <?php if (isset($error['class_id']) && $error['class_id'] === 'blank') : ?>
-            <p class="error">* クラスを入力してください</p>
-          <?php endif; ?>
-          <dd>
-            <select size="1" name="class_id">
-              <option value="0">-</option>
-              <?php
-              foreach ($selectable_classes as $class) {
-                if ($class['id'] == $this_year_class['class_id']) {
-                  echo "<option value={$class['id']} selected> {$class['grade']} - {$class['class']}</option>";
-                } else {
-                  echo "<option value={$class['id']}> {$class['grade']} - {$class['class']}</option>";
-                }
-              }
-              ?>
-            </select>
-            <?php if ($this_year > $this_year_class['year']) : ?>
-              <span class="required">要新規登録</span>
-            <?php endif; ?>
-          </dd>
-
-          <dt>出席番号</dt>
-          <?php if (isset($error['student_num']) && $error['student_num'] === 'blank') : ?>
-            <p class="error">* 出席番号を入力してください</p>
-          <?php endif; ?>
-          <dd>
-            <?php if ($this_year > $this_year_class['year']) : ?>
-              <input type="number" min="1" max="40" name="student_num" /><span class="required">要新規登録</span>
-            <?php else : ?>
-              <input type="number" min="1" max="40" name="student_num" value="<?php echo $this_year_class['student_num']; ?>" />
-            <?php endif; ?>
-          </dd>
-
-          <dt>メールアドレス</dt>
-          <?php if (isset($error['email']) && $error['email'] === 'blank') : ?>
-            <p class="error">* メールアドレスを入力してください</p>
-          <?php endif; ?>
-          <dd>
-            <input type="text" name="email" size="35" maxlength="255" value="<?php echo h($student_info['email']); ?>" />
-          </dd>
-          <dt>パスワード</dt>
-          <dd>
-            <p>パスワードの変更は<a href="reset_password.php">こちら</a>から。</p>
-          </dd>
-
-          <?php if (isset($_SESSION['teacher_id']) || $this_year > $this_year_class['year']) : ?>
-            <dt>写真など</dt>
-            <dd>
-              <input type="file" name="image" size="35" value="" />
-              <?php if (isset($error['image']) && $error['image'] === 'type') : ?>
-                <p class="error">* 写真などは「.png」または「.jpg」の画像を指定してください</p>
-                <p class="error">* 恐れ入りますが、画像を改めて指定してください</p>
-              <?php endif; ?>
-            </dd>
-          <?php endif ?>
-
-
-
-          <?php if (isset($_SESSION['auth']['teacher_id'])) : ?>
-            <dt>在籍情報</dt>
-            <dd>
-              <input type="radio" name="is_active" value=0 <?php if ($student_info['is_active'] == 0) echo 'checked'; ?>>除籍
-              <input type="radio" name="is_active" value=1 <?php if ($student_info['is_active'] == 1) echo 'checked'; ?>>在籍
-            </dd>
-          <?php else : ?>
-            <input type="hidden" name="is_active" value=<?php echo $student_info['is_active'] ?> />
-          <?php endif; ?>
-        </dl>
-        <div><input type="submit" value="生徒情報を更新" /></div>
-    </div>
-
-  </div>
-</body>
-
-</html>
+$smarty->caching = 0;
+$smarty->display('student/edit_student.tpl');
