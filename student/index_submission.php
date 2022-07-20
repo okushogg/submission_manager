@@ -3,6 +3,9 @@ session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
 
+require_once('../private/set_up.php');
+$smarty = new Smarty_submission_manager();
+
 // class_idを取得
 $class_id = $_GET['class_id'];
 
@@ -12,9 +15,12 @@ if (isset($_GET['subject_id'])) {
 } else {
   header('Location: home.php');
 }
+$smarty->assign('subject_id', $subject_id);
+
 
 // class_idを取得
 $class_id = $_GET['class_id'];
+$smarty->assign('class_id', $class_id);
 
 // ログイン情報がないとログインページへ移る
 login_check();
@@ -31,7 +37,7 @@ $student_stmt = $db->prepare("SELECT first_name as student_first_name,
 $student_stmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
 $student_stmt->execute();
 $student_info = $student_stmt->fetch(PDO::FETCH_ASSOC);
-
+$smarty->assign('student_info', $student_info);
 
 // 生徒の画像情報を取得
 $stmt = $db->prepare("select path from images where id=:image_id");
@@ -44,6 +50,8 @@ if (!$success) {
   die($db->error);
 }
 $student_pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
+$smarty->assign('student_pic_info', $student_pic_info);
+
 
 // クラスを求める
 $class_stmt = $db->prepare("SELECT belongs.id, belongs.class_id, belongs.student_num as student_num,
@@ -55,13 +63,14 @@ $class_stmt = $db->prepare("SELECT belongs.id, belongs.class_id, belongs.student
                                         AND belongs.class_id = $class_id");
 $class_stmt->execute();
 $chosen_class = $class_stmt->fetch(PDO::FETCH_ASSOC);
-// var_dump($student_id, $class_id, $chosen_class);
+$smarty->assign('chosen_class', $chosen_class);
 
 
 // 教科一覧
 $subjects_stmt = $db->prepare("SELECT id, name FROM subjects");
 $subjects_stmt->execute();
 $all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC | PDO::FETCH_UNIQUE);
+$smarty->assign('all_subjects', $all_subjects);
 
 // 生徒が持つ本年度の該当教科課題を求める
 $stmt = $db->prepare("SELECT student_submissions.id, submissions.name as submission_name, submissions.dead_line,
@@ -85,6 +94,7 @@ if (!$success) {
   die($db->error);
 }
 $submission_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$smarty->assign('submission_info', $submission_info);
 
 // scoreの値
 $scoreList = array(
@@ -94,87 +104,9 @@ $scoreList = array(
   1 => "C",
   0 => "未提出"
 );
+$smarty->assign('scoreList', $scoreList);
+
+$smarty->caching = 0;
+$smarty->display('student/index_submission.tpl');
+
 ?>
-
-<!DOCTYPE html>
-<html lang="jp">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?php echo h($all_subjects[$subject_id]['name']); ?>課題一覧</title>
-  <link rel="stylesheet" href="../style.css" />
-</head>
-
-<body>
-  <div id="wrap">
-    <div id="head">
-      <h1><?php echo h($all_subjects[$subject_id]['name']); ?>課題一覧</h1>
-    </div>
-    <div id="content">
-      <?php if (isset($_SESSION['teacher_id'])) : ?>
-        <div style="text-align: right"><a href="../teacher/home.php">教員ホームへ</a></div>
-      <?php endif; ?>
-      <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
-      <div style="text-align: right"><a href="home.php?year=<?php echo $chosen_class['year']; ?>">ホーム</a></div>
-      <div style="text-align: left">
-        <div style="margin: 10px;">
-          <p>クラス</p>
-            <div style="display: flex;">
-              <?php echo "{$chosen_class['year']}年度{$chosen_class['grade']} 年 {$chosen_class['class']}組"; ?>
-            </div>
-        </div>
-        <img src="../student_pictures/<?php echo h($student_pic_info['path']); ?>" width="100" height="100" alt="" />
-        <?php echo "{$chosen_class['grade']} - {$chosen_class['class']} No_{$chosen_class['student_num']}"; ?>
-        <?php echo "{$student_info['student_last_name']} {$student_info['student_first_name']}" . ' さん' ?>
-      </div>
-
-      <!-- 課題一覧 -->
-      <div>
-        <?php if ($submission_info) : ?>
-          <form action="" , method="post">
-            <table class="" style="text-align: center;">
-              <tr>
-                <!-- <th>h_id</th> -->
-                <th>課題名</th>
-                <th>提出期限</th>
-                <th>受領日</th>
-                <th>評価</th>
-              </tr>
-              <?php foreach ($submission_info as $submission) : ?>
-
-                <!-- student_submissions_id -->
-                <!-- <td>
-                <?php echo h($submission['student_submissions_id']); ?>
-              </td> -->
-
-                <!-- 課題名 -->
-                <td>
-                  <?php echo $submission['submission_name']; ?>
-                </td>
-
-                <!-- 提出期限 -->
-                <td>
-                  <?php echo h($submission['dead_line']); ?>
-                </td>
-
-                <!-- 受領日 -->
-                <td>
-                  <?php echo $submission['approved_date']; ?>
-                </td>
-
-                <!-- スコア -->
-                <td>
-                  <?php echo $scoreList[$submission['score']]; ?>
-                </td>
-                </tr>
-              <?php endforeach; ?>
-            </table>
-          <?php else : ?>
-            <p>課題はありません</p>
-          <?php endif; ?>
-
-
-</body>
-
-</html>
