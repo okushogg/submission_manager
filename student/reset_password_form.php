@@ -3,16 +3,20 @@ session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
 
+require_once('../private/set_up.php');
+$smarty = new Smarty_submission_manager();
+
 // 現在のバンコクの時刻
 $current_time = bkk_time();
 
 // urlからpassword_reset_tokenを取得
-$password_reset_token = filter_input(INPUT_GET, 'password_reset_token');
+$password_reset_token = filter_input(INPUT_GET, 'password_reset_token', FILTER_SANITIZE_SPECIAL_CHARS);
 
 // フォームの初期化
 $form = [
   "password" => ''
 ];
+$smarty->assign('form', $form);
 
 // エラーの初期化
 $error = [];
@@ -41,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindValue(':password', $password, PDO::PARAM_STR);
     $stmt->bindValue(':updated_at', $current_time, PDO::PARAM_STR);
     $stmt->bindValue(':password_reset_token', $password_reset_token, PDO::PARAM_STR);
-
     $success = $stmt->execute();
     if (!$success) {
       $db->error;
@@ -49,44 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: log_in.php");
     exit();
   }
+  $smarty->assign('form', $form);
+  $smarty->assign('error', $error);
 }
+$smarty->caching = 0;
+$smarty->display('student/reset_password_form.tpl');
 ?>
-
-<!DOCTYPE html>
-<html lang="jp">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>生徒用パスワードリセットフォーム</title>
-  <link rel="stylesheet" href="../style.css" />
-</head>
-
-<body>
-  <div id="wrap">
-    <div id="head">
-      <h1>生徒用パスワードリセットフォーム</h1>
-    </div>
-    <div id="content">
-      <p>新しいパスワードをご入力ください。</p>
-      <form action="" method="post">
-        <dl>
-          <dt>新しいパスワード</dt>
-          <dd>
-            <input type="password" name="password" size="10" maxlength="20" value="<?php echo h($form['password']); ?>" />
-          </dd>
-          <?php if (isset($error['password']) && $error['password'] === 'blank') : ?>
-            <p class="error">* パスワードを入力してください</p>
-          <?php elseif (isset($error['password']) && $error['password'] === 'length') : ?>
-            <p class="error">* パスワードは4文字以上で入力してください</p>
-          <?php endif; ?>
-          <input type="submit" value="送信" />
-      </form>
-    </div>
-
-  </div>
-</body>
-
-</html>
-
-</html>

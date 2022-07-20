@@ -25,7 +25,7 @@
       <p>記入した内容を確認して、「登録する」ボタンをクリックしてください</p>
       <form action="" method="post" enctype="multipart/form-data">
         <dl>
-          <dt>姓</dt>
+          <dt>氏</dt>
           {if isset($error.last_name) && $error.first_name === 'blank'}
             <p class="error">* 苗字を入力してください</p>
           {/if}
