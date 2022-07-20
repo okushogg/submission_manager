@@ -31,6 +31,13 @@ function login_check()
   }
 }
 
+// 教員のログインか確認
+function is_teacher_login(){
+  if(isset($_SESSION['auth']['teacher_id'])){
+    return true;
+  }
+}
+
 //不正な文字列をチェック
 function h($value)
 {

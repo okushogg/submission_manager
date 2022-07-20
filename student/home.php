@@ -3,6 +3,9 @@ session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
 
+require_once('../private/set_up.php');
+$smarty = new Smarty_submission_manager();
+
 // ログイン情報がないとログインページへ移る
 login_check();
 
@@ -17,6 +20,8 @@ if(isset($_GET['year']) && $_GET['year']<= $this_year){
   'year' => $this_year
 ];
 }
+$smarty->assign('this_year', $this_year);
+$smarty->assign('form', $form);
 
 // 変更ボタン押下時
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -37,7 +42,7 @@ $student_stmt = $db->prepare("SELECT first_name as student_first_name,
 $student_stmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
 $student_stmt->execute();
 $student_info = $student_stmt->fetch(PDO::FETCH_ASSOC);
-// var_dump($student_info);
+$smarty->assign('student_info', $student_info);
 
 
 // 生徒の画像情報を取得
@@ -51,6 +56,7 @@ if (!$success) {
   die($db->error);
 }
 $student_pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
+$smarty->assign('student_pic_info', $student_pic_info);
 
 // 本年度の所属クラスを求める
 $this_year_class_stmt = $db->prepare("SELECT belongs.id, belongs.class_id, belongs.student_num as student_num,
@@ -64,11 +70,13 @@ $this_year_class_stmt->bindValue(':student_id', $student_id, PDO::PARAM_INT);
 $this_year_class_stmt->bindValue(':year', $form['year'], PDO::PARAM_INT);
 $this_year_class_stmt->execute();
 $this_year_class = $this_year_class_stmt->fetch(PDO::FETCH_ASSOC);
+$smarty->assign('this_year_class', $this_year_class);
 if ($this_year_class) {
   $class_id = $this_year_class['class_id'];
 } else {
   $class_id = null;
 }
+$smarty->assign('class_id', $class_id);
 
 
 //生徒が所属していたクラスを求める
@@ -79,14 +87,14 @@ $classes_stmt = $db->prepare("SELECT c.grade, b.id, b.class_id, c.grade, c.year,
 $classes_stmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
 $classes_stmt->execute();
 $belonged_classes = $classes_stmt->fetchAll(PDO::FETCH_ASSOC | PDO::FETCH_UNIQUE);
-// var_dump($belonged_classes);
+$smarty->assign('belonged_classes', $belonged_classes);
 
 
 // 教科一覧
 $subjects_stmt = $db->prepare("SELECT id, id as subject_id, name FROM subjects");
 $subjects_stmt->execute();
 $all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC | PDO::FETCH_UNIQUE);
-// var_dump($all_subjects);
+$smarty->assign('all_subjects', $all_subjects);
 
 // 生徒が持つ課題を求める（提出期限の前後1週間のもの）
 $a_week_ago = date("Y-m-d", strtotime("-1 week"));
@@ -113,7 +121,7 @@ if (!$submission_success) {
   die($db->error);
 }
 $submission_info = $submission_stmt->fetchAll(PDO::FETCH_ASSOC);
-// var_dump($_SESSION);
+$smarty->assign('submission_info', $submission_info);
 
 // scoreの値
 $scoreList = array(
@@ -123,138 +131,8 @@ $scoreList = array(
   1 => "C",
   0 => "未提出"
 );
+$smarty->assign('scoreList', $scoreList);
 
+$smarty->caching = 0;
+$smarty->display('student/home.tpl');
 ?>
-
-<!DOCTYPE html>
-<html lang="jp">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>生徒トップページ</title>
-  <link rel="stylesheet" href="../style.css" />
-</head>
-
-<body>
-  <div id="wrap">
-    <div id="head">
-      <h1>生徒トップページ</h1>
-    </div>
-    <div id="content">
-      <?php if (isset($_SESSION['auth']['teacher_id'])) : ?>
-        <div style="text-align: right"><a href="../teacher/home.php">教員ホームへ</a></div>
-      <?php endif; ?>
-
-      <div style="text-align: right">
-        <?php if (!$this_year_class) : ?>
-          <span class="required">要新規登録</span>
-        <?php endif ?>
-        <a href="edit_student.php">生徒情報編集ページ</a>
-      </div>
-
-      <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
-      <div style="text-align: left">
-
-        <!-- 所属クラス -->
-        <div style="margin-top: 10px; margin-bottom: 10px;">
-          <p>所属クラス</p>
-          <form action="" method="post">
-            <select size="1" name="year">
-              <?php
-              foreach ($belonged_classes as $belonged_class) {
-                if ($belonged_class['year'] == $form['year']) {
-                  echo "<option value={$belonged_class['year']} selected>" .
-                    "{$belonged_class['year']}年度{$belonged_class['grade']}年{$belonged_class['class']}組"
-                    . "</option>";
-                } else {
-                  echo "<option value={$belonged_class['year']}>" .
-                    "{$belonged_class['year']}年度{$belonged_class['grade']}年{$belonged_class['class']}組"
-                    . "</option>";
-                }
-              }
-              ?>
-            </select>
-            <input type="submit" value="変更" />
-          </form>
-        </div>
-        <!-- 生徒情報 -->
-        <div>
-          <img src="../student_pictures/<?php echo h($student_pic_info['path']); ?>" width="100" height="100" alt="" />
-          <?php if ($this_year_class) : ?>
-            <?php echo "{$this_year_class['grade']} - {$this_year_class['class']} No_{$this_year_class['student_num']}"; ?>
-          <?php endif; ?>
-          <?php echo "{$student_info['student_last_name']} {$student_info['student_first_name']}" . ' さん' ?>
-          <?php if ($student_info['is_active'] == 0) : ?>
-            <p style="color: red;">除籍済</p>
-          <?php endif; ?>
-        </div>
-
-        <?php if ($this_year_class) : ?>
-          <div>
-            <p> 各教科 課題一覧</p>
-            <?php foreach ($all_subjects as $subject) : ?>
-              <span style="margin: 15px;">
-                <a href="index_submission.php?subject_id=<?php echo $subject['subject_id']; ?>&class_id=<?php echo $class_id; ?>">
-                  <?php echo $subject['name']; ?>
-                </a>
-              </span>
-            <?php endforeach; ?>
-          </div>
-
-          <?php if ($submission_info) : ?>
-            <!-- 課題一覧 -->
-            <div style="margin: 15px;">
-              <table class="" style="text-align: center;">
-                <tr>
-                  <!-- <th>h_id</th> -->
-                  <th>教科</th>
-                  <th>課題名</th>
-                  <th>提出期限</th>
-                  <th>受領日</th>
-                  <th>評価</th>
-                </tr>
-                <?php foreach ($submission_info as $submission) : ?>
-                  <!-- 教科 -->
-                  <td>
-                    <?php echo $all_subjects[$submission['subject_id']]['name']; ?>
-                  </td>
-
-                  <!-- 課題名 -->
-                  <td>
-                    <?php echo $submission['submission_name']; ?>
-                  </td>
-
-                  <!-- 提出期限 -->
-                  <td>
-                    <?php echo h($submission['dead_line']); ?>
-                  </td>
-
-                  <!-- 受領日 -->
-                  <td>
-                    <?php echo $submission['approved_date']; ?>
-                  </td>
-
-                  <!-- スコア -->
-                  <?php if ($submission['score'] === 0) : ?>
-                    <td style="color: red;">
-                      <?php echo $scoreList[$submission['score']]; ?>
-                    </td>
-                  <?php else : ?>
-                    <td>
-                      <?php echo $scoreList[$submission['score']]; ?>
-                    </td>
-                  <?php endif; ?>
-                  </tr>
-                <?php endforeach; ?>
-              </table>
-            <?php else : ?>
-              <p>期限の近い課題はありません</p>
-            <?php endif; ?>
-
-          <?php endif; ?>
-
-
-</body>
-
-</html>
