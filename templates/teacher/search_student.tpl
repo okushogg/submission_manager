@@ -65,8 +65,8 @@
         <input type="submit" value="検索" />
       </form>
 
-      {if isset($student_search_result)}
-
+      {if $_POST}
+      {if count($student_search_result)>0}
         <!-- 生徒検索結果一覧 -->
         <div style="margin: 15px;">
           <table class="" style="text-align: center;">
@@ -116,7 +116,9 @@
             {/foreach}
           </table>
         </div>
-
+      {else}
+         <p>該当する生徒はいませんでした。</p>
+      
       {/if}
 
 

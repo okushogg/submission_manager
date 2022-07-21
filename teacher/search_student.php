@@ -10,6 +10,8 @@ $smarty = new Smarty_submission_manager();
 $teacher_info = $_SESSION['auth'];
 $smarty->assign('teacher_info', $teacher_info);
 
+$smarty->assign('_POST', $_POST);
+
 $form = [
   "last_name" => '',
   "first_name" => '',
@@ -60,6 +62,9 @@ $smarty->assign('pic_info', $pic_info);
 // 登録されている年度を全て取得
 $all_years = get_years($db);
 $smarty->assign('all_years', $all_years);
+
+$student_search_result = [];
+$smarty->assign('student_search_result',$student_search_result);
 
 // 検索ボタン押下時
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -115,5 +120,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $smarty->assign('student_search_result', $student_search_result);
   $smarty->assign('form', $form);
 }
+var_dump(count($student_search_result));
 $smarty->caching = 0;
 $smarty->display('teacher/search_student.tpl');

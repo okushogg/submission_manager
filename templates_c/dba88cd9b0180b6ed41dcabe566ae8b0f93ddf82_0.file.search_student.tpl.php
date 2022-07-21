@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-19 10:08:21
+/* Smarty version 4.1.1, created on 2022-07-21 03:18:11
   from '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/search_student.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62d68295294116_53902100',
+  'unifunc' => 'content_62d8c573be8929_02304725',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'dba88cd9b0180b6ed41dcabe566ae8b0f93ddf82' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/search_student.tpl',
-      1 => 1658225291,
+      1 => 1658373485,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_62d68295294116_53902100 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62d8c573be8929_02304725 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="jp">
 
@@ -126,8 +126,8 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
         <input type="submit" value="検索" />
       </form>
 
-      <?php if ((isset($_smarty_tpl->tpl_vars['student_search_result']->value))) {?>
-
+      <?php if ($_smarty_tpl->tpl_vars['_POST']->value) {?>
+      <?php if (count($_smarty_tpl->tpl_vars['student_search_result']->value) > 0) {?>
         <!-- 生徒検索結果一覧 -->
         <div style="margin: 15px;">
           <table class="" style="text-align: center;">
@@ -190,7 +190,9 @@ $_smarty_tpl->tpl_vars['student']->do_else = false;
 $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
           </table>
         </div>
-
+      <?php } else { ?>
+         <p>該当する生徒はいませんでした。</p>
+      <?php }?>
       <?php }?>
 
 

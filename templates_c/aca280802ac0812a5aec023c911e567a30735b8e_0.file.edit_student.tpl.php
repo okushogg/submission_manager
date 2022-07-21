@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-20 15:37:13
+/* Smarty version 4.1.1, created on 2022-07-20 18:32:52
   from '/Applications/MAMP/htdocs/submissions_manager/templates/student/edit_student.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62d7beb9d20db0_31504712',
+  'unifunc' => 'content_62d7e7e447b937_20316286',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'aca280802ac0812a5aec023c911e567a30735b8e' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/student/edit_student.tpl',
-      1 => 1658306231,
+      1 => 1658309519,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_62d7beb9d20db0_31504712 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62d7e7e447b937_20316286 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="ja">
 
@@ -48,7 +48,7 @@ function content_62d7beb9d20db0_31504712 (Smarty_Internal_Template $_smarty_tpl)
       <p>記入した内容を確認して、「登録する」ボタンをクリックしてください</p>
       <form action="" method="post" enctype="multipart/form-data">
         <dl>
-          <dt>姓</dt>
+          <dt>氏</dt>
           <?php if ((isset($_smarty_tpl->tpl_vars['error']->value['last_name'])) && $_smarty_tpl->tpl_vars['error']->value['first_name'] === 'blank') {?>
             <p class="error">* 苗字を入力してください</p>
           <?php }?>
