@@ -83,4 +83,30 @@
     $error['dead_line'] = 'not_future_date';
   }
 
+// クラス登録のエラーチェエク
+  // 学年入力チェック
+  $grade = filter_input(INPUT_POST, 'grade', FILTER_SANITIZE_NUMBER_INT);
+  if ($grade === '0') {
+    $error['grade'] = 'blank';
+  }
+  $smarty->assign('grade', $grade);
+
+  // クラス入力チェック
+  $class = filter_input(INPUT_POST, 'class', FILTER_SANITIZE_STRING);
+  if ($class === '-') {
+    $error['class'] = 'blank';
+  }
+  $smarty->assign('class', $class);
+
+  // 同じクラスがないかチェック
+  $stmt_check = $db->prepare("SELECT * FROM classes WHERE year = ? AND grade = ? AND class = ?");
+  $success_check = $stmt_check->execute(array($this_year, $grade, $class));
+  if (!$success_check) {
+    die($db->error);
+  }
+  $same_class_check = $stmt_check->fetchALL(PDO::FETCH_ASSOC);
+  if (count($same_class_check) >= 1) {
+    $error['class'] = 'same_class';
+  }
+
 ?>

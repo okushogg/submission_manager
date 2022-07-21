@@ -54,30 +54,8 @@ $smarty->assign('classes', $classes);
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // 学年入力チェック
-  $grade = filter_input(INPUT_POST, 'grade', FILTER_SANITIZE_NUMBER_INT);
-  if ($grade === '0') {
-    $error['grade'] = 'blank';
-  }
-  $smarty->assign('grade', $grade);
-
-  // クラス入力チェック
-  $class = filter_input(INPUT_POST, 'class', FILTER_SANITIZE_STRING);
-  if ($class === '-') {
-    $error['class'] = 'blank';
-  }
-  $smarty->assign('class', $class);
-
-  // 同じクラスがないかチェック
-  $stmt_check = $db->prepare("SELECT * FROM classes WHERE year = ? AND grade = ? AND class = ?");
-  $success_check = $stmt_check->execute(array($this_year, $grade, $class));
-  if (!$success_check) {
-    die($db->error);
-  }
-  $same_class_check = $stmt_check->fetchALL(PDO::FETCH_ASSOC);
-  if (count($same_class_check) >= 1) {
-    $error['class'] = 'same_class';
-  }
+  // エラーチェック
+  include('error_check.php');
 
   // 入力に問題がなければ
   if (empty($error)) {
