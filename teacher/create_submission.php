@@ -69,34 +69,8 @@ $smarty->assign('all_subjects', $all_subjects);
 
 //「課題を作成する」をクリック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // 課題名の確認
-  $form['submission_name'] = filter_input(INPUT_POST, 'submission_name', FILTER_SANITIZE_STRING);
-  if ($form['submission_name'] === '') {
-    $error['submission_name'] = 'blank';
-  }
-
-  // クラスの確認
-  $form['class_id'] = filter_input(INPUT_POST, 'class_id', FILTER_SANITIZE_NUMBER_INT);
-  $class_id = intval($form['class_id']);
-  if ($form['class_id'] == 0) {
-    $error['class_id'] = 'blank';
-  }
-
-  // 教科の確認
-  $form['subject_id'] = filter_input(INPUT_POST, 'subject_id', FILTER_SANITIZE_NUMBER_INT);
-  $subject_id = intval($form['subject_id']);
-  if ($form['subject_id'] == 0) {
-    $error['subject_id'] = 'blank';
-  }
-
-  // 提出期限の確認
-  $form['dead_line'] = filter_input(INPUT_POST, 'dead_line', FILTER_SANITIZE_NUMBER_INT);
-  $dead_line = $form['dead_line'];
-  if ($form['dead_line'] === '') {
-    $error['dead_line'] = 'blank';
-  } elseif ($today > $dead_line) {
-    $error['dead_line'] = 'not_future_date';
-  }
+  // エラーチェック
+  include('error_check.php');
 
   // hiddenに入ったteacherのid
   $teacher_id = intval($form['teacher_id']);

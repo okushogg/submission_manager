@@ -2,7 +2,6 @@
 session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
-
 require_once('../private/set_up.php');
 
 $smarty = new Smarty_submission_manager();
@@ -21,67 +20,16 @@ if (isset($_GET['action']) && isset($_SESSION['form'])) {
 }
 
 $error = [];
-
 $smarty->assign('error', $error);
 $smarty->assign('form', $form);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // 姓名の確認
-  $form['first_name'] = filter_input(INPUT_POST, 'first_name');
-  if ($form['first_name'] === '') {
-    $error['first_name'] = 'blank';
-  }
 
-  $form['last_name'] = filter_input(INPUT_POST, 'last_name');
-  if ($form['last_name'] === '') {
-    $error['last_name'] = 'blank';
-  }
+  // エラーチェック
+  include('error_check.php');
 
-  //メールアドレスが入力されているかチェック
-  $form['email'] = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-  if ($form['email'] === '') {
-    $error['email'] = 'blank';
-  } else {
-    // 同一のメールアドレスがないかチェック
-    $stmt = $db->prepare('select count(*) from teachers where email=?');
-    if (!$stmt) {
-      die($db->error);
-    }
-    $stmt->bindParam(1, $form['email'], PDO::PARAM_STR);
-    $success = $stmt->execute();
-    if (!$success) {
-      die($db->error);
-    }
-    $cnt_string = $stmt->fetch(PDO::FETCH_COLUMN);
-    $cnt = intval($cnt_string);
-
-    if ($cnt > 0) {
-      $error['email'] = 'duplicate';
-    }
-  }
-
-
-  // パスワードのチェック
-  $form['password'] = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
-  if ($form['password'] === '') {
-    $error['password'] = 'blank';
-  } elseif (strlen($form['password']) < 4) {
-    $error['password'] = 'length';
-  }
-
-  // 画像のチェック
-  $image = $_FILES['image'];
-  if ($image['name'] !== '' && $image['error'] === 0) {
-    $type = mime_content_type($image['tmp_name']);
-    if ($type !== 'image/png' && $type !== 'image/jpeg') {
-      $error['image'] = 'type';
-    }
-  }
-
-
-  var_dump($error);
+  // エラーがなかった場合
   if (empty($error)) {
-    var_dump($error);
     $_SESSION['form'] = $form;
     // 画像のアップロード
     if ($image['name'] !== '') {

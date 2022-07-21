@@ -86,56 +86,10 @@ $smarty->assign('selectable_classes', $selectable_classes);
 
 // 生徒情報を更新をクリック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // 姓名の確認
-  $form['first_name'] = filter_input(INPUT_POST, 'first_name');
-  if ($form['first_name'] === '') {
-    $error['first_name'] = 'blank';
-  }
+  // エラーチェック
+  include('error_check.php');
 
-  $form['last_name'] = filter_input(INPUT_POST, 'last_name');
-  if ($form['last_name'] === '') {
-    $error['last_name'] = 'blank';
-  }
-
-  //メールアドレスが入力されているかチェック
-  $form['email'] = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-  if ($form['email'] === '') {
-    $error['email'] = 'blank';
-  }
-
-  if ($form['image']) {
-    // 画像のチェック
-    $image = $_FILES['image'];
-    if ($image['name'] !== '' && $image['error'] === 0) {
-      $type = mime_content_type($image['tmp_name']);
-      if ($type !== 'image/png' && $type !== 'image/jpeg') {
-        $error['image'] = 'type';
-      }
-    }
-  }
-
-  // 学年とクラスのチェック
-  $form['class_id'] = filter_input(INPUT_POST, 'class_id', FILTER_SANITIZE_NUMBER_INT);
-  if ($form['class_id'] == 0) {
-    $error['class_id'] = 'blank';
-  }
-
-  // 出席番号のチェック
-  $form['student_num'] = filter_input(INPUT_POST, 'student_num', FILTER_SANITIZE_NUMBER_INT);
-  if ($form['student_num'] == 0) {
-    $error['student_num'] = 'blank';
-  }
-
-
-  // 性別のチェック
-  $form['sex'] = filter_input(INPUT_POST, 'sex');
-  if ($form['sex'] === '') {
-    $error['sex'] = 'blank';
-  }
-
-  // 在籍状況のチェック
-  $form['is_active'] = filter_input(INPUT_POST, 'is_active');
-
+  // エラーがなかった場合
   if (empty($error)) {
     // 画像のアップロード
     if ($form['image']) {

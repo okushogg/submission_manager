@@ -87,29 +87,8 @@ $class_id = $submission_info['class_id'];
 
 //「課題内容を編集」をクリックしたら
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // 課題名の確認
-  $form['submission_name'] = filter_input(INPUT_POST, 'submission_name');
-  if ($form['submission_name'] === '') {
-    $error['submission_name'] = 'blank';
-  }
-
-  // 教科の確認
-  $form['subject_id'] = filter_input(INPUT_POST, 'subject_id', FILTER_SANITIZE_NUMBER_INT);
-  $subject_id = intval($form['subject_id']);
-  if ($form['subject_id'] == 0) {
-    $error['subject_id'] = 'blank';
-  }
-
-  // 提出期限の確認
-  $form['dead_line'] = filter_input(INPUT_POST, 'dead_line', FILTER_SANITIZE_NUMBER_INT);
-  // 提出期限を変更する場合は過去の日付を選べない
-  if ($form['dead_line'] != $submission_info['dead_line']) {
-    if ($form['dead_line'] === '') {
-      $error['dead_line'] = 'blank';
-    } elseif ($today > $form['dead_line']) {
-      $error['dead_line'] = 'not_future_date';
-    }
-  }
+  // エラーチェック
+  include('error_check.php');
 
   // teacherのid
   $teacher_id = $form['teacher_id'];
