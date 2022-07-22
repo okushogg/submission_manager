@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-20 03:20:59
+/* Smarty version 4.1.1, created on 2022-07-22 03:18:23
   from '/Applications/MAMP/htdocs/submissions_manager/templates/student/sign_up.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62d7749b727856_72480282',
+  'unifunc' => 'content_62da16ff7f07d5_62617379',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '476544783135c37cf279de881208f432b46952a0' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/student/sign_up.tpl',
-      1 => 1658287252,
+      1 => 1658459895,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_62d7749b727856_72480282 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62da16ff7f07d5_62617379 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="jp">
 
@@ -45,8 +45,10 @@ function content_62d7749b727856_72480282 (Smarty_Internal_Template $_smarty_tpl)
         <form action="" method="post" enctype="multipart/form-data">
           <dl>
             <dt>氏<span class="required">（必須）</span></dt>
-            <?php if ((isset($_smarty_tpl->tpl_vars['error']->value['last_name'])) && $_smarty_tpl->tpl_vars['error']->value['first_name'] === 'blank') {?>
+            <?php if ((isset($_smarty_tpl->tpl_vars['error']->value['last_name'])) && $_smarty_tpl->tpl_vars['error']->value['last_name'] === 'blank') {?>
               <p class="error">* 苗字を入力してください</p>
+            <?php } elseif ((isset($_smarty_tpl->tpl_vars['error']->value['last_name'])) && $_smarty_tpl->tpl_vars['error']->value['last_name'] === 'invalid_letter') {?>
+              <p class="error">* 全角ひらがな、カタカナ、漢字で入力してください</p>
             <?php }?>
             <dd>
               <input type="text" name="last_name" size="35" maxlength="255" value="<?php echo $_smarty_tpl->tpl_vars['form']->value['last_name'];?>
@@ -56,6 +58,8 @@ function content_62d7749b727856_72480282 (Smarty_Internal_Template $_smarty_tpl)
             <dt>名<span class="required">（必須）</span></dt>
             <?php if ((isset($_smarty_tpl->tpl_vars['error']->value['first_name'])) && $_smarty_tpl->tpl_vars['error']->value['first_name'] === 'blank') {?>
               <p class="error">* 名前を入力してください</p>
+            <?php } elseif ((isset($_smarty_tpl->tpl_vars['error']->value['first_name'])) && $_smarty_tpl->tpl_vars['error']->value['first_name'] === 'invalid_letter') {?>
+              <p class="error">* 全角ひらがな、カタカナ、漢字で入力してください</p>
             <?php }?>
             <dd>
               <input type="text" name="first_name" size="35" maxlength="255" value="<?php echo $_smarty_tpl->tpl_vars['form']->value['first_name'];?>
@@ -113,16 +117,23 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
             <dt>メールアドレス<span class="required">（必須）</span></dt>
             <?php if ((isset($_smarty_tpl->tpl_vars['error']->value['email'])) && $_smarty_tpl->tpl_vars['error']->value['email'] === 'blank') {?>
               <p class="error">* メールアドレスを入力してください</p>
+            <?php } elseif ((isset($_smarty_tpl->tpl_vars['error']->value['email'])) && $_smarty_tpl->tpl_vars['error']->value['email'] === 'not_like_email') {?>
+              <p class="error">* メールアドレスの形式ではないようです</p>
+            <?php } elseif ((isset($_smarty_tpl->tpl_vars['error']->value['email'])) && $_smarty_tpl->tpl_vars['error']->value['email'] === 'duplicate') {?>
+              <p class="error">* 登録済のメールアドレスです</p>
             <?php }?>
             <dd>
               <input type="text" name="email" size="35" maxlength="255" value="<?php echo $_smarty_tpl->tpl_vars['form']->value['email'];?>
 " />
+            </dd>
 
             <dt>パスワード<span class="required">（必須）</span></dt>
             <?php if ((isset($_smarty_tpl->tpl_vars['error']->value['password'])) && $_smarty_tpl->tpl_vars['error']->value['password'] === 'blank') {?>
               <p class="error">* パスワードを入力してください</p>
             <?php } elseif ((isset($_smarty_tpl->tpl_vars['error']->value['password'])) && $_smarty_tpl->tpl_vars['error']->value['password'] === 'length') {?>
               <p class="error">* パスワードは4文字以上で入力してください</p>
+            <?php } elseif ((isset($_smarty_tpl->tpl_vars['error']->value['password'])) && $_smarty_tpl->tpl_vars['error']->value['password'] === 'invalid_letter') {?>
+              <p class="error">* パスワードは半角英数字で入力してください</p>
             <?php }?>
             <dd>
               <input type="password" name="password" size="10" maxlength="20" value="<?php echo $_smarty_tpl->tpl_vars['form']->value['password'];?>
