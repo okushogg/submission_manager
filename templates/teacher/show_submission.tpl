@@ -23,10 +23,8 @@
       <div style="text-align: right"><a href="index_submission.php?class_id={$submission_info.class_id}">課題一覧へ</a></div>
 
       <!-- ユーザー情報 -->
-      <div style="text-align: left">
-        <img src="../teacher_pictures/{$pic_info.path}" width="100" height="100" alt="" />
-        {$teacher_info.last_name} {$teacher_info.first_name}先生
-      </div>
+      {* ユーザーの情報表示 *}
+      {include file="/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl"}
 
       <!-- 課題情報 -->
       <div>

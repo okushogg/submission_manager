@@ -25,7 +25,7 @@ function get_years($db)
 // ログインチェック
 function login_check()
 {
-  if (!$_SESSION['auth']['login']) {
+  if (!$_SESSION['auth']['is_login']) {
     header('Location: log_in.php');
     exit();
   }

@@ -120,6 +120,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $smarty->assign('student_search_result', $student_search_result);
   $smarty->assign('form', $form);
 }
-var_dump(count($student_search_result));
 $smarty->caching = 0;
 $smarty->display('teacher/search_student.tpl');

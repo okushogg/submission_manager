@@ -19,10 +19,8 @@
       <div style="text-align: right"><a href="search_student.php">生徒検索</a></div>
       <div style="text-align: right"><a href="register_class.php">クラス登録</a></div>
       <div style="text-align: right"><a href="create_submission.php">提出物登録</a></div>
-      <div style="text-align: left">
-        <img src="../teacher_pictures/{$pic_info.path}" width="100" height="100" alt="" />
-        {$teacher_info.last_name} {$teacher_info.first_name}先生
-      </div>
+      {* ユーザーの情報表示 *}
+      {include file="/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl"}
 
       <div>
         <div class="box">
