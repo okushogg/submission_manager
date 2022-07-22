@@ -24,7 +24,7 @@
             <dt>氏<span class="required">（必須）</span></dt>
             {if isset($error.last_name) && $error.last_name === 'blank'}
               <p class="error">* 苗字を入力してください</p>
-            {elseif isset($error['last_name']) && $error.last_name === 'invalid_letter' }
+            {elseif isset($error.last_name) && $error.last_name === 'invalid_letter' }
               <p class="error">* 全角ひらがな、カタカナ、漢字で入力してください</p>
             {/if}
             <dd>
@@ -34,7 +34,7 @@
             <dt>名<span class="required">（必須）</span></dt>
             {if isset($error.first_name) && $error.first_name === 'blank' }
               <p class="error">* 名前を入力してください</p>
-            {elseif isset($error['first_name']) && $error.first_name === 'invalid_letter' }
+            {elseif isset($error.first_name) && $error.first_name === 'invalid_letter' }
               <p class="error">* 全角ひらがな、カタカナ、漢字で入力してください</p>
             {/if }
             <dd>

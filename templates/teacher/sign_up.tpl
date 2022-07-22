@@ -22,9 +22,9 @@
         <form action="" method="post" enctype="multipart/form-data">
           <dl>
             <dt>氏<span class="required">（必須）</span></dt>
-            {if isset($error['last_name']) && $error.last_name === 'blank' }
+            {if isset($error.last_name) && $error.last_name === 'blank' }
               <p class="error">* 苗字を入力してください</p>
-            {elseif isset($error['last_name']) && $error.last_name === 'invalid_letter' }
+            {elseif isset($error.last_name) && $error.last_name === 'invalid_letter' }
               <p class="error">* 全角ひらがな、カタカナ、漢字で入力してください</p>
             {/if}
             <dd>
@@ -32,13 +32,13 @@
             </dd>
 
             <dt>名<span class="required">（必須）</span></dt>
-            {if isset($error['first_name']) && $error.first_name === 'blank'}
+            {if isset($error.first_name) && $error.first_name === 'blank'}
               <p class="error">* 名前を入力してください</p>
-            {elseif isset($error['first_name']) && $error.first_name === 'invalid_letter' }
+            {elseif isset($error.first_name) && $error.first_name === 'invalid_letter' }
               <p class="error">* 全角ひらがな、カタカナ、漢字で入力してください</p>
             {/if}
             <dd>
-              <input type="text" name="first_name" size="35" maxlength="255" value="{$form['first_name']}" />
+              <input type="text" name="first_name" size="35" maxlength="255" value="{$form.first_name}" />
             </dd>
 
             <dt>メールアドレス<span class="required">（必須）</span></dt>
@@ -65,7 +65,7 @@
             </dd>
 
             <dt>写真など</dt>
-            {if isset($error['image']) && $error.image === 'type'}
+            {if isset($error.image) && $error.image === 'type'}
                 <p class="error">* 写真などは「.png」または「.jpg」の画像を指定してください</p>
                 <p class="error">* 恐れ入りますが、画像を改めて指定してください</p>
             {/if}
