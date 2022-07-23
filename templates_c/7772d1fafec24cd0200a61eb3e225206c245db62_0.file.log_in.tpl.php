@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-20 07:30:11
+/* Smarty version 4.1.1, created on 2022-07-22 11:12:07
   from '/Applications/MAMP/htdocs/submissions_manager/templates/student/log_in.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62d7af03428d81_84538294',
+  'unifunc' => 'content_62da8607ea8652_48362931',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '7772d1fafec24cd0200a61eb3e225206c245db62' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/student/log_in.tpl',
-      1 => 1658302208,
+      1 => 1658488325,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_62d7af03428d81_84538294 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62da8607ea8652_48362931 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -28,6 +28,9 @@ function content_62d7af03428d81_84538294 (Smarty_Internal_Template $_smarty_tpl)
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <link rel="stylesheet" type="text/css" href="../style.css" />
   <title>生徒ログインページ</title>
+  <?php echo '<script'; ?>
+ type="text/javascript" src="../js/teacher_page.js"><?php echo '</script'; ?>
+>
 </head>
 
 <body>
@@ -65,8 +68,10 @@ function content_62d7af03428d81_84538294 (Smarty_Internal_Template $_smarty_tpl)
           <input type="submit" value="ログインする" />
         </div>
       </form>
-      <div style="text-align: right; margin: 10px;"><a href="../teacher/log_in.php">>教員用ログインページ</a></div>
 
+      <form style="text-align: right; margin: 10px;">
+        <input type="button" value="教員用ログインページ" onclick="myEnter()">
+      </form>
     </div>
   </div>
 </body>

@@ -54,5 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $smarty->assign('password', $password);
   $smarty->assign('error', $error);
 }
+var_dump($_SESSION);
 $smarty->caching = 0;
 $smarty->display('student/log_in.tpl');
