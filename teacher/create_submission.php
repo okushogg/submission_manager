@@ -43,16 +43,7 @@ $teacher_id = $_SESSION['auth']['teacher_id'];
 $image_id = $_SESSION['auth']['teacher_image_id'];
 
 // 画像の情報を取得
-$stmt = $db->prepare("select path from images where id=:id");
-if (!$stmt) {
-  die($db->error);
-}
-$stmt->bindParam(':id', $image_id, PDO::PARAM_INT);
-$success = $stmt->execute();
-if (!$success) {
-  die($db->error);
-}
-$pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
+$pic_info = get_pic_info($db, $image_id);
 $smarty->assign('pic_info', $pic_info);
 
 // 該当年度の年度のクラスを取得する

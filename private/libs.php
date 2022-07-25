@@ -11,6 +11,20 @@ $today = date('Y-m-d');
 // 画像がないユーザー用のimagesレコード
 $no_image_id = 69;
 
+// 写真の情報を取得
+function get_pic_info($db, $image_id)
+{
+$stmt = $db->prepare("select path from images where id=:id");
+if (!$stmt) {
+  die($db->error);
+}
+$stmt->bindParam(':id', $image_id, PDO::PARAM_INT);
+$success = $stmt->execute();
+
+$pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
+return $pic_info;
+}
+
 // 登録されている年度を全て取得
 function get_years($db)
 {
