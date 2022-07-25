@@ -26,7 +26,7 @@ function get_years($db)
 function login_check()
 {
   if (!$_SESSION['auth']['is_login']) {
-    header('Location: log_in.php');
+    header('Location: ../student/log_in.php');
     exit();
   }
 }
@@ -35,6 +35,9 @@ function login_check()
 function is_teacher_login(){
   if(isset($_SESSION['auth']['teacher_id'])){
     return true;
+  } else {
+    header('Location: ../teacher/teacher_check.php');
+    exit();
   }
 }
 

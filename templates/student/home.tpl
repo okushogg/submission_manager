@@ -14,7 +14,7 @@
       <h1>生徒トップページ</h1>
     </div>
     <div id="content">
-     {if is_teacher_login() }
+     {if isset($teacher_id) }
         <div style="text-align: right"><a href="../teacher/home.php">教員ホームへ</a></div>
      {/if}
 

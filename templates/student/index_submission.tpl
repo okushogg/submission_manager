@@ -14,7 +14,7 @@
       <h1>{$all_subjects[$subject_id].name}課題一覧</h1>
     </div>
     <div id="content">
-      {if is_teacher_login() }
+      {if isset($teacher_id) }
         <div style="text-align: right"><a href="../teacher/home.php">教員ホームへ</a></div>
       {/if}
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>

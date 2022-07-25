@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-20 07:05:08
+/* Smarty version 4.1.1, created on 2022-07-25 06:04:28
   from '/Applications/MAMP/htdocs/submissions_manager/templates/student/home.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62d7a924306df5_52373383',
+  'unifunc' => 'content_62de326c106f40_03304306',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'a8a32e863f747a56342dbe3c3264f4d4facc36db' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/student/home.tpl',
-      1 => 1658300706,
+      1 => 1658729061,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_62d7a924306df5_52373383 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62de326c106f40_03304306 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="jp">
 
@@ -37,7 +37,7 @@ function content_62d7a924306df5_52373383 (Smarty_Internal_Template $_smarty_tpl)
       <h1>生徒トップページ</h1>
     </div>
     <div id="content">
-     <?php if (is_teacher_login()) {?>
+     <?php if ((isset($_smarty_tpl->tpl_vars['teacher_id']->value))) {?>
         <div style="text-align: right"><a href="../teacher/home.php">教員ホームへ</a></div>
      <?php }?>
 

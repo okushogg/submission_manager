@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if (password_verify($password, $student_info['password'])) {
         // ログイン成功
         session_regenerate_id();
-        $_SESSION['auth']['login'] = true;
+        $_SESSION['auth']['is_login'] = true;
         $_SESSION['auth']['student_id'] = $student_info['id'];
         $_SESSION['auth']['last_name'] = $student_info['last_name'];
         $_SESSION['auth']['first_name'] = $student_info['first_name'];
@@ -54,6 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $smarty->assign('password', $password);
   $smarty->assign('error', $error);
 }
-var_dump($_SESSION);
+
 $smarty->caching = 0;
 $smarty->display('student/log_in.tpl');

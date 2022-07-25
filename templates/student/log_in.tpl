@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <link rel="stylesheet" type="text/css" href="../style.css" />
   <title>生徒ログインページ</title>
-  <script type="text/javascript" src="../js/teacher_page.js"></script>
+  <script type="text/javascript" src="../private/js/teacher_page.js"></script>
 </head>
 
 <body>
@@ -41,10 +41,7 @@
           <input type="submit" value="ログインする" />
         </div>
       </form>
-
-      <form style="text-align: right; margin: 10px;">
-        <input type="button" value="教員用ログインページ" onclick="myEnter()">
-      </form>
+       <div style="text-align: right; margin: 10px;"><a href="../teacher/teacher_check.php">>教員用ログインページ</a></div>
     </div>
   </div>
 </body>

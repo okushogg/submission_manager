@@ -31,6 +31,9 @@ $today = date('Y-m-d');
 // ログイン情報がないとログインページへ移る
 login_check();
 
+// 教員のログインか確認
+is_teacher_login();
+
 // セッション内の情報
 $teacher_info = $_SESSION['auth'];
 $smarty->assign('teacher_info', $teacher_info);

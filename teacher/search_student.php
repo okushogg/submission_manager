@@ -42,6 +42,9 @@ $smarty->assign('classes', $classes);
 // ログイン情報がないとログインページへ移る
 login_check();
 
+// 教員のログインか確認
+is_teacher_login();
+
 // 教員がログインしていた場合
 $teacher_id = $_SESSION['auth']['teacher_id'];
 $image_id = $_SESSION['auth']['teacher_image_id'];
