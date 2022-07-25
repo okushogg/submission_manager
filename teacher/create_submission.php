@@ -69,15 +69,10 @@ $subjects_stmt->execute();
 $all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC);
 $smarty->assign('all_subjects', $all_subjects);
 
-
 //「課題を作成する」をクリック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
   include('error_check.php');
-
-  // hiddenに入ったteacherのid
-  $teacher_id = intval($form['teacher_id']);
-  $smarty->assign('teacher_id', $teacher_id);
 
   // 指定されたclass_idを持つ全てのstudent_idを求める(除籍済を除く)
   $student_stmt = $db->prepare("SELECT b.student_id as student_id, b.student_num as student_num

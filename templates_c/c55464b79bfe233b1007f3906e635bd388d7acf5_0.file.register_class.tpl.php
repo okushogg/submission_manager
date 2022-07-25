@@ -1,26 +1,27 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-19 09:33:12
+/* Smarty version 4.1.1, created on 2022-07-25 08:26:25
   from '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/register_class.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62d67a584afc29_15673801',
+  'unifunc' => 'content_62de53b1505b56_86600507',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'c55464b79bfe233b1007f3906e635bd388d7acf5' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/register_class.tpl',
-      1 => 1658223184,
+      1 => 1658475098,
       2 => 'file',
     ),
   ),
   'includes' => 
   array (
+    'file:/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl' => 1,
   ),
 ),false)) {
-function content_62d67a584afc29_15673801 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62de53b1505b56_86600507 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="jp">
 
@@ -39,13 +40,8 @@ function content_62d67a584afc29_15673801 (Smarty_Internal_Template $_smarty_tpl)
     <div id="content">
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
       <div style="text-align: right"><a href="home.php">トップページへ</a></div>
-      <div style="text-align: left">
-        <img src="../teacher_pictures/<?php echo $_smarty_tpl->tpl_vars['pic_info']->value['path'];?>
-" width="100" height="100" alt="" />
-        <?php echo $_smarty_tpl->tpl_vars['teacher_info']->value['last_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['teacher_info']->value['first_name'];?>
-先生
-      </div>
+            <?php $_smarty_tpl->_subTemplateRender("file:/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
+?>
 
       <form action="" method="post">
         <dl>

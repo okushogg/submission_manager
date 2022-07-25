@@ -1,54 +1,64 @@
 <?php
 // Sign_upのエラーチェック
-$form['first_name'] = filter_input(INPUT_POST, 'first_name', FILTER_SANITIZE_STRING);
-if ($form['first_name'] === '') {
-  $error['first_name'] = 'blank';
-} elseif (!preg_match("/\A[一-龠ァ-ヶぁ-ん]+\z/", $form['first_name'])) {
-  $error['first_name'] = 'invalid_letter';
+if(!empty($form['first_name'])){
+  $form['first_name'] = filter_input(INPUT_POST, 'first_name', FILTER_SANITIZE_STRING);
+  if ($form['first_name'] === '') {
+    $error['first_name'] = 'blank';
+  } elseif (!preg_match("/\A[一-龠ァ-ヶぁ-ん]+\z/", $form['first_name'])) {
+    $error['first_name'] = 'invalid_letter';
+  }
 }
 
+if(!empty($form['last_name'])){
 $form['last_name'] = filter_input(INPUT_POST, 'last_name', FILTER_SANITIZE_STRING);
 if ($form['last_name'] === '') {
   $error['last_name'] = 'blank';
 } elseif (!preg_match("/\A[一-龠ァ-ヶぁ-ん]+\z/", $form['last_name'])) {
   $error['last_name'] = 'invalid_letter';
 }
+}
 
 //メールアドレスが入力されているかチェック
-$form['email'] = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-if ($form['email'] === '') {
-  $error['email'] = 'blank';
-} elseif (!preg_match("/\A([a-zA-Z0-9_\.\-]+)\@([a-zA-Z0-9\-]+)\.([a-zA-Z0-9]{2,4})\z/", $form['email'])) {
-  $error['email'] = 'not_like_email';
-} else {
-  // 同一のメールアドレスがないかチェック
-  $stmt = $db->prepare('select count(*) from teachers where email=?');
-  if (!$stmt) {
-    die($db->error);
-  }
-  $stmt->bindParam(1, $form['email'], PDO::PARAM_STR);
-  $success = $stmt->execute();
-  if (!$success) {
-    die($db->error);
-  }
-  $cnt_str = $stmt->fetch(PDO::FETCH_COLUMN);
-  $cnt = intval($cnt_str);
-
-  if ($cnt > 0) {
-    $error['email'] = 'duplicate';
+if(!empty($form['email'])){
+  $form['email'] = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+  if ($form['email'] === '') {
+    $error['email'] = 'blank';
+  } elseif (!preg_match("/\A([a-zA-Z0-9_\.\-]+)\@([a-zA-Z0-9\-]+)\.([a-zA-Z0-9]{2,4})\z/", $form['email'])) {
+    $error['email'] = 'not_like_email';
+  } else {
+    // 同一のメールアドレスがないかチェック
+    $stmt = $db->prepare('select count(*) from teachers where email=?');
+    if (!$stmt) {
+      die($db->error);
+    }
+    $stmt->bindParam(1, $form['email'], PDO::PARAM_STR);
+    $success = $stmt->execute();
+    if (!$success) {
+      die($db->error);
+    }
+    $cnt_str = $stmt->fetch(PDO::FETCH_COLUMN);
+    $cnt = intval($cnt_str);
+  
+    if ($cnt > 0) {
+      $error['email'] = 'duplicate';
+    }
   }
 }
+
 
 // 課題作成・編集のエラーチェック
 // パスワードのチェック
-$form['password'] = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
-if ($form['password'] === '') {
-  $error['password'] = 'blank';
-} elseif (strlen($form['password']) < 4) {
-  $error['password'] = 'length';
-} elseif (!preg_match("/\A[a-zA-Z0-9]+\z/", $form['password'])) {
-  $error['password'] = 'invalid_letter';
+if(!empty($form['password'])){
+  $form['password'] = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+  if ($form['password'] === '') {
+    $error['password'] = 'blank';
+  } elseif (strlen($form['password']) < 4) {
+    $error['password'] = 'length';
+  } elseif (!preg_match("/\A[a-zA-Z0-9]+\z/", $form['password'])) {
+    $error['password'] = 'invalid_letter';
+  }
 }
+
 // 画像のチェック
 if ($_FILES) {
   $image = $_FILES['image'];
