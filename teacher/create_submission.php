@@ -69,6 +69,7 @@ $subjects_stmt->execute();
 $all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC);
 $smarty->assign('all_subjects', $all_subjects);
 
+
 //「課題を作成する」をクリック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
@@ -136,6 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: home.php');
     exit();
   }
+
   $smarty->assign('form',$form);
   $smarty->assign('error',$error);
 }
