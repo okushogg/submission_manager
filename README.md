@@ -4,4 +4,3 @@
 https://qiita.com/sano1202/items/1f49f407f310f2e493ff
 
 ・ちゃんと学ぶ、PHP+MySQL（MariaDB）入門講座
-https://www.udemy.com/course/php7basic/
