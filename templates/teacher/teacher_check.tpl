@@ -28,7 +28,7 @@
           </dd>
         </dl>
         <div>
-          <input type="submit" value="ログインする" />
+          <input type="submit" value="教員ページへ" />
         </div>
       </form>
     </div>

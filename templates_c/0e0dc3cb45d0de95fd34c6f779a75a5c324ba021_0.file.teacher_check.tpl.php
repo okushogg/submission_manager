@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-25 06:21:00
+/* Smarty version 4.1.1, created on 2022-07-25 06:22:32
   from '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_check.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62de364ca4e2c6_41656989',
+  'unifunc' => 'content_62de36a80d1e20_41282347',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '0e0dc3cb45d0de95fd34c6f779a75a5c324ba021' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_check.tpl',
-      1 => 1658730058,
+      1 => 1658730147,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_62de364ca4e2c6_41656989 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62de36a80d1e20_41282347 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -54,7 +54,7 @@ function content_62de364ca4e2c6_41656989 (Smarty_Internal_Template $_smarty_tpl)
           </dd>
         </dl>
         <div>
-          <input type="submit" value="ログインする" />
+          <input type="submit" value="教員ページへ" />
         </div>
       </form>
     </div>

@@ -17,7 +17,7 @@
     </div>
 
     <div id="content">
-      {if is_teacher_login()}
+      {if isset($smarty.session.auth.teacher_id)}
         <div style="text-align: right"><a href="../teacher/home.php">教員ホームへ</a></div>
       {/if}
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
@@ -41,7 +41,7 @@
             <input type="text" name="first_name" size="35" maxlength="255" value="{$student_info.first_name}" />
           </dd>
           <dt>性別</dt>
-          {if isset($teacher_id)}
+          {if isset($smarty.session.auth.teacher_id)}
             {if isset($error.sex) && $error.sex === null}
               <p class="error">* 性別を入力してください</p>
             {/if}
@@ -100,7 +100,7 @@
             <p>パスワードの変更は<a href="reset_password.php">こちら</a>から。</p>
           </dd>
 
-          {if isset($teacher_id) || $this_year > $this_year_class.year}
+          {if isset($smarty.session.auth.teacher_id) || $this_year > $this_year_class.year}
             <dt>写真など</dt>
             <dd>
               <input type="file" name="image" size="35" value="" />
@@ -113,7 +113,7 @@
 
 
 
-          {if isset($teacher_id)}
+          {if isset($smarty.session.auth.teacher_id)}
             <dt>在籍情報</dt>
             <dd>
               <input type="radio" name="is_active" value=0 {if $student_info.is_active == 0} checked {/if}> 除籍

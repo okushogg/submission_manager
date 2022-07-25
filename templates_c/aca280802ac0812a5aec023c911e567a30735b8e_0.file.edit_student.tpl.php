@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-20 18:32:52
+/* Smarty version 4.1.1, created on 2022-07-25 13:47:36
   from '/Applications/MAMP/htdocs/submissions_manager/templates/student/edit_student.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62d7e7e447b937_20316286',
+  'unifunc' => 'content_62de3c88d48187_23453410',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'aca280802ac0812a5aec023c911e567a30735b8e' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/student/edit_student.tpl',
-      1 => 1658309519,
+      1 => 1658731654,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_62d7e7e447b937_20316286 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62de3c88d48187_23453410 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="ja">
 
@@ -40,7 +40,7 @@ function content_62d7e7e447b937_20316286 (Smarty_Internal_Template $_smarty_tpl)
     </div>
 
     <div id="content">
-      <?php if (is_teacher_login()) {?>
+      <?php if ((isset($_SESSION['auth']['teacher_id']))) {?>
         <div style="text-align: right"><a href="../teacher/home.php">教員ホームへ</a></div>
       <?php }?>
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
@@ -66,7 +66,7 @@ function content_62d7e7e447b937_20316286 (Smarty_Internal_Template $_smarty_tpl)
 " />
           </dd>
           <dt>性別</dt>
-          <?php if (is_teacher_login()) {?>
+          <?php if ((isset($_SESSION['auth']['teacher_id']))) {?>
             <?php if ((isset($_smarty_tpl->tpl_vars['error']->value['sex'])) && $_smarty_tpl->tpl_vars['error']->value['sex'] === null) {?>
               <p class="error">* 性別を入力してください</p>
             <?php }?>
@@ -142,7 +142,7 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
             <p>パスワードの変更は<a href="reset_password.php">こちら</a>から。</p>
           </dd>
 
-          <?php if (is_teacher_login() || $_smarty_tpl->tpl_vars['this_year']->value > $_smarty_tpl->tpl_vars['this_year_class']->value['year']) {?>
+          <?php if ((isset($_SESSION['auth']['teacher_id'])) || $_smarty_tpl->tpl_vars['this_year']->value > $_smarty_tpl->tpl_vars['this_year_class']->value['year']) {?>
             <dt>写真など</dt>
             <dd>
               <input type="file" name="image" size="35" value="" />
@@ -155,7 +155,7 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
 
 
 
-          <?php if (is_teacher_login()) {?>
+          <?php if ((isset($_SESSION['auth']['teacher_id']))) {?>
             <dt>在籍情報</dt>
             <dd>
               <input type="radio" name="is_active" value=0 <?php if ($_smarty_tpl->tpl_vars['student_info']->value['is_active'] == 0) {?> checked <?php }?>> 除籍

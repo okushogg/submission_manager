@@ -1,26 +1,27 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-19 04:04:28
+/* Smarty version 4.1.1, created on 2022-07-25 06:38:39
   from '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/index_submission.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62d62d4c08cba9_90204188',
+  'unifunc' => 'content_62de3a6f132750_61287852',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '5d9120d8e59eead6fd08f6817c468bf4eb18a511' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/index_submission.tpl',
-      1 => 1658203174,
+      1 => 1658475115,
       2 => 'file',
     ),
   ),
   'includes' => 
   array (
+    'file:/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl' => 1,
   ),
 ),false)) {
-function content_62d62d4c08cba9_90204188 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62de3a6f132750_61287852 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="jp">
 
@@ -47,13 +48,8 @@ function content_62d62d4c08cba9_90204188 (Smarty_Internal_Template $_smarty_tpl)
       <div style="text-align: right"><a href="home.php">ホーム</a></div>
 
       <!-- ユーザー情報 -->
-      <div style="text-align: left">
-        <img src="../teacher_pictures/<?php echo $_smarty_tpl->tpl_vars['pic_info']->value['path'];?>
-" width="100" height="100" alt="" />
-        <?php echo $_smarty_tpl->tpl_vars['teacher_info']->value['last_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['teacher_info']->value['first_name'];?>
-先生
-      </div>
+            <?php $_smarty_tpl->_subTemplateRender("file:/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
+?>
 
       <!-- 課題一覧 -->
       <div>

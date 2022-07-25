@@ -14,7 +14,7 @@
       <h1>生徒トップページ</h1>
     </div>
     <div id="content">
-     {if isset($teacher_id) }
+     {if isset($smarty.session.auth.teacher_id) }
         <div style="text-align: right"><a href="../teacher/home.php">教員ホームへ</a></div>
      {/if}
 

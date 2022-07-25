@@ -1,26 +1,27 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-19 14:29:16
+/* Smarty version 4.1.1, created on 2022-07-25 13:38:40
   from '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/show_submission.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62d65d4c5e2774_98544044',
+  'unifunc' => 'content_62de3a70988fb3_11406825',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '7b199e6968abd25dc2b69dbd0172688065a08528' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/show_submission.tpl',
-      1 => 1658215753,
+      1 => 1658474933,
       2 => 'file',
     ),
   ),
   'includes' => 
   array (
+    'file:/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl' => 1,
   ),
 ),false)) {
-function content_62d65d4c5e2774_98544044 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62de3a70988fb3_11406825 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="jp">
 
@@ -49,13 +50,8 @@ function content_62d65d4c5e2774_98544044 (Smarty_Internal_Template $_smarty_tpl)
 ">課題一覧へ</a></div>
 
       <!-- ユーザー情報 -->
-      <div style="text-align: left">
-        <img src="../teacher_pictures/<?php echo $_smarty_tpl->tpl_vars['pic_info']->value['path'];?>
-" width="100" height="100" alt="" />
-        <?php echo $_smarty_tpl->tpl_vars['teacher_info']->value['last_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['teacher_info']->value['first_name'];?>
-先生
-      </div>
+            <?php $_smarty_tpl->_subTemplateRender("file:/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
+?>
 
       <!-- 課題情報 -->
       <div>
