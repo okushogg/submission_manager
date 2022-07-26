@@ -63,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     header('Location: home.php');
   }
+  var_dump($error);
   $smarty->assign('form',$form);
   $smarty->assign('error',$error);
 }

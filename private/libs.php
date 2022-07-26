@@ -3,7 +3,7 @@ require('dbconnect.php');
 
 // 今年度
 $this_year = (new \DateTime('-3 month'))->format('Y');
-
+// $this_year =2023;
 
 // 今日の日付
 $today = date('Y-m-d');
@@ -14,15 +14,27 @@ $no_image_id = 69;
 // 写真の情報を取得
 function get_pic_info($db, $image_id)
 {
-$stmt = $db->prepare("select path from images where id=:id");
-if (!$stmt) {
-  die($db->error);
-}
-$stmt->bindParam(':id', $image_id, PDO::PARAM_INT);
-$success = $stmt->execute();
+  $stmt = $db->prepare("select path from images where id=:id");
+  if (!$stmt) {
+    die($db->error);
+  }
+  $stmt->bindParam(':id', $image_id, PDO::PARAM_INT);
+  $success = $stmt->execute();
 
-$pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
-return $pic_info;
+  $pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
+  return $pic_info;
+}
+
+// 生徒情報を取得
+function get_student_info($db, $student_id)
+{
+  $student_stmt = $db->prepare("SELECT first_name, last_name, sex, email, image_id, is_active
+                                  FROM students
+                                 WHERE id=:student_id");
+  $student_stmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
+  $student_stmt->execute();
+  $student_info = $student_stmt->fetch(PDO::FETCH_ASSOC);
+  return $student_info;
 }
 
 // 登録されている年度を全て取得
@@ -46,8 +58,9 @@ function login_check()
 }
 
 // 教員のログインか確認
-function is_teacher_login(){
-  if(isset($_SESSION['auth']['teacher_id'])){
+function is_teacher_login()
+{
+  if (isset($_SESSION['auth']['teacher_id'])) {
     return true;
   } else {
     header('Location: ../teacher/teacher_check.php');

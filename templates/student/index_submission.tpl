@@ -28,7 +28,7 @@
         </div>
         <img src="../student_pictures/{$student_pic_info.path}" width="100" height="100" alt="" />
         {$chosen_class.grade} - {$chosen_class.class} No_{$chosen_class.student_num}
-        {$student_info.student_last_name} {$student_info.student_first_name}さん
+        {$student_info.last_name} {$student_info.first_name}さん
       </div>
 
       <!-- 課題一覧 -->

@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-25 07:42:30
+/* Smarty version 4.1.1, created on 2022-07-25 10:52:23
   from '/Applications/MAMP/htdocs/submissions_manager/templates/student/index_submission.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62de49662557e6_42314623',
+  'unifunc' => 'content_62de75e70b2908_45517066',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'd5c564c9f7a47f5a80d5cd388203e067aec53836' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/student/index_submission.tpl',
-      1 => 1658731698,
+      1 => 1658746341,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_62de49662557e6_42314623 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62de75e70b2908_45517066 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="jp">
 
@@ -61,8 +61,8 @@ function content_62de49662557e6_42314623 (Smarty_Internal_Template $_smarty_tpl)
  - <?php echo $_smarty_tpl->tpl_vars['chosen_class']->value['class'];?>
  No_<?php echo $_smarty_tpl->tpl_vars['chosen_class']->value['student_num'];?>
 
-        <?php echo $_smarty_tpl->tpl_vars['student_info']->value['student_last_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['student_info']->value['student_first_name'];?>
+        <?php echo $_smarty_tpl->tpl_vars['student_info']->value['last_name'];?>
+ <?php echo $_smarty_tpl->tpl_vars['student_info']->value['first_name'];?>
 さん
       </div>
 

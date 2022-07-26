@@ -22,6 +22,9 @@
       {* ユーザーの情報表示 *}
       {include file="/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl"}
 
+      {if $classes_array}
+      
+      {if isset($classes_array.1)}
       <div>
         <div class="box">
           {foreach $classes_array.1 as $a}
@@ -30,7 +33,11 @@
             </div>
           {/foreach}
         </div>
-
+      {else}
+        <li>新年度の1年生クラスは未登録です。</li>
+      {/if}
+       
+       {if isset($classes_array.2)}
         <div class="box">
           {foreach $classes_array.2 as $a}
             <div class="box">
@@ -38,7 +45,11 @@
             </div>
           {/foreach}
         </div>
+        {else}
+          <li>新年度の２年生クラスは未登録です。</li>
+        {/if}
 
+        {if isset($classes_array.3)}
         <div class="box">
           {foreach $classes_array.3 as $a}
             <div class="box">
@@ -46,7 +57,14 @@
             </div>
           {/foreach}
         </div>
+        {else}
+          <li>新年度の3年生クラスは未登録です。</li>
+        {/if}
       </div>
+      
+      {else}
+      <p>新年度のクラスが未登録です。</p>
+      {/if}
 
 
 </body>

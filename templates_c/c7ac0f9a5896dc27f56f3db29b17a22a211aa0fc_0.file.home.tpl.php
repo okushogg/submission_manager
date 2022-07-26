@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-22 07:32:10
+/* Smarty version 4.1.1, created on 2022-07-25 11:26:42
   from '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/home.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62da527a8ed486_41433767',
+  'unifunc' => 'content_62de7df2459705_20047624',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'c7ac0f9a5896dc27f56f3db29b17a22a211aa0fc' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/home.tpl',
-      1 => 1658475129,
+      1 => 1658748388,
       2 => 'file',
     ),
   ),
@@ -21,7 +21,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl' => 1,
   ),
 ),false)) {
-function content_62da527a8ed486_41433767 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62de7df2459705_20047624 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!DOCTYPE html>
 <html lang="jp">
@@ -46,6 +46,9 @@ function content_62da527a8ed486_41433767 (Smarty_Internal_Template $_smarty_tpl)
             <?php $_smarty_tpl->_subTemplateRender("file:/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
 ?>
 
+      <?php if ($_smarty_tpl->tpl_vars['classes_array']->value) {?>
+      
+      <?php if ((isset($_smarty_tpl->tpl_vars['classes_array']->value[1]))) {?>
       <div>
         <div class="box">
           <?php
@@ -64,7 +67,11 @@ $_smarty_tpl->tpl_vars['a']->do_else = false;
 }
 $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
         </div>
-
+      <?php } else { ?>
+        <li>新年度の1年生クラスは未登録です。</li>
+      <?php }?>
+       
+       <?php if ((isset($_smarty_tpl->tpl_vars['classes_array']->value[2]))) {?>
         <div class="box">
           <?php
 $_from = $_smarty_tpl->smarty->ext->_foreach->init($_smarty_tpl, $_smarty_tpl->tpl_vars['classes_array']->value[2], 'a');
@@ -82,7 +89,11 @@ $_smarty_tpl->tpl_vars['a']->do_else = false;
 }
 $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
         </div>
+        <?php } else { ?>
+          <li>新年度の２年生クラスは未登録です。</li>
+        <?php }?>
 
+        <?php if ((isset($_smarty_tpl->tpl_vars['classes_array']->value[3]))) {?>
         <div class="box">
           <?php
 $_from = $_smarty_tpl->smarty->ext->_foreach->init($_smarty_tpl, $_smarty_tpl->tpl_vars['classes_array']->value[3], 'a');
@@ -100,7 +111,14 @@ $_smarty_tpl->tpl_vars['a']->do_else = false;
 }
 $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
         </div>
+        <?php } else { ?>
+          <li>新年度の3年生クラスは未登録です。</li>
+        <?php }?>
       </div>
+      
+      <?php } else { ?>
+      <p>新年度のクラスが未登録です。</p>
+      <?php }?>
 
 
 </body>

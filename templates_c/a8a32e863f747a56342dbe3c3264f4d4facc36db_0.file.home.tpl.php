@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-25 07:42:34
+/* Smarty version 4.1.1, created on 2022-07-25 10:47:23
   from '/Applications/MAMP/htdocs/submissions_manager/templates/student/home.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62de496a6f9a69_95751059',
+  'unifunc' => 'content_62de74bb07e2b8_34186392',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'a8a32e863f747a56342dbe3c3264f4d4facc36db' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/student/home.tpl',
-      1 => 1658731674,
+      1 => 1658745962,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_62de496a6f9a69_95751059 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62de74bb07e2b8_34186392 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="jp">
 
@@ -96,8 +96,8 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
  No_<?php echo $_smarty_tpl->tpl_vars['this_year_class']->value['student_num'];?>
 
          <?php }?>
-           <?php echo $_smarty_tpl->tpl_vars['student_info']->value['student_last_name'];?>
- <?php echo $_smarty_tpl->tpl_vars['student_info']->value['student_first_name'];?>
+           <?php echo $_smarty_tpl->tpl_vars['student_info']->value['last_name'];?>
+ <?php echo $_smarty_tpl->tpl_vars['student_info']->value['first_name'];?>
 さん
          <?php if ($_smarty_tpl->tpl_vars['student_info']->value['is_active'] == 0) {?>
             <p style="color: red;">除籍済</p>

@@ -54,7 +54,7 @@
          {if $this_year_class }
            {$this_year_class.grade}-{$this_year_class.class} No_{$this_year_class.student_num}
          {/if}
-           {$student_info.student_last_name} {$student_info.student_first_name}さん
+           {$student_info.last_name} {$student_info.first_name}さん
          {if $student_info.is_active == 0 }
             <p style="color: red;">除籍済</p>
          {/if}

@@ -29,27 +29,11 @@ login_check();
 $student_id = $_SESSION['auth']['student_id'];
 
 // studentの情報を求める
-$student_stmt = $db->prepare("SELECT first_name as student_first_name,
-                                     last_name as student_last_name,
-                                     image_id
-                              FROM students
-                              WHERE id=:student_id");
-$student_stmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
-$student_stmt->execute();
-$student_info = $student_stmt->fetch(PDO::FETCH_ASSOC);
+$student_info = get_student_info($db, $student_id);
 $smarty->assign('student_info', $student_info);
 
 // 生徒の画像情報を取得
-$stmt = $db->prepare("select path from images where id=:image_id");
-if (!$stmt) {
-  die($db->error);
-}
-$stmt->bindValue(':image_id', $student_info['image_id'], PDO::PARAM_INT);
-$success = $stmt->execute();
-if (!$success) {
-  die($db->error);
-}
-$student_pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
+$student_pic_info = get_pic_info($db,$student_info['image_id']);
 $smarty->assign('student_pic_info', $student_pic_info);
 
 

@@ -34,18 +34,7 @@ $form = [
 $smarty->assign('form', $form);
 
 // 生徒情報を取得
-$stmt = $db->prepare("SELECT first_name, last_name, sex, email, image_id, is_active
-                      FROM students
-                      WHERE id=:student_id");
-if (!$stmt) {
-  die($db->error);
-}
-$stmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
-$success = $stmt->execute();
-if (!$success) {
-  die($db->error);
-}
-$student_info = $stmt->fetch(PDO::FETCH_ASSOC);
+$student_info = get_student_info($db, $student_id);
 $smarty->assign('student_info', $student_info);
 
 // 現在の所属クラスを求める
