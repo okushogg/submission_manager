@@ -52,6 +52,7 @@ $classes_stmt->bindParam(':year', $this_year, PDO::PARAM_STR);
 $classes_stmt->execute();
 $classes_info = $classes_stmt->fetchAll(PDO::FETCH_ASSOC);
 $cnt = count($classes_info);
+$json_classes_info = json_encode($classes_info);
 $smarty->assign('classes_info', $classes_info);
 
 // 教科一覧

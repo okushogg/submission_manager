@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>教員 課題作成ページ</title>
   <link rel="stylesheet" href="../style.css" />
+  <script type="text/javascript"  src="../private/js/create_submission.js"></script>
 </head>
 
 <body>
@@ -40,14 +41,18 @@
                   <option value="0">-</option>
                   {foreach $classes_info as $class}
                     {if $form.class_id == $class.id}
-                      <option value={$class.id} selected> {$class.grade} - {$class.class}</option>
+                      <option value={$class.id} data-value="{$class.id}" data-text="{$class.grade} - {$class.class}" selected> {$class.grade} - {$class.class}</option>
                     {else}
-                      <option value={$class.id}> {$class.grade} - {$class.class}</option>
+                      <option value={$class.id} data-value="{$class.id}" data-text="{$class.grade} - {$class.class}"> {$class.grade} - {$class.class}</option>
                     {/if}
                   {/foreach}
                 </select>
               </div>
             </dd>
+
+            <div style="margin-top: 10px; margin-bottom: 10px;">
+              <input type="button" value="フォーム追加" onclick="addForm()">
+            </div>
 
             <dt>教科<span class="required">（必須）</span></dt>
             {if isset($error.subject_id) && $error.subject_id === 'blank'}

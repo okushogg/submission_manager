@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-25 08:18:27
+/* Smarty version 4.1.1, created on 2022-07-26 03:57:20
   from '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/create_submission.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62de51d3749a32_37163843',
+  'unifunc' => 'content_62df6620465e65_92163401',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '92fe9ba113cff418f27aeb06c9225f9095516dde' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/create_submission.tpl',
-      1 => 1658475217,
+      1 => 1658807833,
       2 => 'file',
     ),
   ),
@@ -21,7 +21,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl' => 1,
   ),
 ),false)) {
-function content_62de51d3749a32_37163843 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62df6620465e65_92163401 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="jp">
 
@@ -30,6 +30,9 @@ function content_62de51d3749a32_37163843 (Smarty_Internal_Template $_smarty_tpl)
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>教員 課題作成ページ</title>
   <link rel="stylesheet" href="../style.css" />
+  <?php echo '<script'; ?>
+ type="text/javascript" src="../private/js/create_submission.js"><?php echo '</script'; ?>
+>
 </head>
 
 <body>
@@ -86,6 +89,10 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
                 </select>
               </div>
             </dd>
+
+            <div style="margin-top: 10px; margin-bottom: 10px;">
+              <input type="button" value="フォーム追加" onclick="addForm()">
+            </div>
 
             <dt>教科<span class="required">（必須）</span></dt>
             <?php if ((isset($_smarty_tpl->tpl_vars['error']->value['subject_id'])) && $_smarty_tpl->tpl_vars['error']->value['subject_id'] === 'blank') {?>

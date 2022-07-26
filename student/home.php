@@ -9,6 +9,11 @@ $smarty = new Smarty_submission_manager();
 // ログイン情報がないとログインページへ移る
 login_check();
 
+// teacherがstudentを閲覧した場合
+if (isset($_GET['student_id'])) {
+  $_SESSION['auth']['student_id'] = $_GET['student_id'];
+}
+
 // 生徒がログインしていた場合
 $student_id = $_SESSION['auth']['student_id'];
 
@@ -26,11 +31,6 @@ $smarty->assign('form', $form);
 // 変更ボタン押下時
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $form['year'] = filter_input(INPUT_POST, 'year');
-}
-
-// teacherがstudent/を閲覧した場合
-if (isset($_GET['student_id'])) {
-  $_SESSION['auth']['student_id'] = $_GET['student_id'];
 }
 
 // studentの情報を求める
