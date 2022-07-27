@@ -17,7 +17,7 @@ if (isset($_GET['action']) && isset($_SESSION['form'])) {
     'class_id' => '',
     'student_num' => '',
     'email' => '',
-    'image_id' => '',
+    'image' => '',
     'password' => '',
     'is_active' => true
   ];
@@ -66,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: check.php');
     exit();
   }
+  var_dump($error,$form,$_FILES['image']['size']);
   $smarty->assign('form', $form);
   $smarty->assign('error', $error);
 }

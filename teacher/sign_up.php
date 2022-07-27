@@ -47,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: check.php');
     exit();
   }
-  var_dump($error, $_FILES['image']['size']);
   $smarty->assign('error', $error);
   $smarty->assign('form', $form);
 }

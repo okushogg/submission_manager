@@ -107,7 +107,7 @@
               {elseif isset($error.image) && $error.image === 'size'}
                 <p class="error">* 500KB以下の画像を指定してください </p>
               {/if}
-              <input type="file" name="image" size="35" value="" />
+              <input type="file" name="image" size="35" value="$form.image" />
             </dd>
 
             <dd>

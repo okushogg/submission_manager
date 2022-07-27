@@ -90,7 +90,6 @@ function error_check($db, $this_year, $today, $form)
   // 画像のチェック
   if (isset($form['image'])) {
     $image = $_FILES['image'];
-    $file_size = $_FILES['image']['size'];
     // 画像のファイル種類の判別
     if ($image['name'] !== '' && $image['error'] === 0) {
       $type = mime_content_type($image['tmp_name']);
@@ -99,6 +98,7 @@ function error_check($db, $this_year, $today, $form)
       }
     }
     // 画像のファイルサイズの判別
+    $file_size = $_FILES['image']['size'];
     if ($file_size !== '' && $image['error'] === 0) {
       if ($file_size >= 500000) {
         $error['image'] = 'size';
