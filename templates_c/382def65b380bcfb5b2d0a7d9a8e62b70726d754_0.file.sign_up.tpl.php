@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-25 08:26:37
+/* Smarty version 4.1.1, created on 2022-07-27 09:35:21
   from '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/sign_up.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62de53bd078282_86590385',
+  'unifunc' => 'content_62e106d9d4e767_60356991',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '382def65b380bcfb5b2d0a7d9a8e62b70726d754' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/sign_up.tpl',
-      1 => 1658463453,
+      1 => 1658914516,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_62de53bd078282_86590385 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62e106d9d4e767_60356991 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="en">
 
@@ -95,6 +95,8 @@ function content_62de53bd078282_86590385 (Smarty_Internal_Template $_smarty_tpl)
             <?php if ((isset($_smarty_tpl->tpl_vars['error']->value['image'])) && $_smarty_tpl->tpl_vars['error']->value['image'] === 'type') {?>
                 <p class="error">* 写真などは「.png」または「.jpg」の画像を指定してください</p>
                 <p class="error">* 恐れ入りますが、画像を改めて指定してください</p>
+            <?php } elseif ((isset($_smarty_tpl->tpl_vars['error']->value['image'])) && $_smarty_tpl->tpl_vars['error']->value['image'] === 'size') {?>
+                <p class="error">* 500KB以下の画像を指定してください </p>
             <?php }?>
             <dd>
               <input type="file" name="image" size="35" value="" />

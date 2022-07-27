@@ -14,6 +14,10 @@ $form = [
   "class" => ''
 ];
 
+// header tittle
+$title = "教員ホーム";
+$smarty->assign('title', $title);
+
 // セッション内の情報
 $teacher_info = $_SESSION['auth'];
 $smarty->assign('teacher_info', $teacher_info);

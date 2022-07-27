@@ -1,37 +1,34 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-27 07:41:08
+/* Smarty version 4.1.1, created on 2022-07-27 08:57:19
   from '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/home.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62e0ec143c26d6_62557131',
+  'unifunc' => 'content_62e0fdefb31b27_28150928',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'c7ac0f9a5896dc27f56f3db29b17a22a211aa0fc' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/home.tpl',
-      1 => 1658907666,
+      1 => 1658912232,
       2 => 'file',
     ),
   ),
   'includes' => 
   array (
+    'file:../common/header.tpl' => 1,
     'file:../teacher/teacher_info_display.tpl' => 1,
   ),
 ),false)) {
-function content_62e0ec143c26d6_62557131 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62e0fdefb31b27_28150928 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!DOCTYPE html>
 <html lang="jp">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>教員トップページ</title>
-  <link rel="stylesheet" href="../style.css" />
-</head>
+<?php $_smarty_tpl->_subTemplateRender("file:../common/header.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
+?>
 
 <body>
   <div id="wrap">
@@ -115,12 +112,9 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
           <li>新年度の3年生クラスは未登録です。</li>
         <?php }?>
       </div>
-      
       <?php } else { ?>
       <p>新年度のクラスが未登録です。</p>
       <?php }?>
-
-
 </body>
 
 </html><?php }

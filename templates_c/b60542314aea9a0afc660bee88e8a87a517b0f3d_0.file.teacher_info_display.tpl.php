@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-22 06:41:17
+/* Smarty version 4.1.1, created on 2022-07-27 08:39:41
   from '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62da468d79ae09_83386331',
+  'unifunc' => 'content_62e0f9cd6ef1b2_03296136',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_62da468d79ae09_83386331 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62e0f9cd6ef1b2_03296136 (Smarty_Internal_Template $_smarty_tpl) {
 ?><div style="text-align: left">
   <img src="../teacher_pictures/<?php echo $_smarty_tpl->tpl_vars['pic_info']->value['path'];?>
 " width="100" height="100" alt="" />

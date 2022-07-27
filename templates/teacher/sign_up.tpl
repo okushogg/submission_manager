@@ -68,6 +68,8 @@
             {if isset($error.image) && $error.image === 'type'}
                 <p class="error">* 写真などは「.png」または「.jpg」の画像を指定してください</p>
                 <p class="error">* 恐れ入りますが、画像を改めて指定してください</p>
+            {elseif isset($error.image) && $error.image === 'size'}
+                <p class="error">* 500KB以下の画像を指定してください </p>
             {/if}
             <dd>
               <input type="file" name="image" size="35" value="" />

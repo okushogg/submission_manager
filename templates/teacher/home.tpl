@@ -2,12 +2,8 @@
 <!DOCTYPE html>
 <html lang="jp">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>教員トップページ</title>
-  <link rel="stylesheet" href="../style.css" />
-</head>
+{* header *}
+{include file="../common/header.tpl"}
 
 <body>
   <div id="wrap">
@@ -61,12 +57,9 @@
           <li>新年度の3年生クラスは未登録です。</li>
         {/if}
       </div>
-      
       {else}
       <p>新年度のクラスが未登録です。</p>
       {/if}
-
-
 </body>
 
 </html>
