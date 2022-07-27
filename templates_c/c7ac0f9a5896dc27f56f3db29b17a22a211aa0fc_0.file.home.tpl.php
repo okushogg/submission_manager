@@ -1,27 +1,27 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-25 11:26:42
+/* Smarty version 4.1.1, created on 2022-07-27 07:41:08
   from '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/home.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62de7df2459705_20047624',
+  'unifunc' => 'content_62e0ec143c26d6_62557131',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'c7ac0f9a5896dc27f56f3db29b17a22a211aa0fc' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/home.tpl',
-      1 => 1658748388,
+      1 => 1658907666,
       2 => 'file',
     ),
   ),
   'includes' => 
   array (
-    'file:/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl' => 1,
+    'file:../teacher/teacher_info_display.tpl' => 1,
   ),
 ),false)) {
-function content_62de7df2459705_20047624 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62e0ec143c26d6_62557131 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!DOCTYPE html>
 <html lang="jp">
@@ -43,11 +43,11 @@ function content_62de7df2459705_20047624 (Smarty_Internal_Template $_smarty_tpl)
       <div style="text-align: right"><a href="search_student.php">生徒検索</a></div>
       <div style="text-align: right"><a href="register_class.php">クラス登録</a></div>
       <div style="text-align: right"><a href="create_submission.php">提出物登録</a></div>
-            <?php $_smarty_tpl->_subTemplateRender("file:/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
+            <?php $_smarty_tpl->_subTemplateRender("file:../teacher/teacher_info_display.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
 ?>
 
       <?php if ($_smarty_tpl->tpl_vars['classes_array']->value) {?>
-      
+
       <?php if ((isset($_smarty_tpl->tpl_vars['classes_array']->value[1]))) {?>
       <div>
         <div class="box">

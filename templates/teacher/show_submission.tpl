@@ -24,7 +24,7 @@
 
       <!-- ユーザー情報 -->
       {* ユーザーの情報表示 *}
-      {include file="/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl"}
+      {include file="../teacher/teacher_info_display.tpl"}
 
       <!-- 課題情報 -->
       <div>

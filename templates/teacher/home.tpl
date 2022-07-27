@@ -20,10 +20,10 @@
       <div style="text-align: right"><a href="register_class.php">クラス登録</a></div>
       <div style="text-align: right"><a href="create_submission.php">提出物登録</a></div>
       {* ユーザーの情報表示 *}
-      {include file="/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl"}
+      {include file="../teacher/teacher_info_display.tpl"}
 
       {if $classes_array}
-      
+
       {if isset($classes_array.1)}
       <div>
         <div class="box">

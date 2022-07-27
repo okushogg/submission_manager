@@ -17,8 +17,8 @@
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
       <div style="text-align: right"><a href="home.php">トップページへ</a></div>
       {* ユーザーの情報表示 *}
-      {include file="/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl"}
-
+      {include file="../teacher/teacher_info_display.tpl"}
+      
       <form action="" method="post">
         <dl>
           <dt>年度</dt>
