@@ -2,7 +2,7 @@
 session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
-
+require('../private/error_check.php');
 require_once('../private/set_up.php');
 $smarty = new Smarty_submission_manager();
 
@@ -30,6 +30,13 @@ $image_id = $_SESSION['auth']['teacher_image_id'];
 $pic_info = get_pic_info($db, $image_id);
 $smarty->assign('pic_info', $pic_info);
 
+$form= [
+  'grade' => '',
+  'class' => ''
+];
+
+$error= [];
+
 $grades = [
   "-" => 0,
   "1" => 1,
@@ -49,7 +56,7 @@ $smarty->assign('classes', $classes);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
-  include('error_check.php');
+  list($error, $form) = error_check($db, $this_year, $today, $form);
 
   // 入力に問題がなければ
   if (empty($error)) {
@@ -57,13 +64,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$stmt) {
       die($db->error);
     }
-    $success = $stmt->execute(array($this_year, $grade, $class));
+    $success = $stmt->execute(array($this_year, $from['grade'], $form['class']));
     if (!$success) {
       die($db->error);
     }
     header('Location: home.php');
   }
-  var_dump($error);
   $smarty->assign('form',$form);
   $smarty->assign('error',$error);
 }

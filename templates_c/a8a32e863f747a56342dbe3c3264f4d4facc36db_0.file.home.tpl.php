@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-25 10:47:23
+/* Smarty version 4.1.1, created on 2022-07-26 09:25:25
   from '/Applications/MAMP/htdocs/submissions_manager/templates/student/home.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62de74bb07e2b8_34186392',
+  'unifunc' => 'content_62dfb305e3c714_73768051',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'a8a32e863f747a56342dbe3c3264f4d4facc36db' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/student/home.tpl',
-      1 => 1658745962,
+      1 => 1658827518,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_62de74bb07e2b8_34186392 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62dfb305e3c714_73768051 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="jp">
 
@@ -40,7 +40,9 @@ function content_62de74bb07e2b8_34186392 (Smarty_Internal_Template $_smarty_tpl)
      <?php if ((isset($_SESSION['auth']['teacher_id']))) {?>
         <div style="text-align: right"><a href="../teacher/home.php">教員ホームへ</a></div>
      <?php }?>
-
+    <?php if (!$_smarty_tpl->tpl_vars['student_info']->value) {?>
+      <p>該当する生徒はいません。</p>
+    <?php } else { ?>
       <div style="text-align: right">
        <?php if ((!$_smarty_tpl->tpl_vars['this_year_class']->value)) {?>
           <span class="required">要新規登録</span>
@@ -49,8 +51,6 @@ function content_62de74bb07e2b8_34186392 (Smarty_Internal_Template $_smarty_tpl)
       </div>
 
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
-      <div style="text-align: left">
-
         <!-- 所属クラス -->
         <div style="margin-top: 10px; margin-bottom: 10px;">
           <p>所属クラス</p>
@@ -189,6 +189,7 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
               <p>期限の近い課題はありません</p>
            <?php }?>
         <?php }?>
+    <?php }?>
 </body>
 
 </html><?php }

@@ -6,9 +6,6 @@ require('../private/dbconnect.php');
 require_once('../private/set_up.php');
 $smarty = new Smarty_submission_manager();
 
-// class_idを取得
-$class_id = $_GET['class_id'];
-
 // 選択した教科のidを求める
 if (isset($_GET['subject_id'])) {
   $subject_id = $_GET['subject_id'];

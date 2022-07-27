@@ -14,8 +14,16 @@ if (isset($_SESSION['form'])) {
   exit();
 }
 
+// student/check.phpから飛ばないようにする。
+if(isset($_SESSION['form']['student_num'])){
+  header('Location: ../student/sign_up.php');
+  unset($_SESSION['form']);
+  exit();
+}
+
 $form = $_SESSION['form'];
 $smarty->assign('form', $form);
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // 画像がある場合

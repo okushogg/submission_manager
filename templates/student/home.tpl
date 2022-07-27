@@ -17,7 +17,9 @@
      {if isset($smarty.session.auth.teacher_id) }
         <div style="text-align: right"><a href="../teacher/home.php">教員ホームへ</a></div>
      {/if}
-
+    {if !$student_info}
+      <p>該当する生徒はいません。</p>
+    {else}
       <div style="text-align: right">
        {if (!$this_year_class) }
           <span class="required">要新規登録</span>
@@ -26,8 +28,6 @@
       </div>
 
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
-      <div style="text-align: left">
-
         <!-- 所属クラス -->
         <div style="margin-top: 10px; margin-bottom: 10px;">
           <p>所属クラス</p>
@@ -122,6 +122,7 @@
               <p>期限の近い課題はありません</p>
            {/if}
         {/if}
+    {/if}
 </body>
 
 </html>

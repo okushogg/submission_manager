@@ -2,7 +2,7 @@
 session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
-
+require('../private/error_check.php');
 require_once('../private/set_up.php');
 $smarty = new Smarty_submission_manager();
 
@@ -76,7 +76,7 @@ $smarty->assign('selectable_classes', $selectable_classes);
 // 生徒情報を更新をクリック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
-  include('error_check.php');
+  list($error, $form) = error_check($db, $this_year, $today, $form);
 
   // エラーがなかった場合
   if (empty($error)) {
@@ -170,6 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     unset($_SESSION['form']);
     header('Location: home.php');
   }
+  var_dump($error);
   $smarty->assign('form', $form);
   $smarty->assign('error', $error);
 }

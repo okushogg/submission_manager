@@ -41,9 +41,9 @@
                   <option value="0">-</option>
                   {foreach $classes_info as $class}
                     {if $form.class_id == $class.id}
-                      <option value={$class.id} data-value="{$class.id}" data-text="{$class.grade} - {$class.class}" selected> {$class.grade} - {$class.class}</option>
+                      <option value={$class.id} selected> {$class.grade} - {$class.class}</option>
                     {else}
-                      <option value={$class.id} data-value="{$class.id}" data-text="{$class.grade} - {$class.class}"> {$class.grade} - {$class.class}</option>
+                      <option value={$class.id}> {$class.grade} - {$class.class}</option>
                     {/if}
                   {/foreach}
                 </select>

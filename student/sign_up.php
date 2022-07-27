@@ -2,7 +2,7 @@
 session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
-
+require('../private/error_check.php');
 require_once('../private/set_up.php');
 $smarty = new Smarty_submission_manager();
 
@@ -44,13 +44,15 @@ $smarty->assign('this_year_classes', $this_year_classes);
 // フォームの内容をチェック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
-  include('error_check.php');
+  list($error, $form) = error_check($db, $this_year, $today, $form);
+
 
   // エラーがなければ画像を保存して、checkへ
   if (empty($error)) {
     $_SESSION['form'] = $form;
 
     // 画像のアップロード
+    $image = $_FILES['image'];
     if ($image['name'] !== '') {
       $filename = date('Ymdhis') . '_' . $image['name'];
       if (!move_uploaded_file($image['tmp_name'], '../student_pictures/' . $filename)) {

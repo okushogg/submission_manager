@@ -2,6 +2,7 @@
 session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
+require('../private/error_check.php');
 
 require_once('../private/set_up.php');
 $smarty = new Smarty_submission_manager();
@@ -18,12 +19,12 @@ if (isset($_GET['action']) && isset($_SESSION['form'])) {
     'teacher_id' => $_SESSION['auth']['teacher_id'],
   ];
 }
-$smarty->assign('form',$form);
+$smarty->assign('form', $form);
 
 
 // エラーの初期化
 $error = [];
-$smarty->assign('error',$error);
+$smarty->assign('error', $error);
 
 // 今日の日付
 $today = date('Y-m-d');
@@ -65,26 +66,27 @@ $smarty->assign('all_subjects', $all_subjects);
 //「課題を作成する」をクリック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
-  include('error_check.php');
-
-  // 指定されたclass_idを持つ全てのstudent_idを求める(除籍済を除く)
-  $student_stmt = $db->prepare("SELECT b.student_id as student_id, b.student_num as student_num
-                                FROM belongs AS b
-                                INNER JOIN students AS s
-                                ON b.student_id = s.id
-                                WHERE class_id = :class_id AND s.is_active = 1
-                                ORDER BY b.student_num");
-  $student_stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
-  $student_success = $student_stmt->execute();
-  if (!$student_success) {
-    die($db->error);
-  }
-  $all_student_id = $student_stmt->fetchAll(PDO::FETCH_ASSOC);
-
+  list($error, $form) = error_check($db, $this_year, $today, $form);
 
   // 入力に問題がない場合
   if (empty($error)) {
     $_SESSION['form'] = $form;
+    $class_id = intval($form['class_id']);
+
+    // 指定されたclass_idを持つ全てのstudent_idを求める(除籍済を除く)
+    $student_stmt = $db->prepare("SELECT b.student_id as student_id, b.student_num as student_num
+                                  FROM belongs AS b
+                                  INNER JOIN students AS s
+                                  ON b.student_id = s.id
+                                  WHERE class_id = :class_id AND s.is_active = 1
+                                  ORDER BY b.student_num");
+    $student_stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
+    $student_success = $student_stmt->execute();
+    if (!$student_success) {
+      die($db->error);
+    }
+    $all_student_id = $student_stmt->fetchAll(PDO::FETCH_ASSOC);
+
     // submissionsレコードを作成
     $stmt = $db->prepare("INSERT INTO submissions(name,
                                                     class_id,
@@ -101,8 +103,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $stmt->bindValue(':name', $form['submission_name'], PDO::PARAM_STR);
     $stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
-    $stmt->bindValue(':subject_id', $subject_id, PDO::PARAM_INT);
-    $stmt->bindValue(':dead_line', $dead_line, PDO::PARAM_STR);
+    $stmt->bindValue(':subject_id', $form['subject_id'], PDO::PARAM_INT);
+    $stmt->bindValue(':dead_line', $form['dead_line'], PDO::PARAM_STR);
     $stmt->bindValue(':teacher_id', $teacher_id, PDO::PARAM_INT);
     $success = $stmt->execute();
     if (!$success) {
@@ -129,10 +131,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: home.php');
     exit();
   }
-
-  $smarty->assign('form',$form);
-  $smarty->assign('error',$error);
+  $smarty->assign('form', $form);
+  $smarty->assign('error', $error);
 }
 $smarty->caching = 0;
 $smarty->display('teacher/create_submission.tpl');
-?>

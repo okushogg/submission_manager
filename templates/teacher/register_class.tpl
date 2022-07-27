@@ -33,7 +33,7 @@
           <dd>
             <select name="grade">
               {foreach $grades as $key => $value}
-                {if $value == $grade}
+                {if $value == $form['grade']}
                   <option value="{$value}" selected>{$key}</option>
                 {else}
                   <option value="{$value}">{$key}</option>
@@ -51,7 +51,7 @@
           <dd>
             <select name="class">
               {foreach $classes as $key => $value}
-                {if $value == $class}
+                {if $value == $form['class']}
                   <option value="{$value}" selected> {$key} </option>
                 {else}
                   <option value="{$value}"> {$key} </option>

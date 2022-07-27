@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-20 03:52:33
+/* Smarty version 4.1.1, created on 2022-07-27 06:35:48
   from '/Applications/MAMP/htdocs/submissions_manager/templates/student/check.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62d77c018115f9_01459512',
+  'unifunc' => 'content_62e0dcc4d946d1_12698095',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'f27a3895f745515420e941cded2cbdaa37bca207' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/student/check.tpl',
-      1 => 1658289143,
+      1 => 1658903746,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_62d77c018115f9_01459512 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62e0dcc4d946d1_12698095 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="ja">
 
@@ -66,7 +66,7 @@ function content_62d77c018115f9_01459512 (Smarty_Internal_Template $_smarty_tpl)
           </dd>
           <dt>顔写真</dt>
           <dd>
-            <?php if ($_smarty_tpl->tpl_vars['form']->value['image']) {?>
+            <?php if ($_smarty_tpl->tpl_vars['form']->value['image'] !== '') {?>
             <img src="../student_pictures/<?php echo $_smarty_tpl->tpl_vars['form']->value['image'];?>
 " width="100" alt="" />
             <?php } else { ?>

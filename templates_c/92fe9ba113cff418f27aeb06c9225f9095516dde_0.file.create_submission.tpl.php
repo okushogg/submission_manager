@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-26 03:57:20
+/* Smarty version 4.1.1, created on 2022-07-27 03:59:33
   from '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/create_submission.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62df6620465e65_92163401',
+  'unifunc' => 'content_62e0b825cc13a8_83380621',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '92fe9ba113cff418f27aeb06c9225f9095516dde' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/create_submission.tpl',
-      1 => 1658807833,
+      1 => 1658894140,
       2 => 'file',
     ),
   ),
@@ -21,7 +21,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:/Applications/MAMP/htdocs/submissions_manager/templates/teacher/teacher_info_display.tpl' => 1,
   ),
 ),false)) {
-function content_62df6620465e65_92163401 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62e0b825cc13a8_83380621 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="jp">
 
@@ -31,7 +31,7 @@ function content_62df6620465e65_92163401 (Smarty_Internal_Template $_smarty_tpl)
   <title>教員 課題作成ページ</title>
   <link rel="stylesheet" href="../style.css" />
   <?php echo '<script'; ?>
- type="text/javascript" src="../private/js/create_submission.js"><?php echo '</script'; ?>
+ type="text/javascript"  src="../private/js/create_submission.js"><?php echo '</script'; ?>
 >
 </head>
 

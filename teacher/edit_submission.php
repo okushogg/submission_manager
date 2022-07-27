@@ -2,7 +2,7 @@
 session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
-
+require('../private/error_check.php');
 require_once('../private/set_up.php');
 $smarty = new Smarty_submission_manager();
 
@@ -82,7 +82,7 @@ $class_id = $submission_info['class_id'];
 //「課題内容を編集」をクリックしたら
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
-  include('error_check.php');
+  list($error, $form) = error_check($db, $this_year, $today, $form);
 
   // teacherのid
   $teacher_id = $form['teacher_id'];
@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: index_submission.php?class_id={$class_id}");
     exit();
   }
-
+  
   $smarty->assign('form',$form);
   $smarty->assign('error',$error);
 }

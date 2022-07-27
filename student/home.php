@@ -10,7 +10,7 @@ $smarty = new Smarty_submission_manager();
 login_check();
 
 // teacherがstudentを閲覧した場合
-if (isset($_GET['student_id'])) {
+if (isset($_GET['student_id']) && isset($_SESSION['auth']['teacher_id'])) {
   $_SESSION['auth']['student_id'] = $_GET['student_id'];
 }
 
@@ -39,8 +39,10 @@ $smarty->assign('student_info', $student_info);
 
 
 // 生徒の画像情報を取得
-$student_pic_info = get_pic_info($db,$student_info['image_id']);
-$smarty->assign('student_pic_info', $student_pic_info);
+if($student_info){
+  $student_pic_info = get_pic_info($db,$student_info['image_id']);
+  $smarty->assign('student_pic_info', $student_pic_info);
+}
 
 // 本年度の所属クラスを求める
 $this_year_class_stmt = $db->prepare("SELECT belongs.id, belongs.class_id, belongs.student_num as student_num,

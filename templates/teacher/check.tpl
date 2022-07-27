@@ -32,8 +32,8 @@
           </dd>
           <dt>顔写真</dt>
           <dd>
-            {if $form.image}
-              <img src="../teacher_pictures/{$form['image']}" width="100" alt="" />
+            {if $form.image !== '' }
+              <img src="../teacher_pictures/{$form.image}" width="100" alt="" />
             {else}
               <img src="../teacher_pictures/no_image.jpg" width="100" alt="" />
             {/if}
