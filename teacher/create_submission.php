@@ -7,6 +7,10 @@ require('../private/error_check.php');
 require_once('../private/set_up.php');
 $smarty = new Smarty_submission_manager();
 
+// header tittle
+$title = "教員課題確認ページ";
+$smarty->assign('title', $title);
+
 // フォームの中身を確認、内容がなければ初期化
 if (isset($_GET['action']) && isset($_SESSION['form'])) {
   $form = $_SESSION['form'];

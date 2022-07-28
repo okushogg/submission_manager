@@ -1,13 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>教員登録</title>
-  <link rel="stylesheet" href="../style.css" />
-</head>
-
+{* header *}
+{include file="../common/header.tpl"}
 <body>
 
   <body>

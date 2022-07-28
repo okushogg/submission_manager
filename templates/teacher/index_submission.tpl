@@ -1,12 +1,8 @@
 <!DOCTYPE html>
 <html lang="jp">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{$class_info.grade} - {$class_info.class} 課題一覧ページ</title>
-  <link rel="stylesheet" href="../style.css" />
-</head>
+{* header *}
+{include file="../common/header.tpl"}
 
 <body>
   <div id="wrap">

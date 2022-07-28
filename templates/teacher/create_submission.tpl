@@ -1,13 +1,8 @@
 <!DOCTYPE html>
 <html lang="jp">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>教員 課題作成ページ</title>
-  <link rel="stylesheet" href="../style.css" />
-  <script type="text/javascript"  src="../private/js/create_submission.js"></script>
-</head>
+{* header *}
+{include file="../common/header.tpl"}
 
 <body>
   <div id="wrap">

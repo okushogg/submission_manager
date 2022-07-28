@@ -6,6 +6,10 @@ require('../private/dbconnect.php');
 require_once('../private/set_up.php');
 $smarty = new Smarty_submission_manager();
 
+// header tittle
+$title = "教員 パスワードリセットページ";
+$smarty->assign('title', $title);
+
 // 現在のバンコクの時刻
 $current_time = bkk_time();
 

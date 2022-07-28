@@ -6,6 +6,10 @@ require_once('../private/set_up.php');
 require('../private/error_check.php');
 $smarty = new Smarty_submission_manager();
 
+// header tittle
+$title = "教員 登録ページ";
+$smarty->assign('title', $title);
+
 if (isset($_GET['action']) && isset($_SESSION['form'])) {
   $form = $_SESSION['form'];
 } else {
