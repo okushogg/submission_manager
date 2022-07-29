@@ -6,6 +6,10 @@ require('../private/dbconnect.php');
 require_once('../private/set_up.php');
 $smarty = new Smarty_submission_manager();
 
+// header tittle
+$title = "生徒 登録確認ページ";
+$smarty->assign('title', $title);
+
 // 直接check.phpに飛ばないようにする
 if (isset($_SESSION['form'])) {
   $form = $_SESSION['form'];

@@ -6,6 +6,10 @@ require('../private/dbconnect.php');
 require_once('../private/set_up.php');
 $smarty = new Smarty_submission_manager();
 
+// header tittle
+$title = "生徒　ホーム";
+$smarty->assign('title', $title);
+
 // ログイン情報がないとログインページへ移る
 login_check();
 

@@ -6,6 +6,10 @@ require('../private/error_check.php');
 require_once('../private/set_up.php');
 $smarty = new Smarty_submission_manager();
 
+// header tittle
+$title = "生徒情報編集ページ";
+$smarty->assign('title', $title);
+
 $smarty->assign('this_year', $this_year);
 
 // 今日の日付

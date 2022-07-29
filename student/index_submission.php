@@ -6,6 +6,10 @@ require('../private/dbconnect.php');
 require_once('../private/set_up.php');
 $smarty = new Smarty_submission_manager();
 
+// header tittle
+$title = "生徒 課題一覧ページ";
+$smarty->assign('title', $title);
+
 // 選択した教科のidを求める
 if (isset($_GET['subject_id'])) {
   $subject_id = $_GET['subject_id'];
