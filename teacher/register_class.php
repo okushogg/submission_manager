@@ -21,7 +21,7 @@ $teacher_info = $_SESSION['auth'];
 $smarty->assign('teacher_info', $teacher_info);
 
 // ログイン情報がないとログインページへ移る
-login_check();
+login_check($teacher_page);
 
 // 教員のログインか確認
 is_teacher_login();

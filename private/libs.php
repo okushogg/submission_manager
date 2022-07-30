@@ -1,6 +1,10 @@
 <?php
 require('dbconnect.php');
 
+// ページの種類
+$student_page = "student_page";
+$teacher_page = "teacher_page";
+
 // 今年度
 $this_year = (new \DateTime('-3 month'))->format('Y');
 // $this_year =2023;
@@ -49,11 +53,13 @@ function get_years($db)
 }
 
 // ログインチェック
-function login_check()
+function login_check($page)
 {
-  if (!$_SESSION['auth']['is_login']) {
+  if (!$_SESSION['auth']['is_login'] && $page === "student_page") {
     header('Location: ../student/log_in.php');
     exit();
+  } else {
+    header('Location: ../teacher/check.php');
   }
 }
 

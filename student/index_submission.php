@@ -24,7 +24,7 @@ $class_id = $_GET['class_id'];
 $smarty->assign('class_id', $class_id);
 
 // ログイン情報がないとログインページへ移る
-login_check();
+login_check($student_page);
 
 // 生徒がログインしていた場合
 $student_id = $_SESSION['auth']['student_id'];

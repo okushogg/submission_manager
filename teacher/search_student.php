@@ -44,7 +44,7 @@ $smarty->assign('classes', $classes);
 
 
 // ログイン情報がないとログインページへ移る
-login_check();
+login_check($teacher_page);
 
 // 教員のログインか確認
 is_teacher_login();

@@ -18,7 +18,7 @@ if (isset($_SESSION['form'])) {
   exit();
 }
 
-// student/check.phpから飛ばないようにする。
+// student/check.phpからteacher/check.phpへ飛ばないようにする。
 if(isset($_SESSION['form']['student_num'])){
   header('Location: ../student/sign_up.php');
   unset($_SESSION['form']);

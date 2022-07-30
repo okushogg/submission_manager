@@ -21,7 +21,7 @@ $class_id = filter_input(INPUT_GET, 'class_id', FILTER_SANITIZE_NUMBER_INT);
 $today = date('Y-m-d');
 
 // ログイン情報がないとログインページへ移る
-login_check();
+login_check($teacher_page);
 
 // 教員のログインか確認
 is_teacher_login();

@@ -11,7 +11,7 @@ $title = "生徒　ホーム";
 $smarty->assign('title', $title);
 
 // ログイン情報がないとログインページへ移る
-login_check();
+login_check($student_page);
 
 // teacherがstudentを閲覧した場合
 if (isset($_GET['student_id']) && isset($_SESSION['auth']['teacher_id'])) {

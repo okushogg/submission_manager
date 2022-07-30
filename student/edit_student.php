@@ -19,7 +19,7 @@ $today = date('Y-m-d');
 $current_time = bkk_time();
 
 // ログイン情報がないとログインページへ移る
-login_check();
+login_check($student_page);
 
 // 生徒がログインしていた場合
 $student_id = $_SESSION['auth']['student_id'];
