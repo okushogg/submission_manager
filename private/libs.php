@@ -58,8 +58,6 @@ function login_check($page)
   if (!$_SESSION['auth']['is_login'] && $page === "student_page") {
     header('Location: ../student/log_in.php');
     exit();
-  } else {
-    header('Location: ../teacher/check.php');
   }
 }
 

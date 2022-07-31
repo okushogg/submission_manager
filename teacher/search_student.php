@@ -104,13 +104,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   //氏が記入されている場合
   if ($form['last_name'] != '') {
     $sql .= " AND ";
-    $sql .= 'students.last_name LIKE "%' . $form['last_name'] . '%"';
+    $sql .= 'students.last_name LIKE "%' . h($form['last_name']) . '%"';
   }
 
   //名が記入されている場合
   if ($form['first_name'] != '') {
     $sql .= " AND ";
-    $sql .= 'students.first_name LIKE "%' . $form['first_name'] . '%"';
+    $sql .= 'students.first_name LIKE "%' . h($form['first_name']) . '%"';
   }
 
   $stmt = $db->query($sql);

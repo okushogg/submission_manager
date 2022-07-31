@@ -1,36 +1,32 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-07-27 09:27:42
+/* Smarty version 4.1.1, created on 2022-07-31 00:59:09
   from '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/check.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62e1050e99da98_92020688',
+  'unifunc' => 'content_62e5d3ddeb2792_75635569',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '1e5f2e90b07381708786d99300804c27700f3726' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/check.tpl',
-      1 => 1658907911,
+      1 => 1658980459,
       2 => 'file',
     ),
   ),
   'includes' => 
   array (
+    'file:../common/header.tpl' => 1,
   ),
 ),false)) {
-function content_62e1050e99da98_92020688 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62e5d3ddeb2792_75635569 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="ja">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>教員登録確認</title>
-  <link rel="stylesheet" href="../style.css" />
-</head>
+<?php $_smarty_tpl->_subTemplateRender("file:../common/header.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
+?>
 
 <body>
   <div id="wrap">
