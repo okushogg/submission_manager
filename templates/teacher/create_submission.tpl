@@ -83,8 +83,6 @@
           <div><input type="submit" value="課題を作成" /></div>
         </form>
       </div>
-
-      <script type="text/javascript" src="../submission.js"></script>
 </body>
 
 </html>

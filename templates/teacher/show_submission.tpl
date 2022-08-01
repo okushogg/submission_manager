@@ -6,10 +6,10 @@
 
 <body>
   <div id="wrap">
+
     <div id="head">
       <h1>評価入力ページ</h1>
     </div>
-
 
     <div id="content">
       <!-- ナビゲーション -->
@@ -33,6 +33,7 @@
       <div>
         <form action="" , method="post">
           <table class="">
+
             <tr>
               <!-- <th>h_id</th> -->
               <th>No.</th>
@@ -41,7 +42,9 @@
               <th>受領日</th>
               <th>評価</th>
             </tr>
+
             {foreach $students_who_have_submission as $student}
+
               <!-- 出席番号 -->
               <td>
                 {$student_num_array[{$student.student_id}].student_num}
@@ -84,12 +87,14 @@
                   ?>
                 </select>
               </td>
-              </tr>
+
             {/foreach}
+            
           </table>
           <div><input type="submit" value="評価を更新" /></div>
         </form>
-      </div>
+    </div>
+  </div>
 
 
 </body>

@@ -6,7 +6,7 @@ function addForm() {
 
   var add_option = document.createElement('option');
     add_option.text = dataset
-    add_option.value = class[class_id];
+    // add_option.value = class;
 
   var parent = document.getElementById('class_select');
   parent.appendChild(add_select);

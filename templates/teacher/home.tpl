@@ -21,7 +21,7 @@
       {if $classes_array}
 
       {if isset($classes_array.1)}
-      <div>
+        <ul>
         <div class="box">
           {foreach $classes_array.1 as $a}
             <div class="box">
@@ -56,7 +56,7 @@
         {else}
           <li>新年度の3年生クラスは未登録です。</li>
         {/if}
-      </div>
+        </ul>
       {else}
       <p>新年度のクラスが未登録です。</p>
       {/if}
