@@ -1,6 +1,6 @@
 <?php
 
-function error_check($db, $this_year, $today, $form)
+function error_check($db, $this_year, $today, $form, $type)
 {
   $error = [];
 
@@ -33,7 +33,8 @@ function error_check($db, $this_year, $today, $form)
       $error['email'] = 'not_like_email';
     } else {
       // 同一のメールアドレスがないかチェック
-      $stmt = $db->prepare('select count(*) from teachers where email=?');
+      // $sql = ;
+      $stmt = $db->prepare("select email from $type where email=? limit 1");
       if (!$stmt) {
         die($db->error);
       }
@@ -42,9 +43,8 @@ function error_check($db, $this_year, $today, $form)
       if (!$success) {
         die($db->error);
       }
-      $cnt_str = $stmt->fetch(PDO::FETCH_COLUMN);
-      $cnt = intval($cnt_str);
-      if ($cnt > 0) {
+      $is_email_exist = $stmt->fetch(PDO::FETCH_ASSOC);
+      if ($is_email_exist) {
         $error['email'] = 'duplicate';
       }
     }

@@ -85,7 +85,7 @@ $class_id = $submission_info['class_id'];
 //「課題内容を編集」をクリックしたら
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
-  list($error, $form) = error_check($db, $this_year, $today, $form);
+  list($error, $form) = error_check($db, $this_year, $today, $form, "teachers");
 
   // teacherのid
   $teacher_id = $form['teacher_id'];

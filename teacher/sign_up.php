@@ -32,7 +32,7 @@ $smarty->assign('form', $form);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // エラーチェック
-  list($error, $form) = error_check($db, $this_year, $today, $form);
+  list($error, $form) = error_check($db, $this_year, $today, $form, "teachers");
 
   // エラーがなかった場合
   if (empty($error)) {

@@ -48,7 +48,7 @@ $smarty->assign('this_year_classes', $this_year_classes);
 // フォームの内容をチェック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
-  list($error, $form) = error_check($db, $this_year, $today, $form);
+  list($error, $form) = error_check($db, $this_year, $today, $form, "students");
 
 
   // エラーがなければ画像を保存して、checkへ
@@ -70,7 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: check.php');
     exit();
   }
-  var_dump($error,$form,$_FILES['image']['size']);
   $smarty->assign('form', $form);
   $smarty->assign('error', $error);
 }

@@ -59,7 +59,7 @@ $smarty->assign('classes', $classes);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
-  list($error, $form) = error_check($db, $this_year, $today, $form);
+  list($error, $form) = error_check($db, $this_year, $today, $form, "teachers");
 
   // 入力に問題がなければ
   if (empty($error)) {

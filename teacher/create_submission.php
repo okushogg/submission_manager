@@ -69,7 +69,7 @@ $smarty->assign('all_subjects', $all_subjects);
 //「課題を作成する」をクリック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
-  list($error, $form) = error_check($db, $this_year, $today, $form);
+  list($error, $form) = error_check($db, $this_year, $today, $form, "teachers");
 
   // 入力に問題がない場合
   if (empty($error)) {

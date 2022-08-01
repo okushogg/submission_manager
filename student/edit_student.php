@@ -80,7 +80,7 @@ $smarty->assign('selectable_classes', $selectable_classes);
 // 生徒情報を更新をクリック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
-  list($error, $form) = error_check($db, $this_year, $today, $form);
+  list($error, $form) = error_check($db, $this_year, $today, $form, "students");
 
   // エラーがなかった場合
   if (empty($error)) {
