@@ -114,6 +114,7 @@ function bkk_time()
 // パスワードリセット用のメール
 function send_mail($to, $password_reset_token, $type)
 {
+  $smarty = new Smarty_submission_manager();
   mb_language("Japanese");
   mb_internal_encoding("UTF-8");
   // 環境変数にてパスワードリセットURLとメールアドレスを管理
@@ -123,11 +124,8 @@ function send_mail($to, $password_reset_token, $type)
   $password_reset_url = "{$url}/{$type}/password_reset_form.php?password_reset_token={$password_reset_token}";
 
   $subject =  "{$type}用パスワードリセットURLをお送りします";
-
-  $body = <<<EOD
-  下記URLへアクセスし、パスワードの変更を完了してください。<br>
-  <a href="{$password_reset_url}">{$password_reset_url}</a>
-  EOD;
+  $smarty->assign('password_reset_url', $password_reset_url);
+  $body = $smarty->fetch('common/mail.tpl');
 
   $headers = "From : {$mail_address} \n";
   $headers .= "Content-Type : text/html";
