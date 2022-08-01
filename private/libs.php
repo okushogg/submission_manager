@@ -64,8 +64,10 @@ function login_check($page)
 // 教員のログインか確認
 function is_teacher_login()
 {
-  if (isset($_SESSION['auth']['teacher_id'])) {
+  if (isset($_SESSION['auth']['pass_teacher_check'])) {
     return true;
+  } elseif(isset($_SESSION['auth']['teacher_id'])) {
+    return $_SESSION['auth']['teacher_id'];
   } else {
     header('Location: ../teacher/teacher_check.php');
     exit();

@@ -10,6 +10,8 @@ $smarty = new Smarty_submission_manager();
 $title = "教員 登録ページ";
 $smarty->assign('title', $title);
 
+is_teacher_login();
+
 if (isset($_GET['action']) && isset($_SESSION['form'])) {
   $form = $_SESSION['form'];
 } else {

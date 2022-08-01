@@ -10,18 +10,13 @@ $smarty = new Smarty_submission_manager();
 $title = "教員登録確認ページ";
 $smarty->assign('title', $title);
 
+is_teacher_login();
+
 // 直接check.phpに飛ばないようにする
 if (isset($_SESSION['form'])) {
   $form = $_SESSION['form'];
 } else {
   header('Location: sign_up.php');
-  exit();
-}
-
-// student/check.phpからteacher/check.phpへ飛ばないようにする。
-if(isset($_SESSION['form']['student_num'])){
-  header('Location: ../student/sign_up.php');
-  unset($_SESSION['form']);
   exit();
 }
 

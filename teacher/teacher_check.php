@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if($password === $teacher_check_password){
       // 成功時はloginページへ
       header('Location: log_in.php');
+      $_SESSION['auth']['pass_teacher_check'] = true;
       exit();
     } else {
       // 失敗時はエラー表示

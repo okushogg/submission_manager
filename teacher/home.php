@@ -27,10 +27,9 @@ $smarty->assign('teacher_info', $teacher_info);
 login_check($teacher_page);
 
 // 教員のログインか確認
-is_teacher_login();
+$teacher_id = is_teacher_login();
 
 // 教員がログインしていた場合
-$teacher_id = $_SESSION['auth']['teacher_id'];
 $image_id = $_SESSION['auth']['teacher_image_id'];
 
 // 画像の情報を取得

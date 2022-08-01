@@ -24,6 +24,7 @@
       </div>
 
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
+        
         <!-- 所属クラス -->
         <div style="margin-top: 10px; margin-bottom: 10px;">
           <p>所属クラス</p>
@@ -44,6 +45,7 @@
             <input type="submit" value="変更" />
           </form>
         </div>
+
         <!-- 生徒情報 -->
         <div>
           <img src="../student_pictures/{$student_pic_info.path}" width="100" height="100" alt="" />

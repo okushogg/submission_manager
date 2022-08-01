@@ -15,7 +15,7 @@ $current_time = bkk_time();
 
 $email = "";
 
-
+is_teacher_login();
 
 // 送信をクリック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

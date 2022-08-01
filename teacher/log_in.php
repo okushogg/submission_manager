@@ -10,6 +10,8 @@ $smarty = new Smarty_submission_manager();
 $title = "教員 ログインページ";
 $smarty->assign('title', $title);
 
+is_teacher_login();
+
 $error = [];
 $smarty->assign('error', $error);
 

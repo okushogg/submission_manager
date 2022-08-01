@@ -30,7 +30,6 @@
       <!-- 課題一覧 -->
       <div>
         {if $submission_info}
-          <form action="" , method="post">
             <table class="" style="text-align: center">
               <tr>
                 <!-- <th>h_id</th> -->
@@ -39,12 +38,8 @@
                 <th>受領日</th>
                 <th>評価</th>
               </tr>
-              {foreach $submission_info as $submission}
 
-                <!-- student_submissions_id -->
-                <!-- <td>
-                {$submission.student_submissions_id}
-              </td> -->
+              {foreach $submission_info as $submission}
 
                 <!-- 課題名 -->
                 <td>
@@ -71,6 +66,7 @@
           {else}
             <p>課題はありません</p>
           {/if}
+      </div>
 
 
 </body>

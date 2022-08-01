@@ -10,6 +10,8 @@ $smarty = new Smarty_submission_manager();
 $title = "教員 パスワードリセットページ";
 $smarty->assign('title', $title);
 
+is_teacher_login();
+
 // 現在のバンコクの時刻
 $current_time = bkk_time();
 

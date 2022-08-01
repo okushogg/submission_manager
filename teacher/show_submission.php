@@ -32,14 +32,13 @@ $current_time = bkk_time();
 login_check($teacher_page);
 
 // 教員のログインか確認
-is_teacher_login();
+$teacher_id = is_teacher_login();
 
 // セッション内の情報
 $teacher_info = $_SESSION['auth'];
 $smarty->assign('teacher_info', $teacher_info);
 
 // 教員がログインしていた場合
-$teacher_id = $_SESSION['auth']['teacher_id'];
 $image_id = $_SESSION['auth']['teacher_image_id'];
 
 // 画像の情報を取得

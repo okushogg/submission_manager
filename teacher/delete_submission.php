@@ -10,7 +10,7 @@ $current_time = bkk_time();
 $submission_id = filter_input(INPUT_GET, 'submission_id', FILTER_SANITIZE_NUMBER_INT);
 
 // teacherのid
-$teacher_id = $_SESSION['auth']['teacher_id'];
+$teacher_id = is_teacher_login();
 
 // 課題の情報を求める
 $submission_stmt = $db->prepare("SELECT submissions.name, submissions.dead_line,

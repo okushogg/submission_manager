@@ -24,7 +24,7 @@
             <p class="error">* 苗字を入力してください</p>
           {/if}
           <dd>
-          <input type="text" name="last_name" size="35" maxlength="255" value="{$student_info.last_name}" />
+            <input type="text" name="last_name" size="35" maxlength="255" value="{$student_info.last_name}" />
           </dd>
 
           <dt>名</dt>
