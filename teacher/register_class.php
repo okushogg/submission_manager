@@ -33,10 +33,18 @@ $image_id = $_SESSION['auth']['teacher_image_id'];
 $pic_info = get_pic_info($db, $image_id);
 $smarty->assign('pic_info', $pic_info);
 
-$form= [
-  'grade' => '',
-  'class' => ''
-];
+
+// register_class_checkから戻ってきた場合
+if (isset($_GET['action']) && isset($_SESSION['form'])) {
+  $form = $_SESSION['form'];
+} else {
+  $form= [
+    'grade' => '',
+    'class' => ''
+  ];
+}
+$smarty->assign('form',$form);
+
 
 $error= [];
 
@@ -63,15 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // 入力に問題がなければ
   if (empty($error)) {
-    $stmt = $db->prepare("insert into classes(year, grade, class) values(?, ?, ?)");
-    if (!$stmt) {
-      die($db->error);
-    }
-    $success = $stmt->execute(array($this_year, $from['grade'], $form['class']));
-    if (!$success) {
-      die($db->error);
-    }
-    header('Location: home.php');
+    $_SESSION['form'] = $form;
+    header('Location: register_class_check.php');
   }
   $smarty->assign('form',$form);
   $smarty->assign('error',$error);
