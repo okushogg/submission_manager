@@ -84,12 +84,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // エラーがなかった場合
   if (empty($error)) {
-    // 画像のアップロード
-    if ($form['image']) {
 
+    // 画像のデータがある場合
+    if ($form['image']) {
+      // 画像のアップロード
+      $image = $_FILES['image'];
       if ($image['name'] !== '') {
         $filename = date('Ymdhis') . '_' . $image['name'];
-        if (!move_uploaded_file($image['tmp_name'], '../student_pictures/' . $filename)) {
+        $pic_dir = "teacher_pictures";
+        if (!makeThumb($pic_dir)) {
           die('ファイルのアップロードに失敗しました');
         }
         $_SESSION['form']['image'] = $filename;

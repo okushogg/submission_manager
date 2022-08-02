@@ -66,7 +66,7 @@ function is_teacher_login()
 {
   if (isset($_SESSION['auth']['pass_teacher_check'])) {
     return true;
-  } elseif(isset($_SESSION['auth']['teacher_id'])) {
+  } elseif (isset($_SESSION['auth']['teacher_id'])) {
     return $_SESSION['auth']['teacher_id'];
   } else {
     header('Location: ../teacher/teacher_check.php');
@@ -132,4 +132,66 @@ function send_mail($to, $password_reset_token, $type)
 
   $is_sent = mb_send_mail($to, $subject, $body, $headers);
   return $is_sent;
+}
+
+
+// 画像ファイルリサイズ
+function makeThumb($pic_dir)
+{
+  $image = $_FILES['image'];
+  $original_file = $image['tmp_name'];
+  $type = mime_content_type($image['tmp_name']);
+  $filename = date('Ymdhis') . '_' . $image['name'];
+
+  // getimagesize関数 オリジナル画像の横幅・高さを取得
+  list($original_width, $original_height) = getimagesize($original_file);
+
+  // サムネイルの横幅を指定
+  $thumb_width = 200;
+
+  // サムネイルの高さを算出 round関数で四捨五入
+  $thumb_height = round($original_height * $thumb_width / $original_width);
+
+  // オリジナルファイルの画像リソース
+  if($type === 'image/png'){
+    $original_image = imagecreatefrompng($original_file);
+  } elseif($type === 'image/jpeg'){
+    $original_image = imagecreatefromjpeg($original_file);
+  } else {
+    die('ファイルのアップロードに失敗しました');
+  }
+
+
+  // サムネイルの画像リソース
+  $thumb_image = imagecreatetruecolor($thumb_width, $thumb_height);
+
+  // サムネイル画像の作成
+  imagecopyresized(
+    $thumb_image,
+    $original_image,
+    0,
+    0,
+    0,
+    0,
+    $thumb_width,
+    $thumb_height,
+    $original_width,
+    $original_height
+  );
+
+  // サムネイル画像の出力
+  $save_path = "../$pic_dir/$filename";
+  if($type === 'image/png'){
+    imagepng($thumb_image, $save_path);
+  } elseif($type === 'image/jpeg'){
+    imagejpeg($thumb_image, $save_path);
+  } else {
+    die('ファイルのアップロードに失敗しました');
+  }
+
+  // 画像リソースを破棄
+  imagedestroy($original_image);
+  imagedestroy($thumb_image);
+
+  return $filename;
 }

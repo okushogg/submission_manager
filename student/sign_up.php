@@ -59,7 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $image = $_FILES['image'];
     if ($image['name'] !== '') {
       $filename = date('Ymdhis') . '_' . $image['name'];
-      if (!move_uploaded_file($image['tmp_name'], '../student_pictures/' . $filename)) {
+      $pic_dir = "student_pictures";
+      if (!makeThumb($pic_dir)) {
         die('ファイルのアップロードに失敗しました');
       }
       $_SESSION['form']['image'] = $filename;
