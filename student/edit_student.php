@@ -37,6 +37,9 @@ $form = [
 ];
 $smarty->assign('form', $form);
 
+$error = [];
+$smarty->assign('error', $error);
+
 // 生徒情報を取得
 $student_info = get_student_info($db, $student_id);
 $smarty->assign('student_info', $student_info);
@@ -86,7 +89,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (empty($error)) {
 
     // 画像のデータがある場合
-    if ($form['image']) {
+    if ($_FILES) {
+
       // 画像のアップロード
       $image = $_FILES['image'];
       if ($image['name'] !== '') {
@@ -172,12 +176,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die($db->error);
       }
     }
-
-    // セッション内のフォーム内容を破棄してstudent/home.phpへ
-    unset($_SESSION['form']);
     header('Location: home.php');
   }
-  var_dump($error);
   $smarty->assign('form', $form);
   $smarty->assign('error', $error);
 }

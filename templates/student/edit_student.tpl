@@ -7,7 +7,7 @@
 <body>
   <div id="wrap">
     <div id="head">
-      <h1>生徒登録確認</h1>
+      <h1>生徒情報編集ページ</h1>
     </div>
 
     <div id="content">

@@ -24,21 +24,27 @@ function error_check($db, $this_year, $today, $form, $type)
     }
   }
 
-  //メールアドレスのチェック
+  // メールアドレスのチェック
+  // edit_studentでemailを変更した場合、同一アドレスがないかの確認を行う
+  $edited_email = false;
+  if (isset($_SESSION['auth']['student_id'])) {
+    $student_info = get_student_info($db, $_SESSION['auth']['student_id']);
+    $edited_email = $student_info['email'] !== $form['email'];
+  }
+
   if (isset($form['email'])) {
     $form['email'] = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     if ($form['email'] === '') {
       $error['email'] = 'blank';
     } elseif (!preg_match("/\A([a-zA-Z0-9_\.\-]+)\@([a-zA-Z0-9\-]+)\.([a-zA-Z0-9]{2,4})\z/", $form['email'])) {
       $error['email'] = 'not_like_email';
-    } else {
+    } elseif (!$edited_email) {
       // 同一のメールアドレスがないかチェック
-      // $sql = ;
-      $stmt = $db->prepare("select email from $type where email=? limit 1");
+      $stmt = $db->prepare("select email from $type where email=:email limit 1");
       if (!$stmt) {
         die($db->error);
       }
-      $stmt->bindParam(1, $form['email'], PDO::PARAM_STR);
+      $stmt->bindParam(':email', $form['email'], PDO::PARAM_STR);
       $success = $stmt->execute();
       if (!$success) {
         die($db->error);
