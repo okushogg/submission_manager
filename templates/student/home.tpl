@@ -17,20 +17,20 @@
       <p>該当する生徒はいません。</p>
     {else}
       <div style="text-align: right">
-       {if (!$this_year_class) }
+       {if (!$chosen_year_class) }
           <span class="required">要新規登録</span>
        {/if}
         <a href="edit_student.php">生徒情報編集ページ</a>
       </div>
 
       <div style="text-align: right"><a href="log_out.php">ログアウト</a></div>
-        
+
         <!-- 所属クラス -->
         <div style="margin-top: 10px; margin-bottom: 10px;">
           <p>所属クラス</p>
           <form action="" method="post">
             <select size="1" name="year">
-             {foreach $belonged_classes as $belonged_class}
+             {foreach $all_belonged_classes as $belonged_class}
                 {if $belonged_class.year == $form.year}
                   <option value="{$belonged_class.year}" selected>
                     {$belonged_class.year}年度{$belonged_class.grade}年{$belonged_class.class}組
@@ -49,8 +49,8 @@
         <!-- 生徒情報 -->
         <div>
           <img src="../student_pictures/{$student_pic_info.path}" width="100" height="100" alt="" />
-         {if $this_year_class }
-           {$this_year_class.grade}-{$this_year_class.class} No_{$this_year_class.student_num}
+         {if $chosen_year_class }
+           {$chosen_year_class.grade}-{$chosen_year_class.class} No_{$chosen_year_class.student_num}
          {/if}
            {$student_info.last_name} {$student_info.first_name}さん
          {if $student_info.is_active == 0 }
@@ -58,7 +58,7 @@
          {/if}
         </div>
 
-       {if $this_year_class }
+       {if $chosen_year_class }
           <div>
             <p> 各教科 課題一覧</p>
             {foreach $all_subjects as $subject }
@@ -70,7 +70,7 @@
             {/foreach}
           </div>
 
-         {if $submission_info }
+         {if $recent_submissions }
             <!-- 課題一覧 -->
             <div style="margin: 15px;">
               <table class="" style="text-align: center;">
@@ -82,7 +82,7 @@
                   <th>受領日</th>
                   <th>評価</th>
                 </tr>
-               {foreach $submission_info as $submission }
+               {foreach $recent_submissions as $submission }
                   <!-- 教科 -->
                   <td>
                    {$all_subjects[$submission.subject_id].name}
