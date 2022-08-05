@@ -4,6 +4,9 @@
 
 teacher と student で提出物管理を行う APP
 
+##### DB構造
+- https://drive.google.com/file/d/1Ylt0ujqT6bC6yxtghruXLtg9ZAAPm6R_/view?usp=sharing
+
 1. student
 
 - 過去の提出物を教科別に参照可能。
@@ -20,12 +23,11 @@ teacher と student で提出物管理を行う APP
 - 年度が変わるとクラスの登録ができる。
 
 ### 参考
+- ちゃんと学ぶ、PHP+MySQL（MariaDB）入門講座
+  https://www.udemy.com/course/php7basic/
 
 - これだけは知っておきたい！Smarty の使い方
   https://qiita.com/sano1202/items/1f49f407f310f2e493ff
-
-- ちゃんと学ぶ、PHP+MySQL（MariaDB）入門講座
-  https://www.udemy.com/course/php7basic/
 
 - GD を利用したサムネイル画像の作成方法
   https://webkaru.net/php/image-thumbnail/
