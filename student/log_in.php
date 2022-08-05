@@ -4,7 +4,10 @@ require('../private/libs.php');
 require('../private/dbconnect.php');
 
 require_once('../private/set_up.php');
+require_once('../model/students.php');
+
 $smarty = new Smarty_submission_manager();
+$student = new student();
 
 // header tittle
 $title = "生徒ログインページ";
@@ -24,25 +27,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $error['login'] = 'blank';
   } else {
     //  ログイン情報チェック
-    $stmt = $db->prepare('select * from students where email=:email limit 1');
-    if (!$stmt) {
-      die($db->error);
-    }
-    $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-    $success = $stmt->execute();
-    if (!$success) {
-      die($db->error);
-    }
-    $student_info = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($student_info && $student_info['is_active'] == 1) {
-      if (password_verify($password, $student_info['password'])) {
+    $login_student = $student->student_login_check($db, $email);
+    if ($login_student && $login_student['is_active'] == 1) {
+      if (password_verify($password, $login_student['password'])) {
         // ログイン成功
         session_regenerate_id();
         $_SESSION['auth']['is_login'] = true;
-        $_SESSION['auth']['student_id'] = $student_info['id'];
-        $_SESSION['auth']['last_name'] = $student_info['last_name'];
-        $_SESSION['auth']['first_name'] = $student_info['first_name'];
-        $_SESSION['auth']['student_image_id'] = $student_info['image_id'];
+        $_SESSION['auth']['student_id'] = $login_student['id'];
+        $_SESSION['auth']['last_name'] = $login_student['last_name'];
+        $_SESSION['auth']['first_name'] = $login_student['first_name'];
+        $_SESSION['auth']['student_image_id'] = $login_student['image_id'];
         header('Location: home.php');
         exit();
       } else {
