@@ -3,8 +3,12 @@ session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
 require('../private/error_check.php');
+
 require_once('../private/set_up.php');
+require_once('../model/classes.php');
+
 $smarty = new Smarty_submission_manager();
+$class = new classRoom();
 
 // header tittle
 $title = "生徒登録ページ";
@@ -33,23 +37,13 @@ $error = [];
 $smarty->assign('error', $error);
 
 // 本年度のクラスを求める
-$stmt = $db->prepare("SELECT id, grade, class FROM classes WHERE year=:year");
-if (!$stmt) {
-  die($db->error);
-}
-$stmt->bindParam(':year', $this_year, PDO::PARAM_STR);
-$success = $stmt->execute();
-if (!$success) {
-  die($db->error);
-}
-$this_year_classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$this_year_classes = $class->get_this_year_classes($db, $this_year);
 $smarty->assign('this_year_classes', $this_year_classes);
 
 // フォームの内容をチェック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
   list($error, $form) = error_check($db, $this_year, $today, $form, "students");
-
 
   // エラーがなければ画像を保存して、checkへ
   if (empty($error)) {
