@@ -4,8 +4,9 @@ class student
 {
 
   // loginチェック
-  function student_login_check($db, $email){
-    $stmt = $db->prepare('select * from students where email=:email limit 1');
+  function student_login($db, $email)
+  {
+    $stmt = $db->prepare('SELECT * FROM students WHERE email=:email LIMIT 1');
     if (!$stmt) {
       die($db->error);
     }
@@ -29,5 +30,24 @@ class student
     $student_info = $student_stmt->fetch(PDO::FETCH_ASSOC);
     return $student_info;
   }
+
+  // 生徒情報を新規登録する
+  function register_new_student($db, $form, $password, $image_id)
+  {
+    $stmt = $db->prepare('INSERT INTO students(last_name, first_name, email, password, image_id, sex)
+                          VALUES(:last_name, :first_name, :email, :password, :image_id, :sex)');
+    if (!$stmt) {
+      die($db->error);
+    }
+    $stmt->bindParam(':last_name', $form['last_name'], PDO::PARAM_STR);
+    $stmt->bindParam(':first_name', $form['first_name'], PDO::PARAM_STR);
+    $stmt->bindParam(':email', $form['email'], PDO::PARAM_STR);
+    $stmt->bindParam(':password', $password, PDO::PARAM_STR);
+    $stmt->bindParam(':image_id', $image_id, PDO::PARAM_INT);
+    $stmt->bindParam(':sex', $form['sex'], PDO::PARAM_INT);
+    $success = $stmt->execute();
+    if (!$success) {
+      die($db->error);
+    }
+  }
 }
-?>

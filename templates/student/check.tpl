@@ -21,7 +21,7 @@
           <dt>性別</dt>
           <dd>{display_sex($form.sex)}</dd>
           <dt>クラス</dt>
-          <dd>{$my_class.grade}-{$my_class.class}</dd>
+          <dd>{$chosen_class.grade}-{$chosen_class.class}</dd>
           <dt>メールアドレス</dt>
           <dd>{$form.email}</dd>
           <dt>パスワード</dt>

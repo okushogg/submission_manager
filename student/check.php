@@ -4,7 +4,16 @@ require('../private/libs.php');
 require('../private/dbconnect.php');
 
 require_once('../private/set_up.php');
+require_once('../model/students.php');
+require_once('../model/classes.php');
+require_once('../model/images.php');
+require_once('../model/belongs.php');
+
 $smarty = new Smarty_submission_manager();
+$class = new classRoom();
+$image = new image();
+$belong = new belong();
+$student = new student();
 
 // header tittle
 $title = "生徒 登録確認ページ";
@@ -19,17 +28,8 @@ if (isset($_SESSION['form'])) {
 }
 
 // class_idから学年クラスを表示する
-$stmt = $db->prepare("select grade, class from classes where id=:id");
-if (!$stmt) {
-  die($db->error);
-}
-$stmt->bindParam(':id', $form['class_id'], PDO::PARAM_INT);
-$success = $stmt->execute();
-if (!$success) {
-  die($db->error);
-}
-$my_class = $stmt->fetch(PDO::FETCH_ASSOC);
-$smarty->assign('my_class', $my_class);
+$chosen_class = $class->get_chosen_class($db, $form['class_id']);
+$smarty->assign('chosen_class', $chosen_class);
 
 // 登録内容を確定
 $form = $_SESSION['form'];
@@ -37,20 +37,7 @@ $smarty->assign('form', $form);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // 画像がある場合
   if ($form['image'] !== '') {
-    $stmt = $db->prepare('insert into images(path) VALUES(?)');
-    if (!$stmt) {
-      die($db->error);
-    }
-    $stmt->bindParam(1, $form['image'], PDO::PARAM_STR);
-    $success = $stmt->execute();
-    if (!$success) {
-      die($db->error);
-    }
-    $get_image_id = $db->prepare("select id from images where path = '" . $form['image'] . "'");
-    $get_image_id->execute();
-    $image_id_str = $get_image_id->fetch(PDO::FETCH_COLUMN);
-    $image_id = intval($image_id_str);
-    unset($stmt);
+    $image_id = $image->student_pic_register($db, $form['image']);
   } else {
     // 画像がない場合はlibsに指定した$no_image_idを使用
     $image_id = $no_image_id;
@@ -58,43 +45,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // パスワードをDBに直接保管しない
   $password = password_hash($form['password'], PASSWORD_DEFAULT);
+
   // 情報をテーブルに保存
-  $stmt = $db->prepare('insert into students(last_name, first_name, email, password, image_id, sex) values(?, ?, ?, ?, ?, ?)');
-  if (!$stmt) {
-    die($db->error);
-  }
-  $success = $stmt->execute(array($form['last_name'], $form['first_name'], $form['email'], $password, $image_id, $form['sex']));
-  if (!$success) {
-    die($db->error);
-  }
+  $student->register_new_student($db, $form, $password, $image_id);
 
   // 作成したstudentsテーブルのレコードからstudent_idを求める
-  $stmt_student = $db->prepare('select id from students where email=:email');
-  if (!$stmt_student) {
-    die($db->error);
-  }
-  $stmt_student->bindParam(':email', $form['email'], PDO::PARAM_STR);
-  $success_student = $stmt_student->execute();
-  if (!$success_student) {
-    die($db->error);
-  }
-  $student_id_str = $stmt_student->fetch(PDO::FETCH_COLUMN);
-  $student_id = intval($student_id_str);
-
+  $registered_student_info = $student->student_login($db, $form['email']);
+  $student_id = $registered_student_info['id'];
+  
   // 所属クラスと出席番号の情報をbelongsテーブルに保存
-  $class_id_int=intval($form['class_id']);
-  $student_num_int=intval($form['student_num']);
-  $stmt_belongs = $db->prepare('insert into belongs(student_id, class_id, student_num) values(?, ?, ?)');
-  if (!$stmt_belongs) {
-    die($db->error);
-  }
-  $success_belongs =$stmt_belongs->execute(array($student_id,$class_id_int,$student_num_int));
-  if (!$success_belongs) {
-    die($db->error);
-  }
+  $belong->register_new_student_belongs($db, $student_id, $form['class_id'], $form['student_num']);
 
   // セッションにstudentの情報を入れる
-  $_SESSION['auth']['login'] = true;
+  $_SESSION['auth']['is_login'] = true;
   $_SESSION['auth']['student_id'] = $student_id;
   $_SESSION['auth']['last_name'] = $form['last_name'];
   $_SESSION['auth']['first_name'] = $form['first_name'];
@@ -106,4 +69,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 $smarty->caching = 0;
 $smarty->display('student/check.tpl');
-?>

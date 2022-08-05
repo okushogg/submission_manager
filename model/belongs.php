@@ -35,4 +35,21 @@ class belong
     $chosen_year_class = $chosen_year_class_stmt->fetch(PDO::FETCH_ASSOC);
     return $chosen_year_class;
   }
+
+  // 新規登録した生徒の所属クラスを登録
+  function register_new_student_belongs($db, $student_id, $class_id, $student_num)
+  {
+    $stmt_belongs = $db->prepare('INSERT INTO belongs(student_id, class_id, student_num)
+                                  VALUES (:student_id, :class_id, :student_num)');
+    if (!$stmt_belongs) {
+      die($db->error);
+    }
+    $stmt_belongs->bindParam(':student_id', $student_id, PDO::PARAM_INT);
+    $stmt_belongs->bindParam(':class_id', $class_id, PDO::PARAM_INT);
+    $stmt_belongs->bindParam(':student_num', $student_num, PDO::PARAM_INT);
+    $success_belongs = $stmt_belongs->execute();
+    if (!$success_belongs) {
+      die($db->error);
+    }
+  }
 }

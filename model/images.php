@@ -15,4 +15,21 @@ class image
     $pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
     return $pic_info;
   }
+
+  // studentの登録時に画像を保存
+  function student_pic_register($db, $file_name){
+    $stmt = $db->prepare('INSERT INTO images(path) VALUES(:path)');
+    if (!$stmt) {
+      die($db->error);
+    }
+    $stmt->bindParam(':path', $file_name, PDO::PARAM_STR);
+    $success = $stmt->execute();
+    if (!$success) {
+      die($db->error);
+    }
+    $get_image_id = $db->prepare("SELECT id FROM images WHERE path = '" . $file_name . "'");
+    $get_image_id->execute();
+    $registered_image_id = $get_image_id->fetch(PDO::FETCH_COLUMN);
+    return $registered_image_id;
+  }
 }
