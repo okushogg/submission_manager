@@ -1,9 +1,9 @@
 <?php
 session_start();
-require (dirname(__DIR__, 2). '/private/libs.php');
-require  (dirname(__DIR__, 2). '/private/dbconnect.php');
+require('../private/libs.php');
+require('../private/dbconnect.php');
 
-require_once(dirname(__DIR__, 2). '/private/set_up.php');
+require_once('../private/set_up.php');
 $smarty = new Smarty_submission_manager();
 
 // header tittle
