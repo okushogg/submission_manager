@@ -4,7 +4,16 @@ require('../private/libs.php');
 require('../private/dbconnect.php');
 
 require_once('../private/set_up.php');
+require_once('../model/students.php');
+require_once('../model/classes.php');
+require_once('../model/images.php');
+require_once('../model/belongs.php');
+
 $smarty = new Smarty_submission_manager();
+$class = new classRoom();
+$image = new image();
+$belong = new belong();
+$student = new student();
 
 // header tittle
 $title = "生徒 課題一覧ページ";
