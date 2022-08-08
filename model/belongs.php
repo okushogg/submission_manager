@@ -52,4 +52,19 @@ class belong
       die($db->error);
     }
   }
+
+  // class_idから学年、クラス、出席番号を取得
+  function get_class_student_num($db, $student_id, $class_id)
+  {
+    $class_stmt = $db->prepare("SELECT belongs.id, belongs.class_id, belongs.student_num as student_num,
+                                       classes.year as year, classes.class as class, classes.grade as grade
+                                  FROM belongs
+                             LEFT JOIN classes
+                                    ON belongs.class_id = classes.id
+                                 WHERE belongs.student_id = $student_id
+                                   AND belongs.class_id = $class_id");
+    $class_stmt->execute();
+    $chosen_class = $class_stmt->fetch(PDO::FETCH_ASSOC);
+    return $chosen_class;
+  }
 }
