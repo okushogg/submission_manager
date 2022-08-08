@@ -91,7 +91,7 @@
           </dd>
           <dt>パスワード</dt>
           <dd>
-            <p>パスワードの変更は<a href="reset_password.php">こちら</a>から。</p>
+            <p>パスワードの変更は<a href="../student/reset_password.php">こちら</a>から。</p>
           </dd>
 
           {if isset($smarty.session.auth.teacher_id) || $this_year > $this_year_class.year}

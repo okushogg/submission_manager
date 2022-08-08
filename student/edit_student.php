@@ -102,8 +102,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     // 情報をテーブルに保存
     $student->update_student_info($db, $form, $current_time, $student_id);
+
     // 所属クラスと出席番号の情報をbelongsテーブルに保存
     $belong->update_belonged_class_and_student_num($db,$student_id, $this_year, $this_year_class, $form, $current_time);
+
     header('Location: ../student/home.php');
   }
   $smarty->assign('form', $form);

@@ -15,7 +15,7 @@
         <p>登録がまだの方はこちらからどうぞ。</p>
         <p>&raquo;<a href="sign_up.php">登録手続きをする</a></p>
         <p>パスワードをお忘れの方はこちら。</p>
-        <p>&raquo;<a href="reset_password.php">パスワードの再設定</a></p>
+        <p>&raquo;<a href="../student/reset_password.php">パスワードの再設定</a></p>
       </div>
       <form action="" method="post">
         <dl>
