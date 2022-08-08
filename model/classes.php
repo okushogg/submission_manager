@@ -33,4 +33,25 @@ class classRoom
     $chosen_class = $stmt->fetch(PDO::FETCH_ASSOC);
     return $chosen_class;
   }
+
+  // 生徒情報編集ページで選択可能なクラスの情報を提示する
+  function get_selectable_classes($db, $this_year, $this_year_class){
+    if ($this_year > $this_year_class['year']) {
+      $sql = "SELECT id, grade, class FROM classes WHERE year=:year AND grade > :this_year_class";
+    } else {
+      $sql = "SELECT id, grade, class FROM classes WHERE year=:year AND grade = :this_year_class";
+    }
+    $stmt = $db->prepare($sql);
+    if (!$stmt) {
+      die($db->error);
+    }
+    $stmt->bindParam(':year', $this_year, PDO::PARAM_STR);
+    $stmt->bindParam(':this_year_class', $this_year_class['grade'], PDO::PARAM_STR);
+    $success = $stmt->execute();
+    if (!$success) {
+      die($db->error);
+    }
+    $selectable_classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $selectable_classes;
+  }
 }

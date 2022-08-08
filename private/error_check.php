@@ -94,7 +94,7 @@ function error_check($db, $this_year, $today, $form, $type)
 
 
   // 画像のチェック
-  if (isset($form['image'])) {
+  if ($_FILES) {
     $image = $_FILES['image'];
     // 画像のファイル種類の判別
     if ($image['name'] !== '' && $image['error'] === 0) {
