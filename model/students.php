@@ -108,4 +108,24 @@ class student
     return true;
     }
   }
+
+  // passwordをリセット
+  function reset_password($db, $current_time, $password, $password_reset_token){
+    // password_reset_tokenが一致しているstudentのpasswordを変更
+    $stmt = $db->prepare("UPDATE students
+                           SET password = :password,
+                               updated_at = :updated_at,
+                               password_reset_token = null
+                         WHERE password_reset_token = :password_reset_token");
+    $stmt->bindValue(':password', $password, PDO::PARAM_STR);
+    $stmt->bindValue(':updated_at', $current_time, PDO::PARAM_STR);
+    $stmt->bindValue(':password_reset_token', $password_reset_token, PDO::PARAM_STR);
+    $success = $stmt->execute();
+    if (!$success) {
+      $db->error;
+    }
+    header("Location: log_in.php");
+    exit();
+  }
+
 }
