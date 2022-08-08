@@ -48,6 +48,7 @@ $form = [
 ];
 $smarty->assign('form', $form);
 
+$edit_check = [];
 $error = [];
 $smarty->assign('error', $error);
 
@@ -56,7 +57,6 @@ $student_info = get_student_info($db, $student_id);
 $smarty->assign('student_info', $student_info);
 
 // 現在の所属クラスを求める
-
 $this_year_class = $belong->get_chosen_year_class($db, $student_id, $this_year);
 $class_id = $this_year_class['class_id'];
 $smarty->assign('this_year_class', $this_year_class);
@@ -71,6 +71,12 @@ $smarty->assign('selectable_classes', $selectable_classes);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
   list($error, $form) = error_check($db, $this_year, $today, $form, "students");
+
+  // 編集があったか確認
+  $edit_check = edit_check($form, $student_info, $this_year_class);
+  if($edit_check){
+    $error['edit_check'] = "no_edit";
+  }
 
   // エラーがなかった場合
   if (empty($error)) {

@@ -41,6 +41,21 @@ function get_student_info($db, $student_id)
   return $student_info;
 }
 
+// 編集ページで変更があったか確認
+function edit_check($form, $student_info, $this_year_class){
+  $edit_check = [];
+  $edit_check['last_name'] = $form['last_name'] === $student_info['last_name'];
+  $edit_check['first_name'] = $form['first_name'] === $student_info['first_name'];
+  $edit_check['sex'] = $form['sex'] === $student_info['sex'];
+  $edit_check['class_id'] = $form['class_id'] === $this_year_class['class_id'];
+  $edit_check['student_num'] = $form['student_num'] === $this_year_class['student_num'];
+  $edit_check['email'] = $form['email'] === $student_info['email'];
+  if(isset($_SESSION['auth']['teacher_id'])){
+    $edit_check['is_active'] = $form['is_active'] === $student_info['is_active'];
+  }
+  return !in_array(false, $edit_check, true);
+}
+
 // 登録されている年度を全て取得
 function get_years($db)
 {

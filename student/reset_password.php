@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     send_mail($account_holder['email'], $password_reset_token, "student");
   } else {
     // メールアドレスがなかった場合もログインページへ
-    header('Location: ../teacher/teacher_check.php');
+    header('Location: log_in.php');
     exit();
   }
   // ログインページへ

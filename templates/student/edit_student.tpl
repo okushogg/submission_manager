@@ -85,6 +85,8 @@
           <dt>メールアドレス</dt>
           {if isset($error.email) && $error.email === 'blank'}
             <p class="error">* メールアドレスを入力してください</p>
+          {elseif isset($error.email) && $error.email === 'duplicate'}
+            <p class="error">* 登録済のメールアドレスです</p>
           {/if}
           <dd>
             <input type="text" name="email" size="35" maxlength="255" value="{$student_info.email}");
@@ -119,6 +121,10 @@
             <input type="hidden" name="is_active" value="{$student_info.is_active}" />
           {/if}
         </dl>
+
+        {if isset($error.edit_check) && $error.edit_check === 'no_edit'}
+          <p class="error">* 編集内容がありません</p>
+        {/if}
         <div><input type="submit" value="生徒情報を更新" /></div>
     </div>
 

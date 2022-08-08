@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.1.1, created on 2022-08-01 09:34:17
+/* Smarty version 4.1.1, created on 2022-08-08 10:50:31
   from '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/home.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.1',
-  'unifunc' => 'content_62e79e195a53b4_84227535',
+  'unifunc' => 'content_62f0ea7790d936_94092498',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'c7ac0f9a5896dc27f56f3db29b17a22a211aa0fc' => 
     array (
       0 => '/Applications/MAMP/htdocs/submissions_manager/templates/teacher/home.tpl',
-      1 => 1659334220,
+      1 => 1659670486,
       2 => 'file',
     ),
   ),
@@ -22,7 +22,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:../teacher/teacher_info_display.tpl' => 1,
   ),
 ),false)) {
-function content_62e79e195a53b4_84227535 (Smarty_Internal_Template $_smarty_tpl) {
+function content_62f0ea7790d936_94092498 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!DOCTYPE html>
 <html lang="jp">
