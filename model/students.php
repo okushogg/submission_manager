@@ -2,7 +2,6 @@
 
 class student
 {
-
   // loginチェック
   function student_login($db, $email)
   {

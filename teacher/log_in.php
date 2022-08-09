@@ -4,7 +4,10 @@ require('../private/libs.php');
 require('../private/dbconnect.php');
 
 require_once('../private/set_up.php');
+require_once('../model/teachers.php');
+
 $smarty = new Smarty_submission_manager();
+$teacher = new teacher();
 
 // header tittle
 $title = "教員 ログインページ";
@@ -29,16 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $error['login'] = 'blank';
   } else {
     //  ログイン情報チェック
-    $stmt = $db->prepare('select * from teachers where email=:email limit 1');
-    if (!$stmt) {
-      die($db->error);
-    }
-    $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-    $success = $stmt->execute();
-    if (!$success) {
-      die($db->error);
-    }
-    $teacher_info = $stmt->fetch(PDO::FETCH_ASSOC);
+    $teacher_info = $teacher->teacher_login($db, $email);
     if ($teacher_info && $teacher_info['is_active'] == 1) {
       if (password_verify($password, $teacher_info['password'])) {
         // ログイン成功

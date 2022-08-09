@@ -17,7 +17,7 @@ class image
   }
 
   // studentの登録時に画像を保存
-  function student_pic_register($db, $file_name){
+  function pic_register($db, $file_name){
     $stmt = $db->prepare('INSERT INTO images(path) VALUES(:path)');
     if (!$stmt) {
       die($db->error);
