@@ -28,7 +28,7 @@ class submission
       die($db->error);
     }
   }
-  
+
   // submission_idから課題の情報を求める
   function get_submission_info($db, $submission_id)
   {
@@ -78,6 +78,30 @@ class submission
     }
     $all_submissions_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return $all_submissions_info;
+  }
+
+  // 課題を編集する
+  function edit_submission($db, $form, $submission_id, $current_time){
+    $stmt = $db->prepare("UPDATE submissions
+                          SET name = :submission_name,
+                              subject_id = :subject_id,
+                              dead_line = :dead_line,
+                              teacher_id = :teacher_id,
+                              updated_at = :updated_at
+                        WHERE id = :submission_id");
+    if (!$stmt) {
+      die($db->error);
+    }
+    $stmt->bindValue(':submission_name', $form['submission_name'], PDO::PARAM_STR);
+    $stmt->bindValue(':subject_id', $form['subject_id'], PDO::PARAM_INT);
+    $stmt->bindValue(':dead_line', $form['dead_line'], PDO::PARAM_STR);
+    $stmt->bindValue(':teacher_id', $form['teacher_id'], PDO::PARAM_INT);
+    $stmt->bindValue(':updated_at', $current_time, PDO::PARAM_STR);
+    $stmt->bindValue(':submission_id', $submission_id, PDO::PARAM_INT);
+    $success = $stmt->execute();
+    if (!$success) {
+      die($db->error);
+    }
   }
 
   // 課題を削除する

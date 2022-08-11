@@ -39,10 +39,10 @@
               <select size="1" name="subject_id">
                 <option value="0">-</option>
                 {foreach $all_subjects as $subject}
-                  {if $submission_info.subject_id == $subject.id}
-                    <option value={$subject.id} selected> {$subject.name} </option>
+                  {if $submission_info.subject_name === $subject.name}
+                    <option value={$subject.subject_id} selected> {$subject.name} </option>
                 {else}
-                    <option value={$subject.id}> {$subject.name} </option>
+                    <option value={$subject.subject_id}> {$subject.name} </option>
                 {/if}
                 {/foreach}
               </select>
