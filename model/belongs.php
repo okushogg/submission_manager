@@ -127,4 +127,51 @@ class belong
     $all_student_id = $student_stmt->fetchAll(PDO::FETCH_ASSOC);
     return $all_student_id;
   }
+
+  // 生徒を検索する
+  function search_students($db, $form)
+  {
+    $sql = "SELECT students.id as student_id, students.first_name, students.last_name, students.sex,
+                   belongs.class_id, classes.year, classes.grade,
+                   classes.class, belongs.student_num, students.is_active
+              FROM belongs
+         LEFT JOIN students ON belongs.student_id = students.id
+         LEFT JOIN classes ON belongs.class_id = classes.id";
+    $sql .= " WHERE ";
+    $sql .= 'classes.year = "' . $form['year'] . '"';
+
+    // 学年が選択されている場合
+    if ($form['grade'] != 0) {
+      $sql .= " AND ";
+      $sql .= 'classes.grade = "' . $form['grade'] . '"';
+    }
+
+    //クラスが選択されている場合
+    if ($form['class'] != '-') {
+      $sql .= " AND ";
+      $sql .= 'classes.class = "' . $form['class'] . '"';
+    }
+
+    //在籍状況が選択されている場合
+    if ($form['is_active'] != '') {
+      $sql .= " AND ";
+      $sql .= 'students.is_active = "' . $form['is_active'] . '"';
+    }
+
+    //氏が記入されている場合
+    if ($form['last_name'] != '') {
+      $sql .= " AND ";
+      $sql .= 'students.last_name LIKE "%' . h($form['last_name']) . '%"';
+    }
+
+    //名が記入されている場合
+    if ($form['first_name'] != '') {
+      $sql .= " AND ";
+      $sql .= 'students.first_name LIKE "%' . h($form['first_name']) . '%"';
+    }
+
+    $stmt = $db->query($sql);
+    $student_search_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $student_search_result;
+  }
 }

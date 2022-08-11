@@ -74,4 +74,15 @@ class classRoom
       die($db->error);
     }
   }
+
+  // 登録されている年度を全て取得
+  function get_years($db)
+  {
+    $years_stmt = $db->prepare("SELECT DISTINCT year
+                              FROM classes
+                              ORDER BY year DESC");
+    $years_stmt->execute();
+    $all_years = $years_stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $all_years;
+  }
 }

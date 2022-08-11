@@ -4,7 +4,14 @@ require('../private/libs.php');
 require('../private/dbconnect.php');
 
 require_once('../private/set_up.php');
+require_once('../model/images.php');
+require_once('../model/belongs.php');
+require_once('../model/classes.php');
+
 $smarty = new Smarty_submission_manager();
+$image = new image();
+$belong = new belong();
+$class = new classRoom();
 
 // header tittle
 $title = "教員 生徒検索ページ";
@@ -53,15 +60,15 @@ $teacher_id = is_teacher_login();
 $image_id = $_SESSION['auth']['teacher_image_id'];
 
 // 画像の情報を取得
-$pic_info = get_pic_info($db, $image_id);
+$pic_info = $image->get_pic_info($db, $image_id);
 $smarty->assign('pic_info', $pic_info);
 
 // 登録されている年度を全て取得
-$all_years = get_years($db);
+$all_years = $class->get_years($db);
 $smarty->assign('all_years', $all_years);
 
 $student_search_result = [];
-$smarty->assign('student_search_result',$student_search_result);
+$smarty->assign('student_search_result', $student_search_result);
 
 // 検索ボタン押下時
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -72,48 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $form['is_active'] = filter_input(INPUT_POST, 'is_active');
   $form['last_name'] = filter_input(INPUT_POST, 'last_name');
   $form['first_name'] = filter_input(INPUT_POST, 'first_name');
-  //  var_dump($db_user);
-  $sql = "SELECT students.id as student_id, students.first_name, students.last_name, students.sex,
-                   belongs.class_id, classes.year, classes.grade,
-                   classes.class, belongs.student_num, students.is_active
-              FROM belongs
-         LEFT JOIN students ON belongs.student_id = students.id
-         LEFT JOIN classes ON belongs.class_id = classes.id";
-  $sql .= " WHERE ";
-  $sql .= 'classes.year = "' . $form['year'] . '"';
 
-  // 学年が選択されている場合
-  if ($form['grade'] != 0) {
-    $sql .= " AND ";
-    $sql .= 'classes.grade = "' . $form['grade'] . '"';
-  }
-
-  //クラスが選択されている場合
-  if ($form['class'] != '-') {
-    $sql .= " AND ";
-    $sql .= 'classes.class = "' . $form['class'] . '"';
-  }
-
-  //在籍状況が選択されている場合
-  if ($form['is_active'] != '') {
-    $sql .= " AND ";
-    $sql .= 'students.is_active = "' . $form['is_active'] . '"';
-  }
-
-  //氏が記入されている場合
-  if ($form['last_name'] != '') {
-    $sql .= " AND ";
-    $sql .= 'students.last_name LIKE "%' . h($form['last_name']) . '%"';
-  }
-
-  //名が記入されている場合
-  if ($form['first_name'] != '') {
-    $sql .= " AND ";
-    $sql .= 'students.first_name LIKE "%' . h($form['first_name']) . '%"';
-  }
-
-  $stmt = $db->query($sql);
-  $student_search_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $student_search_result = $belong->search_students($db, $form);
   $smarty->assign('student_search_result', $student_search_result);
   $smarty->assign('form', $form);
 }

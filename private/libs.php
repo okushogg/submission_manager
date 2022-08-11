@@ -56,17 +56,6 @@ function edit_check($form, $student_info, $this_year_class){
   return !in_array(false, $edit_check, true);
 }
 
-// 登録されている年度を全て取得
-function get_years($db)
-{
-  $years_stmt = $db->prepare("SELECT DISTINCT year
-                              FROM classes
-                              ORDER BY year DESC");
-  $years_stmt->execute();
-  $all_years = $years_stmt->fetchAll(PDO::FETCH_ASSOC);
-  return $all_years;
-}
-
 // ログインチェック
 function login_check($page)
 {
