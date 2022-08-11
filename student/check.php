@@ -37,7 +37,7 @@ $smarty->assign('form', $form);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // 画像がある場合
   if ($form['image'] !== '') {
-    $image_id = $image->student_pic_register($db, $form['image']);
+    $image_id = $image->pic_register($db, $form['image']);
   } else {
     // 画像がない場合はlibsに指定した$no_image_idを使用
     $image_id = $no_image_id;
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // 作成したstudentsテーブルのレコードからstudent_idを求める
   $registered_student_info = $student->student_login($db, $form['email']);
   $student_id = $registered_student_info['id'];
-  
+
   // 所属クラスと出席番号の情報をbelongsテーブルに保存
   $belong->register_new_student_belongs($db, $student_id, $form['class_id'], $form['student_num']);
 
