@@ -57,10 +57,10 @@
               <select size="1" name="subject_id">
                 <option value="0">-</option>
                 {foreach $all_subjects as $subject}
-                  {if $form.subject_id == $subject.id}
-                    <option value="{$subject.id}" selected> {$subject.name} </option>
+                  {if $form.subject_id == $subject.subject_id}
+                    <option value="{$subject.subject_id}" selected> {$subject.name} </option>
                   {else}
-                    echo "<option value="{$subject.id}"> {$subject.name} </option>
+                    echo "<option value="{$subject.subject_id}"> {$subject.name} </option>
                   {/if}
                 {/foreach}
               </select>

@@ -3,10 +3,8 @@ session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
 
-require_once('../private/set_up.php');
 require_once('../model/submissions.php');
 
-$smarty = new Smarty_submission_manager();
 $submission = new submission();
 
 // 現在の時刻

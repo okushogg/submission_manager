@@ -2,6 +2,23 @@
 
 class student_submission
 {
+  // 作成したsubmissionsレコードに紐付く該当クラス全生徒のstudent_submissionsレコードを作成
+  function create_student_submission($db, $submission_id, $student_id){
+    $submission_stmt = $db->prepare("INSERT INTO student_submissions(student_id,
+                                                                       submission_id)
+                                            VALUES(:student_id,
+                                                   :submission_id)");
+      if (!$submission_stmt) {
+        die($db->error);
+      }
+      $submission_stmt->bindValue(':student_id', $student_id['student_id'], PDO::PARAM_INT);
+      $submission_stmt->bindValue(':submission_id', $submission_id, PDO::PARAM_INT);
+      $submission_success = $submission_stmt->execute();
+      if (!$submission_success) {
+        die($db->error);
+      }
+    }
+
   // 選択した強化の課題を取得する
   function get_submission_with_subject($db, $student_id, $class_id, $subject_id)
   {

@@ -5,7 +5,22 @@ require('../private/dbconnect.php');
 require('../private/error_check.php');
 
 require_once('../private/set_up.php');
+require_once('../model/teachers.php');
+require_once('../model/images.php');
+require_once('../model/belongs.php');
+require_once('../model/classes.php');
+require_once('../model/subjects.php');
+require_once('../model/submissions.php');
+require_once('../model/student_submissions.php');
+
 $smarty = new Smarty_submission_manager();
+$teacher = new teacher();
+$image = new image();
+$belong = new belong();
+$class = new classRoom();
+$subject = new subject();
+$submission = new submission();
+$student_submission = new student_submission();
 
 // header tittle
 $title = "教員課題確認ページ";
@@ -51,18 +66,13 @@ $pic_info = get_pic_info($db, $image_id);
 $smarty->assign('pic_info', $pic_info);
 
 // 該当年度の年度のクラスを取得する
-$classes_stmt = $db->prepare("select id, year, grade, class from classes where year=:year");
-$classes_stmt->bindParam(':year', $this_year, PDO::PARAM_STR);
-$classes_stmt->execute();
-$classes_info = $classes_stmt->fetchAll(PDO::FETCH_ASSOC);
-$cnt = count($classes_info);
-$json_classes_info = json_encode($classes_info);
+$classes_info = $class->get_this_year_classes($db, $this_year);
+// $cnt = count($classes_info);
+// $json_classes_info = json_encode($classes_info);
 $smarty->assign('classes_info', $classes_info);
 
 // 教科一覧
-$subjects_stmt = $db->prepare("SELECT id, name FROM subjects");
-$subjects_stmt->execute();
-$all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC);
+$all_subjects = $subject->get_all_subjects($db);
 $smarty->assign('all_subjects', $all_subjects);
 
 
@@ -77,59 +87,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $class_id = intval($form['class_id']);
 
     // 指定されたclass_idを持つ全てのstudent_idを求める(除籍済を除く)
-    $student_stmt = $db->prepare("SELECT b.student_id as student_id, b.student_num as student_num
-                                  FROM belongs AS b
-                                  INNER JOIN students AS s
-                                  ON b.student_id = s.id
-                                  WHERE class_id = :class_id AND s.is_active = 1
-                                  ORDER BY b.student_num");
-    $student_stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
-    $student_success = $student_stmt->execute();
-    if (!$student_success) {
-      die($db->error);
-    }
-    $all_student_id = $student_stmt->fetchAll(PDO::FETCH_ASSOC);
+    $all_student_id = $belong->get_students_belong_to_class($db, $class_id);
 
     // submissionsレコードを作成
-    $stmt = $db->prepare("INSERT INTO submissions(name,
-                                                    class_id,
-                                                    subject_id,
-                                                    dead_line,
-                                                    teacher_id)
-                                            VALUES(:name,
-                                                   :class_id,
-                                                   :subject_id,
-                                                   :dead_line,
-                                                   :teacher_id)");
-    if (!$stmt) {
-      die($db->error);
-    }
-    $stmt->bindValue(':name', $form['submission_name'], PDO::PARAM_STR);
-    $stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
-    $stmt->bindValue(':subject_id', $form['subject_id'], PDO::PARAM_INT);
-    $stmt->bindValue(':dead_line', $form['dead_line'], PDO::PARAM_STR);
-    $stmt->bindValue(':teacher_id', $teacher_id, PDO::PARAM_INT);
-    $success = $stmt->execute();
-    if (!$success) {
-      die($db->error);
-    }
+    $submission->create_submission($db, $class_id, $form, $teacher_id);
 
     // 作成したsubmissionsレコードに紐付く該当クラス全生徒のstudent_submissionsレコードを作成
     $submission_id = $db->lastInsertId();
     foreach ($all_student_id as $student_id) {
-      $submission_stmt = $db->prepare("INSERT INTO student_submissions(student_id,
-                                                                         submission_id)
-                                                                  VALUES(:student_id,
-                                                                         :submission_id)");
-      if (!$submission_stmt) {
-        die($db->error);
-      }
-      $submission_stmt->bindValue(':student_id', $student_id['student_id'], PDO::PARAM_INT);
-      $submission_stmt->bindValue(':submission_id', $submission_id, PDO::PARAM_INT);
-      $submission_success = $submission_stmt->execute();
-      if (!$submission_success) {
-        die($db->error);
-      }
+      $student_submission->create_student_submission($db, $submission_id, $student_id);
     }
     header('Location: home.php');
     exit();
