@@ -3,8 +3,16 @@ session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
 require('../private/error_check.php');
+
 require_once('../private/set_up.php');
+require_once('../model/teachers.php');
+require_once('../model/images.php');
+require_once('../model/classes.php');
+
 $smarty = new Smarty_submission_manager();
+$teacher = new teacher();
+$image = new image();
+$class = new classRoom();
 
 // header tittle
 $title = "教員 クラス登録確認ページ";
@@ -35,14 +43,7 @@ $teacher_id = is_teacher_login();
 
 // 登録を押す
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $stmt = $db->prepare("insert into classes(year, grade, class) values(?, ?, ?)");
-    if (!$stmt) {
-      die($db->error);
-    }
-    $success = $stmt->execute(array($this_year, $form['grade'], $form['class']));
-    if (!$success) {
-      die($db->error);
-    }
+    $class->register_class($db, $form, $this_year);
     unset($_SESSION['form']);
     header('Location: home.php');
 }

@@ -35,7 +35,8 @@ class classRoom
   }
 
   // 生徒情報編集ページで選択可能なクラスの情報を提示する
-  function get_selectable_classes($db, $this_year, $this_year_class){
+  function get_selectable_classes($db, $this_year, $this_year_class)
+  {
     if ($this_year > $this_year_class['year']) {
       $sql = "SELECT id, grade, class FROM classes WHERE year=:year AND grade > :this_year_class";
     } else {
@@ -53,5 +54,22 @@ class classRoom
     }
     $selectable_classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return $selectable_classes;
+  }
+
+  // クラスを新しく登録する
+  function register_class($db, $form, $this_year)
+  {
+    $stmt = $db->prepare("INSERT INTO classes(year, grade, class)
+                          VALUES(:year, :grade, :class)");
+    if (!$stmt) {
+      die($db->error);
+    }
+    $stmt->bindParam(':year', $this_year, PDO::PARAM_STR);
+    $stmt->bindParam(':grade', $form['grade'], PDO::PARAM_STR);
+    $stmt->bindParam(':class', $form['class'], PDO::PARAM_STR);
+    $success = $stmt->execute();
+    if (!$success) {
+      die($db->error);
+    }
   }
 }
