@@ -4,7 +4,20 @@ require('../private/libs.php');
 require('../private/dbconnect.php');
 
 require_once('../private/set_up.php');
+require_once('../model/teachers.php');
+require_once('../model/images.php');
+require_once('../model/belongs.php');
+require_once('../model/classes.php');
+require_once('../model/submissions.php');
+require_once('../model/student_submissions.php');
+
 $smarty = new Smarty_submission_manager();
+$teacher = new teacher();
+$image = new image();
+$belong = new belong();
+$class = new classRoom();
+$submission = new submission();
+$student_submission = new student_submission();
 
 // header tittle
 $title = "教員 課題詳細ページ";
@@ -42,65 +55,20 @@ $smarty->assign('teacher_info', $teacher_info);
 $image_id = $_SESSION['auth']['teacher_image_id'];
 
 // 画像の情報を取得
-$pic_info = get_pic_info($db, $image_id);
+$pic_info = $image->get_pic_info($db, $image_id);
 $smarty->assign('pic_info', $pic_info);
 
 // 課題の情報を求める
-$submission_stmt = $db->prepare("SELECT submissions.name, submissions.dead_line,
-                                        subjects.name as subject_name,
-                                        submissions.class_id,
-                                        classes.grade, classes.class
-                                   FROM submissions
-                                   LEFT JOIN subjects
-                                   ON submissions.subject_id = subjects.id
-                                   LEFT JOIN classes
-                                   ON submissions.class_id = classes.id
-                                   WHERE submissions.id = :submission_id");
-if (!$submission_stmt) {
-  die($db->error);
-}
-$submission_stmt->bindValue(':submission_id', $submission_id, PDO::PARAM_INT);
-$success = $submission_stmt->execute();
-if (!$success) {
-  die($db->error);
-}
-$submission_info = $submission_stmt->fetch(PDO::FETCH_ASSOC);
+$submission_info = $submission->get_submission_info($db, $submission_id);
 $smarty->assign('submission_info', $submission_info);
 $class_id = $submission_info['class_id'];
 
 // 該当の課題が与えられた全ての生徒を求める
-$student_stmt = $db->prepare("SELECT student_submissions.id as student_submissions_id,
-                                     student_submissions.student_id as student_id,
-                                     COALESCE(student_submissions.approved_date,'-') as approved_date,
-                                     COALESCE(student_submissions.score,NULL) as score,
-                                     submissions.dead_line as dead_line,
-                                     students.first_name, students.last_name
-                              FROM student_submissions
-                              LEFT JOIN students
-                              ON student_submissions.student_id = students.id
-                              LEFT JOIN submissions
-                              ON student_submissions.submission_id = submissions.id
-                              WHERE student_submissions.submission_id = :submission_id
-                              AND submissions.class_id = :class_id
-                              AND students.is_active = 1;");
-if (!$student_stmt) {
-  die($db->error);
-}
-$student_stmt->bindValue(':submission_id', $submission_id, PDO::PARAM_INT);
-$student_stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
-$student_success = $student_stmt->execute();
-if (!$student_success) {
-  die($db->error);
-}
-$students_who_have_submission = $student_stmt->fetchAll(PDO::FETCH_ASSOC);
+$students_who_have_submission = $student_submission->get_all_students_who_have_submission($db, $submission_id, $class_id);
 $smarty->assign('students_who_have_submission', $students_who_have_submission);
 
-// 課題が与えられた生徒のclass_idからbelongsを求める
-$belong_stmt = $db->prepare("SELECT student_id, student_num
-                             FROM belongs
-                             WHERE class_id = $class_id");
-$belong_stmt->execute();
-$student_num_array = $belong_stmt->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_UNIQUE);
+// 課題が与えられた生徒のclass_idからstudent_numを求める
+$student_num_array = $belong->get_student_num_from_class_id($db, $class_id);
 $smarty->assign('student_num_array', $student_num_array);
 
 // scoreの値
@@ -119,22 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $score_array = $_POST['score'];
     $h_id = $homework['student_submissions_id'];
     if ($homework['score'] !=  $score_array[$h_id]) {
-      $homework_stmt = $db->prepare("UPDATE student_submissions
-                                      SET score = :score,
-                                          approved_date = :approved_date,
-                                          updated_at = :updated_at
-                                   WHERE id = :student_submissions_id");
-      if (!$homework_stmt) {
-        die($db->error);
-      }
-      $homework_stmt->bindValue(':score', $score_array[$h_id], PDO::PARAM_INT);
-      $homework_stmt->bindValue(':approved_date', $today, PDO::PARAM_STR);
-      $homework_stmt->bindValue(':updated_at', $current_time, PDO::PARAM_STR);
-      $homework_stmt->bindValue(':student_submissions_id', $h_id, PDO::PARAM_INT);
-      $homework_success = $homework_stmt->execute();
-      if (!$homework_success) {
-        die($db->error);
-      }
+      $student_submission->update_submission_score($db, $score_array, $h_id, $today, $current_time);
     }
   }
 

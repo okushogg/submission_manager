@@ -59,4 +59,54 @@ class student_submission
     $recent_submissions = $submission_stmt->fetchAll(PDO::FETCH_ASSOC);
     return $recent_submissions;
   }
+
+  // 課題が与えられた全ての生徒を求める
+  function get_all_students_who_have_submission($db, $submission_id, $class_id)
+  {
+    $student_stmt = $db->prepare("SELECT student_submissions.id as student_submissions_id,
+                                     student_submissions.student_id as student_id,
+                                     COALESCE(student_submissions.approved_date,'-') as approved_date,
+                                     COALESCE(student_submissions.score,NULL) as score,
+                                     submissions.dead_line as dead_line,
+                                     students.first_name, students.last_name
+                              FROM student_submissions
+                              LEFT JOIN students
+                              ON student_submissions.student_id = students.id
+                              LEFT JOIN submissions
+                              ON student_submissions.submission_id = submissions.id
+                              WHERE student_submissions.submission_id = :submission_id
+                              AND submissions.class_id = :class_id
+                              AND students.is_active = 1;");
+    if (!$student_stmt) {
+      die($db->error);
+    }
+    $student_stmt->bindValue(':submission_id', $submission_id, PDO::PARAM_INT);
+    $student_stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
+    $student_success = $student_stmt->execute();
+    if (!$student_success) {
+      die($db->error);
+    }
+    $students_who_have_submission = $student_stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $students_who_have_submission;
+  }
+
+  // 課題の評価を更新する
+  function update_submission_score($db, $score_array, $h_id, $today, $current_time){
+    $homework_stmt = $db->prepare("UPDATE student_submissions
+                                      SET score = :score,
+                                          approved_date = :approved_date,
+                                          updated_at = :updated_at
+                                   WHERE id = :student_submissions_id");
+      if (!$homework_stmt) {
+        die($db->error);
+      }
+      $homework_stmt->bindValue(':score', $score_array[$h_id], PDO::PARAM_INT);
+      $homework_stmt->bindValue(':approved_date', $today, PDO::PARAM_STR);
+      $homework_stmt->bindValue(':updated_at', $current_time, PDO::PARAM_STR);
+      $homework_stmt->bindValue(':student_submissions_id', $h_id, PDO::PARAM_INT);
+      $homework_success = $homework_stmt->execute();
+      if (!$homework_success) {
+        die($db->error);
+      }
+  }
 }

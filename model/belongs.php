@@ -69,7 +69,7 @@ class belong
   }
 
   // 所属クラスと出席番号の情報をbelongsテーブルに保存
-  function update_belonged_class_and_student_num($db,$student_id, $this_year, $this_year_class, $form, $current_time)
+  function update_belonged_class_and_student_num($db, $student_id, $this_year, $this_year_class, $form, $current_time)
   {
     // 進学した後新しいクラスを登録する場合
     if ($this_year > $this_year_class['year']) {
@@ -97,5 +97,16 @@ class belong
         die($db->error);
       }
     }
+  }
+
+  // student_numを求める
+  function get_student_num_from_class_id($db, $class_id)
+  {
+    $belong_stmt = $db->prepare("SELECT student_id, student_num
+                             FROM belongs
+                             WHERE class_id = $class_id");
+    $belong_stmt->execute();
+    $student_num_array = $belong_stmt->fetchAll(PDO::FETCH_ASSOC | PDO::FETCH_UNIQUE);
+    return $student_num_array;
   }
 }
