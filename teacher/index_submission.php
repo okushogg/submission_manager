@@ -44,7 +44,7 @@ $pic_info = get_pic_info($db, $image_id);
 $smarty->assign('pic_info', $pic_info);
 
 // 該当クラスの課題を求める
-$submission_info = $submission->get_class_submission($db, $class_id);
+$submission_info = $submission->get_class_all_submissions($db, $class_id);
 $smarty->assign('submission_info', $submission_info);
 
 // クラスの情報を求める
