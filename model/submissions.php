@@ -52,4 +52,24 @@ class submission
     $all_submissions_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return $all_submissions_info;
   }
+
+  // 課題を削除する
+  function delete_submission($db, $submission_id, $teacher_id, $current_time)
+  {
+    $stmt = $db->prepare("UPDATE submissions
+                             SET is_deleted = 1,
+                                 teacher_id = :teacher_id,
+                                 updated_at = :updated_at
+                           WHERE id = :submission_id");
+    if (!$stmt) {
+      die($db->error);
+    }
+    $stmt->bindValue(':teacher_id', $teacher_id, PDO::PARAM_INT);
+    $stmt->bindValue(':updated_at', $current_time, PDO::PARAM_STR);
+    $stmt->bindValue(':submission_id', $submission_id, PDO::PARAM_INT);
+    $success = $stmt->execute();
+    if (!$success) {
+      die($db->error);
+    }
+  }
 }

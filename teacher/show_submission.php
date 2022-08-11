@@ -90,7 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $student_submission->update_submission_score($db, $score_array, $h_id, $today, $current_time);
     }
   }
-
   header("Location: show_submission.php?submission_id={$submission_id}");
   exit();
 }

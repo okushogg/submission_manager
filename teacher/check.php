@@ -46,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // セッションにteacherの情報を入れる
   $_SESSION['auth']['is_login'] = true;
+  $_SESSION['auth']['pass_teacher_check'] = true;
   $_SESSION['auth']['teacher_id'] = $teacher_info['id'];
   $_SESSION['auth']['last_name'] = $teacher_info['last_name'];
   $_SESSION['auth']['first_name'] = $teacher_info['first_name'];

@@ -79,8 +79,9 @@ function login_check($page)
 // 教員のログインか確認
 function is_teacher_login()
 {
-  if (isset($_SESSION['auth']['pass_teacher_check'])) {
-    return true;
+  if (!$_SESSION['auth']['pass_teacher_check']) {
+    header('Location: ../teacher/teacher_check.php');
+    exit();
   } elseif (isset($_SESSION['auth']['teacher_id'])) {
     return $_SESSION['auth']['teacher_id'];
   } else {
