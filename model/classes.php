@@ -21,7 +21,9 @@ class classRoom
   // class_idから選択されたクラス情報を取得
   function get_chosen_class($db, $class_id)
   {
-    $stmt = $db->prepare("select grade, class from classes where id=:id");
+    $stmt = $db->prepare("SELECT id AS class_id, grade, class
+                          FROM classes
+                          WHERE id=:id");
     if (!$stmt) {
       die($db->error);
     }

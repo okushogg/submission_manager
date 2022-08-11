@@ -4,7 +4,17 @@ require('../private/libs.php');
 require('../private/dbconnect.php');
 
 require_once('../private/set_up.php');
+require_once('../model/teachers.php');
+require_once('../model/images.php');
+require_once('../model/classes.php');
+require_once('../model/submissions.php');
+
 $smarty = new Smarty_submission_manager();
+$teacher = new teacher();
+$image = new image();
+$class = new classRoom();
+$submission = new submission();
+
 
 // header tittle
 $title = "教員 課題一覧";
@@ -34,37 +44,11 @@ $pic_info = get_pic_info($db, $image_id);
 $smarty->assign('pic_info', $pic_info);
 
 // 該当クラスの課題を求める
-$stmt = $db->prepare("SELECT submissions.id, submissions.name as submission_name, submissions.dead_line,
-                             subjects.name as subject_name, teachers.first_name, teachers.last_name
-                      FROM submissions
-                      LEFT JOIN subjects
-                      ON submissions.subject_id = subjects.id
-                      LEFT JOIN teachers
-                      ON submissions.teacher_id = teachers.id
-                      WHERE submissions.class_id = :class_id
-                      AND is_deleted = 0
-                      ORDER BY id DESC");
-if (!$stmt) {
-  die($db->error);
-}
-$stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
-$success = $stmt->execute();
-if (!$success) {
-  die($db->error);
-}
-$submission_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$submission_info = $submission->get_class_submission($db, $class_id);
 $smarty->assign('submission_info', $submission_info);
 
 // クラスの情報を求める
-$class_stmt = $db->prepare("SELECT id as class_id, year, grade, class
-                            FROM classes
-                            WHERE id = :class_id");
-$class_stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
-$class_success = $class_stmt->execute();
-if (!$class_success){
-  die($db->error);
-}
-$class_info = $class_stmt->fetch(PDO::FETCH_ASSOC);
+$class_info = $class->get_chosen_class($db, $class_id);
 $smarty->assign('class_info', $class_info);
 
 $smarty->caching = 0;
