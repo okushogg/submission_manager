@@ -2,6 +2,7 @@
 session_start();
 require('../private/libs.php');
 require('../private/dbconnect.php');
+require('../private/error_check.php');
 
 require_once('../private/set_up.php');
 require_once('../model/students.php');
@@ -31,13 +32,8 @@ $error = [];
 // パスワード再設定をクリック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-  // パスワードのチェック
-  $form['password'] = filter_input(INPUT_POST, 'password');
-  if ($form['password'] === '') {
-    $error['password'] = 'blank';
-  } elseif (strlen($form['password']) < 4) {
-    $error['password'] = 'length';
-  }
+  // エラーチェック
+  list($error, $form) = error_check($db, $this_year, $today, $form, "students");
 
   if (empty($error)) {
     // フォームに入力されたパスワードをハッシュ化

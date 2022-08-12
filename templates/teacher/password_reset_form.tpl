@@ -18,6 +18,8 @@
             <p class="error">* パスワードを入力してください</p>
           {elseif isset($error.password) && $error.password === 'length'}
             <p class="error">* パスワードは4文字以上で入力してください</p>
+          {elseif isset($error.password) && $error.password === 'invalid_letter'}
+              <p class="error">* パスワードは半角英数字で入力してください</p>
           {/if}
           <dd>
             <input type="password" name="password" size="10" maxlength="20" value="{$form.password}" />

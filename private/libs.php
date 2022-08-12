@@ -56,6 +56,17 @@ function edit_check($form, $student_info, $this_year_class){
   return !in_array(false, $edit_check, true);
 }
 
+// 登録されている年度を全て取得
+function get_years($db)
+{
+  $years_stmt = $db->prepare("SELECT DISTINCT year
+                              FROM classes
+                              ORDER BY year DESC");
+  $years_stmt->execute();
+  $all_years = $years_stmt->fetchAll(PDO::FETCH_ASSOC);
+  return $all_years;
+}
+
 // ログインチェック
 function login_check($page)
 {
@@ -68,9 +79,8 @@ function login_check($page)
 // 教員のログインか確認
 function is_teacher_login()
 {
-  if (!$_SESSION['auth']['pass_teacher_check']) {
-    header('Location: ../teacher/teacher_check.php');
-    exit();
+  if ($_SESSION['auth']['pass_teacher_check']) {
+    return true;
   } elseif (isset($_SESSION['auth']['teacher_id'])) {
     return $_SESSION['auth']['teacher_id'];
   } else {

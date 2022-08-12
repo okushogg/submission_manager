@@ -21,15 +21,7 @@ $email = "";
 // 送信をクリック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-  $success_pw_reset = $student->set_password_reset_token($db, $email, $current_time);
-  if ($success_pw_reset) {
-    // DBへtokenが保存されたらメールを送信
-    send_mail($account_holder['email'], $password_reset_token, "student");
-  } else {
-    // メールアドレスがなかった場合もログインページへ
-    header('Location: log_in.php');
-    exit();
-  }
+  $student->set_password_reset_token($db, $email, $current_time);
   // ログインページへ
   header('Location: log_in.php');
   exit();
