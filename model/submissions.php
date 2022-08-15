@@ -6,15 +6,15 @@ class submission
   function create_submission($db, $class_id, $form, $teacher_id)
   {
     $stmt = $db->prepare("INSERT INTO submissions(name,
-                                                    class_id,
-                                                    subject_id,
-                                                    dead_line,
-                                                    teacher_id)
-                                            VALUES(:name,
-                                                   :class_id,
-                                                   :subject_id,
-                                                   :dead_line,
-                                                   :teacher_id)");
+                                                  class_id,
+                                                  subject_id,
+                                                  dead_line,
+                                                  teacher_id)
+                               VALUES (:name,
+                                       :class_id,
+                                       :subject_id,
+                                       :dead_line,
+                                       :teacher_id)");
     if (!$stmt) {
       die($db->error);
     }
@@ -33,15 +33,15 @@ class submission
   function get_submission_info($db, $submission_id)
   {
     $submission_stmt = $db->prepare("SELECT submissions.name, submissions.dead_line,
-                                        subjects.name as subject_name,
-                                        submissions.class_id,
-                                        classes.grade, classes.class
-                                   FROM submissions
-                                   LEFT JOIN subjects
-                                   ON submissions.subject_id = subjects.id
-                                   LEFT JOIN classes
-                                   ON submissions.class_id = classes.id
-                                   WHERE submissions.id = :submission_id");
+                                            subjects.name as subject_name,
+                                            submissions.class_id,
+                                            classes.grade, classes.class
+                                       FROM submissions
+                                  LEFT JOIN subjects
+                                         ON submissions.subject_id = subjects.id
+                                  LEFT JOIN classes
+                                         ON submissions.class_id = classes.id
+                                      WHERE submissions.id = :submission_id");
     if (!$submission_stmt) {
       die($db->error);
     }
@@ -59,15 +59,15 @@ class submission
   function get_class_all_submissions($db, $class_id)
   {
     $stmt = $db->prepare("SELECT submissions.id, submissions.name as submission_name, submissions.dead_line,
-                             subjects.name as subject_name, teachers.first_name, teachers.last_name
-                      FROM submissions
-                      LEFT JOIN subjects
-                      ON submissions.subject_id = subjects.id
-                      LEFT JOIN teachers
-                      ON submissions.teacher_id = teachers.id
-                      WHERE submissions.class_id = :class_id
-                      AND is_deleted = 0
-                      ORDER BY id DESC");
+                                 subjects.name as subject_name, teachers.first_name, teachers.last_name
+                            FROM submissions
+                       LEFT JOIN subjects
+                              ON submissions.subject_id = subjects.id
+                       LEFT JOIN teachers
+                              ON submissions.teacher_id = teachers.id
+                           WHERE submissions.class_id = :class_id
+                             AND is_deleted = 0
+                        ORDER BY id DESC");
     if (!$stmt) {
       die($db->error);
     }
@@ -83,12 +83,12 @@ class submission
   // 課題を編集する
   function edit_submission($db, $form, $submission_id, $current_time){
     $stmt = $db->prepare("UPDATE submissions
-                          SET name = :submission_name,
-                              subject_id = :subject_id,
-                              dead_line = :dead_line,
-                              teacher_id = :teacher_id,
-                              updated_at = :updated_at
-                        WHERE id = :submission_id");
+                             SET name = :submission_name,
+                                 subject_id = :subject_id,
+                                 dead_line = :dead_line,
+                                 teacher_id = :teacher_id,
+                                 updated_at = :updated_at
+                           WHERE id = :submission_id");
     if (!$stmt) {
       die($db->error);
     }

@@ -5,7 +5,10 @@ class student
   // loginチェック
   function student_login($db, $email)
   {
-    $stmt = $db->prepare('SELECT * FROM students WHERE email=:email AND is_active = 1 LIMIT 1');
+    $stmt = $db->prepare('SELECT *
+                            FROM students
+                           WHERE email=:email
+                             AND is_active = 1 LIMIT 1');
     if (!$stmt) {
       die($db->error);
     }
@@ -23,7 +26,7 @@ class student
   {
     $student_stmt = $db->prepare("SELECT first_name, last_name, sex, email, image_id, is_active
                                     FROM students
-                                   WHERE id=:student_id");
+                                   WHERE id = :student_id");
     $student_stmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
     $student_stmt->execute();
     $student_info = $student_stmt->fetch(PDO::FETCH_ASSOC);
@@ -34,7 +37,7 @@ class student
   function register_new_student($db, $form, $password, $image_id)
   {
     $stmt = $db->prepare('INSERT INTO students(last_name, first_name, email, password, image_id, sex)
-                          VALUES(:last_name, :first_name, :email, :password, :image_id, :sex)');
+                               VALUES (:last_name, :first_name, :email, :password, :image_id, :sex)');
     if (!$stmt) {
       die($db->error);
     }
@@ -54,13 +57,13 @@ class student
   function update_student_info($db, $form, $current_time, $student_id)
   {
     $stmt = $db->prepare("UPDATE students
-                           SET first_name = :first_name,
-                               last_name = :last_name,
-                               sex = :sex,
-                               email = :email,
-                               is_active = :is_active,
-                               updated_at = :updated_at
-                        WHERE id = :student_id");
+                             SET first_name = :first_name,
+                                 last_name = :last_name,
+                                 sex = :sex,
+                                 email = :email,
+                                 is_active = :is_active,
+                                 updated_at = :updated_at
+                           WHERE id = :student_id");
     if (!$stmt) {
       die($db->error);
     }
@@ -83,9 +86,9 @@ class student
   {
     // メールアドレスがstudentsテーブルにあるか確認
     $stmt = $db->prepare("SELECT id as student_id, email
-   FROM students
-   WHERE email = :email
-   AND is_active = 1");
+                            FROM students
+                           WHERE email = :email
+                             AND is_active = 1");
     $stmt->bindValue(':email', $email, PDO::PARAM_STR);
     $success = $stmt->execute();
     if (!$success) {
@@ -98,9 +101,9 @@ class student
 
       // メールが送信されたらpassword_reset_tokenをstudentsテーブルへ保存
       $pw_reset_stmt = $db->prepare("UPDATE students
-                 SET password_reset_token = :password_reset_token,
-                     updated_at = :updated_at
-               WHERE id = :student_id ");
+                                        SET password_reset_token = :password_reset_token,
+                                            updated_at = :updated_at
+                                      WHERE id = :student_id ");
       $pw_reset_stmt->bindValue(':password_reset_token', $password_reset_token, PDO::PARAM_STR);
       $pw_reset_stmt->bindValue(':updated_at', $current_time, PDO::PARAM_STR);
       $pw_reset_stmt->bindValue(':student_id', $account_holder['student_id'], PDO::PARAM_INT);
@@ -119,10 +122,10 @@ class student
   {
     // password_reset_tokenが一致しているstudentのpasswordを変更
     $stmt = $db->prepare("UPDATE students
-                           SET password = :password,
-                               updated_at = :updated_at,
-                               password_reset_token = null
-                         WHERE password_reset_token = :password_reset_token");
+                             SET password = :password,
+                                 updated_at = :updated_at,
+                                 password_reset_token = null
+                           WHERE password_reset_token = :password_reset_token");
     $stmt->bindValue(':password', $password, PDO::PARAM_STR);
     $stmt->bindValue(':updated_at', $current_time, PDO::PARAM_STR);
     $stmt->bindValue(':password_reset_token', $password_reset_token, PDO::PARAM_STR);

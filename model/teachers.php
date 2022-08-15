@@ -5,7 +5,10 @@ class teacher
   // loginチェック
   function teacher_login($db, $email)
   {
-    $stmt = $db->prepare('SELECT * FROM teachers WHERE email=:email LIMIT 1');
+    $stmt = $db->prepare('SELECT *
+                            FROM teachers
+                           WHERE email=:email
+                           LIMIT 1');
     if (!$stmt) {
       die($db->error);
     }
@@ -22,7 +25,7 @@ class teacher
   function register_new_teacher($db, $form, $password, $image_id)
   {
     $stmt = $db->prepare('INSERT INTO teachers(last_name, first_name, email, password, image_id)
-                        VALUES(:last_name, :first_name, :email, :password, :image_id)');
+                               VALUES (:last_name, :first_name, :email, :password, :image_id)');
     if (!$stmt) {
       die($db->error);
     }
@@ -42,9 +45,9 @@ class teacher
   {
     // メールアドレスがteachersテーブルにあるか確認
     $stmt = $db->prepare("SELECT id as teacher_id, email
-                          FROM teachers
-                          WHERE email = :email
-                          AND is_active = 1");
+                            FROM teachers
+                           WHERE email = :email
+                             AND is_active = 1");
     $stmt->bindValue(':email', $email, PDO::PARAM_STR);
     $success = $stmt->execute();
     if (!$success) {
@@ -57,9 +60,9 @@ class teacher
 
       // メールが送信されたらpassword_reset_tokenをteachersテーブルへ保存
       $pw_reset_stmt = $db->prepare("UPDATE teachers
-                SET password_reset_token = :password_reset_token,
-                    updated_at = :updated_at
-              WHERE id = :teacher_id ");
+                                        SET password_reset_token = :password_reset_token,
+                                            updated_at = :updated_at
+                                      WHERE id = :teacher_id ");
       $pw_reset_stmt->bindValue(':password_reset_token', $password_reset_token, PDO::PARAM_STR);
       $pw_reset_stmt->bindValue(':updated_at', $current_time, PDO::PARAM_STR);
       $pw_reset_stmt->bindValue(':teacher_id', $account_holder['teacher_id'], PDO::PARAM_INT);
@@ -78,10 +81,10 @@ class teacher
   {
     // password_reset_tokenが一致しているteacherのpasswordを変更
     $stmt = $db->prepare("UPDATE teachers
-                           SET password = :password,
-                               updated_at = :updated_at,
-                               password_reset_token = null
-                         WHERE password_reset_token = :password_reset_token");
+                             SET password = :password,
+                                 updated_at = :updated_at,
+                                 password_reset_token = null
+                           WHERE password_reset_token = :password_reset_token");
     $stmt->bindValue(':password', $password, PDO::PARAM_STR);
     $stmt->bindValue(':updated_at', $current_time, PDO::PARAM_STR);
     $stmt->bindValue(':password_reset_token', $password_reset_token, PDO::PARAM_STR);

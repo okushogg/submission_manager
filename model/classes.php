@@ -5,7 +5,9 @@ class classRoom
   // 今年の全クラスを取得
   function get_this_year_classes($db, $this_year)
   {
-    $stmt = $db->prepare("SELECT id, grade, class FROM classes WHERE year=:year");
+    $stmt = $db->prepare("SELECT id, grade, class
+                          FROM classes
+                          WHERE year=:year");
     if (!$stmt) {
       die($db->error);
     }
@@ -22,8 +24,8 @@ class classRoom
   function get_chosen_class($db, $class_id)
   {
     $stmt = $db->prepare("SELECT id AS class_id, grade, class
-                          FROM classes
-                          WHERE id=:id");
+                            FROM classes
+                           WHERE id=:id");
     if (!$stmt) {
       die($db->error);
     }
@@ -40,9 +42,15 @@ class classRoom
   function get_selectable_classes($db, $this_year, $this_year_class)
   {
     if ($this_year > $this_year_class['year']) {
-      $sql = "SELECT id, grade, class FROM classes WHERE year=:year AND grade > :this_year_class";
+      $sql = "SELECT id, grade, class
+                FROM classes
+               WHERE year=:year
+                 AND grade > :this_year_class";
     } else {
-      $sql = "SELECT id, grade, class FROM classes WHERE year=:year AND grade = :this_year_class";
+      $sql = "SELECT id, grade, class
+                FROM classes
+               WHERE year=:year
+                 AND grade = :this_year_class";
     }
     $stmt = $db->prepare($sql);
     if (!$stmt) {
@@ -62,7 +70,7 @@ class classRoom
   function register_class($db, $form, $this_year)
   {
     $stmt = $db->prepare("INSERT INTO classes(year, grade, class)
-                          VALUES(:year, :grade, :class)");
+                               VALUES (:year, :grade, :class)");
     if (!$stmt) {
       die($db->error);
     }
@@ -79,8 +87,8 @@ class classRoom
   function get_years($db)
   {
     $years_stmt = $db->prepare("SELECT DISTINCT year
-                              FROM classes
-                              ORDER BY year DESC");
+                                           FROM classes
+                                       ORDER BY year DESC");
     $years_stmt->execute();
     $all_years = $years_stmt->fetchAll(PDO::FETCH_ASSOC);
     return $all_years;

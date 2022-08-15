@@ -23,12 +23,12 @@ class belong
   function get_chosen_year_class($db, $student_id, $chosen_year)
   {
     $chosen_year_class_stmt = $db->prepare("SELECT belongs.id as belongs_id, belongs.class_id, belongs.student_num as student_num,
-                                                 classes.class as class, classes.grade as grade, classes.year as year
-                                            FROM belongs
-                                       LEFT JOIN classes
-                                              ON belongs.class_id = classes.id
-                                           WHERE belongs.student_id = :student_id
-                                             AND classes.year = :year");
+                                                   classes.class as class, classes.grade as grade, classes.year as year
+                                              FROM belongs
+                                         LEFT JOIN classes
+                                                ON belongs.class_id = classes.id
+                                             WHERE belongs.student_id = :student_id
+                                               AND classes.year = :year");
     $chosen_year_class_stmt->bindValue(':student_id', $student_id, PDO::PARAM_INT);
     $chosen_year_class_stmt->bindValue(':year', $chosen_year, PDO::PARAM_INT);
     $chosen_year_class_stmt->execute();
@@ -40,7 +40,7 @@ class belong
   function register_new_student_belongs($db, $student_id, $class_id, $student_num)
   {
     $stmt_belongs = $db->prepare('INSERT INTO belongs(student_id, class_id, student_num)
-                                  VALUES (:student_id, :class_id, :student_num)');
+                                       VALUES (:student_id, :class_id, :student_num)');
     if (!$stmt_belongs) {
       die($db->error);
     }
@@ -61,8 +61,10 @@ class belong
                                   FROM belongs
                              LEFT JOIN classes
                                     ON belongs.class_id = classes.id
-                                 WHERE belongs.student_id = $student_id
-                                   AND belongs.class_id = $class_id");
+                                 WHERE belongs.student_id = :student_id
+                                   AND belongs.class_id = :class_id");
+    $class_stmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
+    $class_stmt->bindParam(':class_id', $class_id, PDO::PARAM_INT);
     $class_stmt->execute();
     $chosen_class = $class_stmt->fetch(PDO::FETCH_ASSOC);
     return $chosen_class;
@@ -74,7 +76,8 @@ class belong
     // 進学した後新しいクラスを登録する場合
     if ($this_year > $this_year_class['year']) {
       $stmt_belongs = $db->prepare("INSERT INTO belongs(student_id, class_id, student_num)
-                                  VALUES ($student_id, :class_id, :student_num)");
+                                         VALUES (:student_id, :class_id, :student_num)");
+      $stmt_belongs->bindParam(':student_id', $student_id, PDO::PARAM_INT);
       $stmt_belongs->bindValue(':class_id', $form['class_id'], PDO::PARAM_INT);
       $stmt_belongs->bindValue(':student_num', $form['student_num'], PDO::PARAM_INT);
       $success = $stmt_belongs->execute();
@@ -84,10 +87,10 @@ class belong
       // 現在所属のクラスを変更する場合
     } else {
       $stmt_belongs = $db->prepare("UPDATE belongs
-                                     SET class_id = :class_id,
-                                         student_num = :student_num,
-                                         updated_at = :update_at
-                                   WHERE id = :belongs_id");
+                                       SET class_id = :class_id,
+                                           student_num = :student_num,
+                                           updated_at = :update_at
+                                     WHERE id = :belongs_id");
       $stmt_belongs->bindValue(':class_id', $form['class_id'], PDO::PARAM_INT);
       $stmt_belongs->bindValue(':student_num', $form['student_num'], PDO::PARAM_INT);
       $stmt_belongs->bindValue(':update_at', $current_time, PDO::PARAM_STR);
@@ -103,8 +106,8 @@ class belong
   function get_student_num_from_class_id($db, $class_id)
   {
     $belong_stmt = $db->prepare("SELECT student_id, student_num
-                             FROM belongs
-                             WHERE class_id = $class_id");
+                                   FROM belongs
+                                  WHERE class_id = $class_id");
     $belong_stmt->execute();
     $student_num_array = $belong_stmt->fetchAll(PDO::FETCH_ASSOC | PDO::FETCH_UNIQUE);
     return $student_num_array;
@@ -114,11 +117,12 @@ class belong
   function get_students_belong_to_class($db, $class_id)
   {
     $student_stmt = $db->prepare("SELECT b.student_id as student_id, b.student_num as student_num
-                                  FROM belongs AS b
-                                  INNER JOIN students AS s
-                                  ON b.student_id = s.id
-                                  WHERE class_id = :class_id AND s.is_active = 1
-                                  ORDER BY b.student_num");
+                                    FROM belongs as b
+                              INNER JOIN students as s
+                                      ON b.student_id = s.id
+                                   WHERE class_id = :class_id
+                                     AND s.is_active = 1
+                                ORDER BY b.student_num");
     $student_stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
     $student_success = $student_stmt->execute();
     if (!$student_success) {
