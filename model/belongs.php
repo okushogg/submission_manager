@@ -142,24 +142,24 @@ class belong
          LEFT JOIN students ON belongs.student_id = students.id
          LEFT JOIN classes ON belongs.class_id = classes.id";
     $sql .= " WHERE ";
-    $sql .= 'classes.year = "' . $form['year'] . '"';
+    $sql .= 'classes.year = :year';
 
     // 学年が選択されている場合
     if ($form['grade'] != 0) {
       $sql .= " AND ";
-      $sql .= 'classes.grade = "' . $form['grade'] . '"';
+      $sql .= 'classes.grade = "' . h($form['grade']) . '"';
     }
 
     //クラスが選択されている場合
     if ($form['class'] != '-') {
       $sql .= " AND ";
-      $sql .= 'classes.class = "' . $form['class'] . '"';
+      $sql .= 'classes.class = "' . h($form['class']) . '"';
     }
 
     //在籍状況が選択されている場合
     if ($form['is_active'] != '') {
       $sql .= " AND ";
-      $sql .= 'students.is_active = "' . $form['is_active'] . '"';
+      $sql .= 'students.is_active = "' . h($form['is_active']) . '"';
     }
 
     //氏が記入されている場合
@@ -173,8 +173,9 @@ class belong
       $sql .= " AND ";
       $sql .= 'students.first_name LIKE "%' . h($form['first_name']) . '%"';
     }
-
-    $stmt = $db->query($sql);
+    $stmt = $db->prepare($sql);
+    $stmt->bindValue(':year', $form['year'], PDO::PARAM_INT);
+    $stmt->execute();
     $student_search_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return $student_search_result;
   }
