@@ -84,21 +84,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // 入力に問題がない場合
   if (empty($error)) {
     $_SESSION['form'] = $form;
-    $class_id = intval($form['class_id']);
-
-    // 指定されたclass_idを持つ全てのstudent_idを求める(除籍済を除く)
-    $all_student_id = $belong->get_students_belong_to_class($class_id);
-
-    // submissionsレコードを作成
-    $submission->create_submission($form);
-
     // 作成したsubmissionsレコードに紐付く該当クラス全生徒のstudent_submissionsレコードを作成
-    $submission_id = $submission->pdo->lastInsertId();
-    foreach ($all_student_id as $student_id) {
-      $student_submission->create_student_submission($submission_id, $student_id);
+    $result = $student_submission->create_student_submission($form);
+    if ($result) {
+      header('Location: home.php');
+      exit();
     }
-    header('Location: home.php');
-    exit();
   }
   $smarty->assign('form', $form);
   $smarty->assign('error', $error);

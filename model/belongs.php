@@ -118,25 +118,6 @@ class belong extends database
     return $student_num_array;
   }
 
-  // 指定されたclass_idを持つ全てのstudent_idを求める(除籍済を除く)
-  function get_students_belong_to_class($class_id)
-  {
-    $student_stmt = $this->pdo->prepare("SELECT b.student_id as student_id, b.student_num as student_num
-                                    FROM belongs as b
-                              INNER JOIN students as s
-                                      ON b.student_id = s.id
-                                   WHERE class_id = :class_id
-                                     AND s.is_active = 1
-                                ORDER BY b.student_num");
-    $student_stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
-    $student_success = $student_stmt->execute();
-    if (!$student_success) {
-      die($this->pdo->error);
-    }
-    $all_student_id = $student_stmt->fetchAll(PDO::FETCH_ASSOC);
-    return $all_student_id;
-  }
-
   // 生徒を検索する
   function search_students($form)
   {

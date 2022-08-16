@@ -8,33 +8,6 @@ class submission extends database
     parent::connect_db();
   }
 
-  // 課題を作成する
-  function create_submission($form)
-  {
-    $stmt = $this->pdo->prepare("INSERT INTO submissions(name,
-                                                  class_id,
-                                                  subject_id,
-                                                  dead_line,
-                                                  teacher_id)
-                               VALUES (:name,
-                                       :class_id,
-                                       :subject_id,
-                                       :dead_line,
-                                       :teacher_id)");
-    if (!$stmt) {
-      die($this->pdo->error);
-    }
-    $stmt->bindValue(':name', $form['submission_name'], PDO::PARAM_STR);
-    $stmt->bindValue(':class_id', $form['class_id'], PDO::PARAM_INT);
-    $stmt->bindValue(':subject_id', $form['subject_id'], PDO::PARAM_INT);
-    $stmt->bindValue(':dead_line', $form['dead_line'], PDO::PARAM_STR);
-    $stmt->bindValue(':teacher_id', $form['teacher_id'], PDO::PARAM_INT);
-    $success = $stmt->execute();
-    if (!$success) {
-      die($this->pdo->error);
-    }
-  }
-
   // submission_idから課題の情報を求める
   function get_submission_info($submission_id)
   {

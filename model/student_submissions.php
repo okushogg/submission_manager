@@ -9,22 +9,66 @@ class student_submission extends database
   }
 
   // 作成したsubmissionsレコードに紐付く該当クラス全生徒のstudent_submissionsレコードを作成
-  function create_student_submission($submission_id, $student_id){
-    $stmt = $this->pdo->prepare("INSERT INTO student_submissions(student_id,
+  function create_student_submission($form)
+  {
+    try {
+      // DB接続
+      $db = $this->pdo;
+      $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+      // トランザクション開始
+      $db->beginTransaction();
+
+      // 処理1:指定されたclass_idを持つ全てのstudent_idを求める(除籍済を除く)
+      $stmt = $db->prepare("SELECT b.student_id as student_id, b.student_num as student_num
+                                    FROM belongs as b
+                              INNER JOIN students as s
+                                      ON b.student_id = s.id
+                                   WHERE class_id = :class_id
+                                     AND s.is_active = 1
+                                ORDER BY b.student_num");
+      $stmt->bindValue(':class_id', $form['class_id'], PDO::PARAM_INT);
+      $stmt->execute();
+      $all_student_id = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+      // 処理2:課題を作成する
+      $stmt = $db->prepare("INSERT INTO submissions(name,
+                                                  class_id,
+                                                  subject_id,
+                                                  dead_line,
+                                                  teacher_id)
+                               VALUES (:name,
+                                       :class_id,
+                                       :subject_id,
+                                       :dead_line,
+                                       :teacher_id)");
+      $stmt->bindValue(':name', $form['submission_name'], PDO::PARAM_STR);
+      $stmt->bindValue(':class_id', $form['class_id'], PDO::PARAM_INT);
+      $stmt->bindValue(':subject_id', $form['subject_id'], PDO::PARAM_INT);
+      $stmt->bindValue(':dead_line', $form['dead_line'], PDO::PARAM_STR);
+      $stmt->bindValue(':teacher_id', $form['teacher_id'], PDO::PARAM_INT);
+      $stmt->execute();
+      $submission_id = $db->lastInsertId();
+
+      // 処理3:生徒の記録student_submissionsを作成
+      foreach ($all_student_id as $student_id) {
+      $stmt = $db->prepare("INSERT INTO student_submissions(student_id,
                                                                      submission_id)
                                           VALUES (:student_id,
                                                   :submission_id)");
-      if (!$stmt) {
-        die($this->pdo->error);
-      }
       $stmt->bindValue(':student_id', $student_id['student_id'], PDO::PARAM_INT);
       $stmt->bindValue(':submission_id', $submission_id, PDO::PARAM_INT);
-      $success = $stmt->execute();
-      print_r($submission_id);
-      if (!$success) {
-        die($this->pdo->error);
+      $stmt->execute();
       }
+      // コミット
+      $db->commit();
+      return true;
+    } catch (PDOException $e) {
+      // ロールバック
+      $db->rollBack();
+      echo 'DBエラー:' . $e->getMessage();
     }
+  }
 
   // 選択した強化の課題を取得する
   function get_submission_with_subject($student_id, $class_id, $subject_id)
@@ -115,22 +159,23 @@ class student_submission extends database
   }
 
   // 課題の評価を更新する
-  function update_submission_score($score_array, $h_id, $today, $current_time){
+  function update_submission_score($score_array, $h_id, $today, $current_time)
+  {
     $homework_stmt = $this->pdo->prepare("UPDATE student_submissions
                                       SET score = :score,
                                           approved_date = :approved_date,
                                           updated_at = :updated_at
                                     WHERE id = :student_submissions_id");
-      if (!$homework_stmt) {
-        die($this->pdo->error);
-      }
-      $homework_stmt->bindValue(':score', $score_array[$h_id], PDO::PARAM_INT);
-      $homework_stmt->bindValue(':approved_date', $today, PDO::PARAM_STR);
-      $homework_stmt->bindValue(':updated_at', $current_time, PDO::PARAM_STR);
-      $homework_stmt->bindValue(':student_submissions_id', $h_id, PDO::PARAM_INT);
-      $homework_success = $homework_stmt->execute();
-      if (!$homework_success) {
-        die($this->pdo->error);
-      }
+    if (!$homework_stmt) {
+      die($this->pdo->error);
+    }
+    $homework_stmt->bindValue(':score', $score_array[$h_id], PDO::PARAM_INT);
+    $homework_stmt->bindValue(':approved_date', $today, PDO::PARAM_STR);
+    $homework_stmt->bindValue(':updated_at', $current_time, PDO::PARAM_STR);
+    $homework_stmt->bindValue(':student_submissions_id', $h_id, PDO::PARAM_INT);
+    $homework_success = $homework_stmt->execute();
+    if (!$homework_success) {
+      die($this->pdo->error);
+    }
   }
 }
