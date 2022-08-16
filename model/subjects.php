@@ -1,10 +1,16 @@
 <?php
 
-class subject
+class subject extends database
 {
-  function get_all_subjects($db)
+  // DB接続
+  function __construct()
   {
-    $subjects_stmt = $db->prepare("SELECT id, id as subject_id, name
+    parent::connect_db();
+  }
+
+  function get_all_subjects()
+  {
+    $subjects_stmt = $this->pdo->prepare("SELECT id, id as subject_id, name
                                      FROM subjects");
     $subjects_stmt->execute();
     $all_subjects = $subjects_stmt->fetchAll(PDO::FETCH_ASSOC | PDO::FETCH_UNIQUE);

@@ -62,24 +62,24 @@ $smarty->assign('teacher_info', $teacher_info);
 $image_id = $_SESSION['auth']['teacher_image_id'];
 
 // 画像の情報を取得
-$pic_info = get_pic_info($db, $image_id);
+$pic_info = $image->get_pic_info($image_id);
 $smarty->assign('pic_info', $pic_info);
 
 // 該当年度の年度のクラスを取得する
-$classes_info = $class->get_this_year_classes($db, $this_year);
+$classes_info = $class->get_this_year_classes($this_year);
 // $cnt = count($classes_info);
 // $json_classes_info = json_encode($classes_info);
 $smarty->assign('classes_info', $classes_info);
 
 // 教科一覧
-$all_subjects = $subject->get_all_subjects($db);
+$all_subjects = $subject->get_all_subjects();
 $smarty->assign('all_subjects', $all_subjects);
 
 
 //「課題を作成する」をクリック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
-  list($error, $form) = error_check($db, $this_year, $today, $form, "teachers");
+  list($error, $form) = error_check($this_year, $today, $form, "teachers");
 
   // 入力に問題がない場合
   if (empty($error)) {
@@ -87,15 +87,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $class_id = intval($form['class_id']);
 
     // 指定されたclass_idを持つ全てのstudent_idを求める(除籍済を除く)
-    $all_student_id = $belong->get_students_belong_to_class($db, $class_id);
+    $all_student_id = $belong->get_students_belong_to_class($class_id);
 
     // submissionsレコードを作成
-    $submission->create_submission($db, $class_id, $form, $teacher_id);
+    $submission->create_submission($form);
 
     // 作成したsubmissionsレコードに紐付く該当クラス全生徒のstudent_submissionsレコードを作成
-    $submission_id = $db->lastInsertId();
+    $submission_id = $submission->pdo->lastInsertId();
     foreach ($all_student_id as $student_id) {
-      $student_submission->create_student_submission($db, $submission_id, $student_id);
+      $student_submission->create_student_submission($submission_id, $student_id);
     }
     header('Location: home.php');
     exit();

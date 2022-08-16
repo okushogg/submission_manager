@@ -23,7 +23,7 @@ is_teacher_login();
 // 送信をクリック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-  $teacher->set_password_reset_token($db, $email, $current_time);
+  $teacher->set_password_reset_token($email, $current_time);
   // メールアドレスがなかった場合もログインページへ
   header('Location: log_in.php');
   exit();

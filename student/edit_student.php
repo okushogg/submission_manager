@@ -53,24 +53,24 @@ $error = [];
 $smarty->assign('error', $error);
 
 // 生徒情報を取得
-$student_info = get_student_info($db, $student_id);
+$student_info = get_student_info($student_id);
 $smarty->assign('student_info', $student_info);
 
 // 現在の所属クラスを求める
-$this_year_class = $belong->get_chosen_year_class($db, $student_id, $this_year);
+$this_year_class = $belong->get_chosen_year_class($student_id, $this_year);
 $class_id = $this_year_class['class_id'];
 $smarty->assign('this_year_class', $this_year_class);
 
 
 //現在在籍する学年から選択可能なクラスを求める
-$selectable_classes = $class->get_selectable_classes($db, $this_year, $this_year_class);
+$selectable_classes = $class->get_selectable_classes($this_year, $this_year_class);
 $smarty->assign('selectable_classes', $selectable_classes);
 
 
 // 生徒情報を更新をクリック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
-  list($error, $form) = error_check($db, $this_year, $today, $form, "students");
+  list($error, $form) = error_check($this_year, $today, $form, "students");
 
   // 編集があったか確認
   $edit_check = edit_check($form, $student_info, $this_year_class);
@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       // 画像がある場合
       if ($form['image'] != '') {
-        $image_id = $image->student_pic_register($db, $filename);
+        $image_id = $image->student_pic_register($filename);
         unset($stmt);
       } else {
         // 画像を指定しない場合は以前の写真を使用
@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
     }
     // 情報をテーブルに保存
-    $student->update_student_info($db, $form, $current_time, $student_id);
+    $student->update_student_info($form, $current_time, $student_id);
 
     // 所属クラスと出席番号の情報をbelongsテーブルに保存
     $belong->update_belonged_class_and_student_num($db,$student_id, $this_year, $this_year_class, $form, $current_time);

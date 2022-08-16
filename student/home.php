@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // studentの情報を求める
-$student_info = $student->get_student_info($db, $student_id);
+$student_info = $student->get_student_info($student_id);
 $smarty->assign('student_info', $student_info);
 
 
@@ -61,7 +61,7 @@ if($student_info){
 }
 
 // 本年度の所属クラスを取得する
-$chosen_year_class = $belong->get_chosen_year_class($db, $student_id, $form['year']);
+$chosen_year_class = $belong->get_chosen_year_class($student_id, $form['year']);
 $smarty->assign('chosen_year_class', $chosen_year_class);
 if ($chosen_year_class) {
   $class_id = $chosen_year_class['class_id'];
@@ -72,7 +72,7 @@ $smarty->assign('class_id', $class_id);
 
 
 //生徒が所属していたクラスを求める
-$all_belonged_classes = $belong->get_all_belonged_classes($db, $student_id);
+$all_belonged_classes = $belong->get_all_belonged_classes($student_id);
 $smarty->assign('all_belonged_classes', $all_belonged_classes);
 
 
@@ -81,7 +81,7 @@ $all_subjects = $subject->get_all_subjects($db);
 $smarty->assign('all_subjects', $all_subjects);
 
 // 生徒が持つ課題を求める（提出期限の前後1週間のもの）
-$recent_submissions = $student_submission->get_recent_submissions($db, $student_id, $class_id);
+$recent_submissions = $student_submission->get_recent_submissions($student_id, $class_id);
 $smarty->assign('recent_submissions', $recent_submissions);
 
 // scoreの値

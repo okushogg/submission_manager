@@ -17,10 +17,10 @@ $submission_id = filter_input(INPUT_GET, 'submission_id', FILTER_SANITIZE_NUMBER
 $teacher_id = is_teacher_login();
 
 // 課題の情報を求める
-$submission_info = $submission->get_submission_info($db, $submission_id);
+$submission_info = $submission->get_submission_info($submission_id);
 $class_id = $submission_info['class_id'];
 
 // submissionsを削除
-$submission->delete_submission($db, $submission_id, $teacher_id, $current_time);
+$submission->delete_submission($submission_id, $teacher_id, $current_time);
 header("Location: index_submission.php?class_id={$class_id}");
 exit();

@@ -30,7 +30,7 @@ $teacher_id = is_teacher_login();
 $image_id = $_SESSION['auth']['teacher_image_id'];
 
 // 画像の情報を取得
-$pic_info = get_pic_info($db, $image_id);
+$pic_info = get_pic_info($image_id);
 $smarty->assign('pic_info', $pic_info);
 
 
@@ -67,7 +67,7 @@ $smarty->assign('classes', $classes);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
-  list($error, $form) = error_check($db, $this_year, $today, $form, "teachers");
+  list($error, $form) = error_check($this_year, $today, $form, "teachers");
 
   // 入力に問題がなければ
   if (empty($error)) {

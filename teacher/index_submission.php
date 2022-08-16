@@ -40,15 +40,15 @@ $teacher_id = is_teacher_login();
 $image_id = $_SESSION['auth']['teacher_image_id'];
 
 // 画像の情報を取得
-$pic_info = get_pic_info($db, $image_id);
+$pic_info = $image->get_pic_info($image_id);
 $smarty->assign('pic_info', $pic_info);
 
 // 該当クラスの課題を求める
-$submission_info = $submission->get_class_all_submissions($db, $class_id);
+$submission_info = $submission->get_class_all_submissions($class_id);
 $smarty->assign('submission_info', $submission_info);
 
 // クラスの情報を求める
-$class_info = $class->get_chosen_class($db, $class_id);
+$class_info = $class->get_chosen_class($class_id);
 $smarty->assign('class_info', $class_info);
 
 $smarty->caching = 0;

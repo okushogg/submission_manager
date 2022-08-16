@@ -60,11 +60,11 @@ $teacher_id = is_teacher_login();
 $image_id = $_SESSION['auth']['teacher_image_id'];
 
 // 画像の情報を取得
-$pic_info = $image->get_pic_info($db, $image_id);
+$pic_info = $image->get_pic_info($image_id);
 $smarty->assign('pic_info', $pic_info);
 
 // 登録されている年度を全て取得
-$all_years = $class->get_years($db);
+$all_years = $class->get_years();
 $smarty->assign('all_years', $all_years);
 
 $student_search_result = [];
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $form['last_name'] = filter_input(INPUT_POST, 'last_name');
   $form['first_name'] = filter_input(INPUT_POST, 'first_name');
 
-  $student_search_result = $belong->search_students($db, $form);
+  $student_search_result = $belong->search_students($form);
   $smarty->assign('student_search_result', $student_search_result);
   $smarty->assign('form', $form);
 }

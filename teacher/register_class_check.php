@@ -43,7 +43,7 @@ $teacher_id = is_teacher_login();
 
 // 登録を押す
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $class->register_class($db, $form, $this_year);
+    $class->register_class($form, $this_year);
     unset($_SESSION['form']);
     header('Location: home.php');
 }

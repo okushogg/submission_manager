@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $error['login'] = 'blank';
   } else {
     //  ログイン情報チェック
-    $login_student = $student->student_login($db, $email);
+    $login_student = $student->student_login($email);
     if ($login_student && $login_student['is_active'] == 1) {
       if (password_verify($password, $login_student['password'])) {
         // ログイン成功

@@ -37,13 +37,13 @@ $error = [];
 $smarty->assign('error', $error);
 
 // 本年度のクラスを求める
-$this_year_classes = $class->get_this_year_classes($db, $this_year);
+$this_year_classes = $class->get_this_year_classes($this_year);
 $smarty->assign('this_year_classes', $this_year_classes);
 
 // フォームの内容をチェック
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
-  list($error, $form) = error_check($db, $this_year, $today, $form, "students");
+  list($error, $form) = error_check($this_year, $today, $form, "students");
 
   // エラーがなければ画像を保存して、checkへ
   if (empty($error)) {

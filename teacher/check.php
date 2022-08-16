@@ -33,7 +33,7 @@ $smarty->assign('form', $form);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // 画像がある場合
   if ($form['image'] !== '') {
-    $image_id = $image->pic_register($db, $file_name);
+    $image_id = $image->pic_register($file_name);
   } else {
     // 画像がない場合
     $image_id = $no_image_id;
@@ -41,8 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // パスワードをDBに直接保管しない
   $password = password_hash($form['password'], PASSWORD_DEFAULT);
-  $teacher->register_new_teacher($db, $form, $password, $image_id);
-  $teacher_info = $teacher->teacher_login($db, $form['email']);
+  $teacher->register_new_teacher($form, $password, $image_id);
+  $teacher_info = $teacher->teacher_login($form['email']);
 
   // セッションにteacherの情報を入れる
   $_SESSION['auth']['is_login'] = true;

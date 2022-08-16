@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $error['login'] = 'blank';
   } else {
     //  ログイン情報チェック
-    $teacher_info = $teacher->teacher_login($db, $email);
+    $teacher_info = $teacher->teacher_login($email);
     if ($teacher_info && $teacher_info['is_active'] == 1) {
       if (password_verify($password, $teacher_info['password'])) {
         // ログイン成功

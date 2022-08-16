@@ -55,20 +55,20 @@ $smarty->assign('teacher_info', $teacher_info);
 $image_id = $_SESSION['auth']['teacher_image_id'];
 
 // 画像の情報を取得
-$pic_info = $image->get_pic_info($db, $image_id);
+$pic_info = $image->get_pic_info($image_id);
 $smarty->assign('pic_info', $pic_info);
 
 // 課題の情報を求める
-$submission_info = $submission->get_submission_info($db, $submission_id);
+$submission_info = $submission->get_submission_info($submission_id);
 $smarty->assign('submission_info', $submission_info);
 $class_id = $submission_info['class_id'];
 
 // 該当の課題が与えられた全ての生徒を求める
-$students_who_have_submission = $student_submission->get_all_students_who_have_submission($db, $submission_id, $class_id);
+$students_who_have_submission = $student_submission->get_all_students_who_have_submission($submission_id, $class_id);
 $smarty->assign('students_who_have_submission', $students_who_have_submission);
 
 // 課題が与えられた生徒のclass_idからstudent_numを求める
-$student_num_array = $belong->get_student_num_from_class_id($db, $class_id);
+$student_num_array = $belong->get_student_num_from_class_id($class_id);
 $smarty->assign('student_num_array', $student_num_array);
 
 // scoreの値
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $score_array = $_POST['score'];
     $h_id = $homework['student_submissions_id'];
     if ($homework['score'] !=  $score_array[$h_id]) {
-      $student_submission->update_submission_score($db, $score_array, $h_id, $today, $current_time);
+      $student_submission->update_submission_score($score_array, $h_id, $today, $current_time);
     }
   }
   header("Location: show_submission.php?submission_id={$submission_id}");

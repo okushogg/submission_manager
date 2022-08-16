@@ -43,7 +43,7 @@ login_check($student_page);
 $student_id = $_SESSION['auth']['student_id'];
 
 // studentの情報を求める
-$student_info = $student->get_student_info($db, $student_id);
+$student_info = $student->get_student_info($student_id);
 $smarty->assign('student_info', $student_info);
 
 // 生徒の画像情報を取得
@@ -52,7 +52,7 @@ $smarty->assign('student_pic_info', $student_pic_info);
 
 
 // クラスを求める
-$chosen_class = $belong->get_class_student_num($db, $student_id, $class_id);
+$chosen_class = $belong->get_class_student_num($student_id, $class_id);
 $smarty->assign('chosen_class', $chosen_class);
 
 
@@ -61,7 +61,7 @@ $all_subjects = $subject->get_all_subjects($db);
 $smarty->assign('all_subjects', $all_subjects);
 
 // 生徒が持つ本年度の該当教科課題を求める
-$submission_info = $student_submission->get_submission_with_subject($db, $student_id, $class_id, $subject_id);
+$submission_info = $student_submission->get_submission_with_subject($student_id, $class_id, $subject_id);
 $smarty->assign('submission_info', $submission_info);
 
 // scoreの値

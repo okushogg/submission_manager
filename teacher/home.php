@@ -41,12 +41,12 @@ $teacher_id = is_teacher_login();
 $image_id = $_SESSION['auth']['teacher_image_id'];
 
 // 画像の情報を取得
-$pic_info = $image->get_pic_info($db, $image_id);
+$pic_info = $image->get_pic_info($image_id);
 $smarty->assign('pic_info', $pic_info);
 
 
 // 今年度のクラスを取得する
-$classes_info = $class->get_this_year_classes($db, $this_year);
+$classes_info = $class->get_this_year_classes($this_year);
 $smarty->assign('classes_info', $classes_info);
 
 

@@ -61,16 +61,16 @@ $smarty->assign('teacher_info', $teacher_info);
 $image_id = $_SESSION['auth']['teacher_image_id'];
 
 // 画像の情報を取得
-$pic_info = $image->get_pic_info($db, $image_id);
+$pic_info = $image->get_pic_info($image_id);
 $smarty->assign('pic_info', $pic_info);
 
 
 // 教科一覧
-$all_subjects = $subject->get_all_subjects($db);
+$all_subjects = $subject->get_all_subjects();
 $smarty->assign('all_subjects', $all_subjects);
 
 // 課題の情報を求める
-$submission_info = $submission->get_submission_info($db, $submission_id);
+$submission_info = $submission->get_submission_info($submission_id);
 $smarty->assign('submission_info', $submission_info);
 $class_id = $submission_info['class_id'];
 
@@ -78,12 +78,12 @@ $class_id = $submission_info['class_id'];
 //「課題内容を編集」をクリックしたら
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // エラーチェック
-  list($error, $form) = error_check($db, $this_year, $today, $form, "teachers");
+  list($error, $form) = error_check($this_year, $today, $form, "teachers");
 
   // 入力に問題がない場合
   if (empty($error)) {
     // submissionsを編集
-    $submission->edit_submission($db, $form, $submission_id, $current_time);
+    $submission->edit_submission($form, $submission_id, $current_time);
     header("Location: index_submission.php?class_id={$class_id}");
     exit();
   }
@@ -91,7 +91,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $smarty->assign('form', $form);
   $smarty->assign('error', $error);
 }
-var_dump($submission_info);
 
 $smarty->caching = 0;
 $smarty->display('teacher/edit_submission.tpl');

@@ -1,6 +1,9 @@
 <?php
 require('dbconnect.php');
 
+require_once('../model/database.php');
+$db = new database();
+
 // ページの種類
 $student_page = "student_page";
 $teacher_page = "teacher_page";
@@ -14,32 +17,6 @@ $today = date('Y-m-d');
 
 // 画像がないユーザー用のimagesレコード
 $no_image_id = 69;
-
-// 写真の情報を取得
-function get_pic_info($db, $image_id)
-{
-  $stmt = $db->prepare("select path from images where id=:id");
-  if (!$stmt) {
-    die($db->error);
-  }
-  $stmt->bindParam(':id', $image_id, PDO::PARAM_INT);
-  $success = $stmt->execute();
-
-  $pic_info = $stmt->fetch(PDO::FETCH_ASSOC);
-  return $pic_info;
-}
-
-// 生徒情報を取得
-function get_student_info($db, $student_id)
-{
-  $student_stmt = $db->prepare("SELECT first_name, last_name, sex, email, image_id, is_active
-                                  FROM students
-                                 WHERE id=:student_id");
-  $student_stmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
-  $student_stmt->execute();
-  $student_info = $student_stmt->fetch(PDO::FETCH_ASSOC);
-  return $student_info;
-}
 
 // 編集ページで変更があったか確認
 function edit_check($form, $student_info, $this_year_class){
@@ -56,17 +33,6 @@ function edit_check($form, $student_info, $this_year_class){
   return !in_array(false, $edit_check, true);
 }
 
-// 登録されている年度を全て取得
-function get_years($db)
-{
-  $years_stmt = $db->prepare("SELECT DISTINCT year
-                              FROM classes
-                              ORDER BY year DESC");
-  $years_stmt->execute();
-  $all_years = $years_stmt->fetchAll(PDO::FETCH_ASSOC);
-  return $all_years;
-}
-
 // ログインチェック
 function login_check($page)
 {
@@ -79,10 +45,10 @@ function login_check($page)
 // 教員のログインか確認
 function is_teacher_login()
 {
-  if ($_SESSION['auth']['pass_teacher_check']) {
-    return true;
-  } elseif (isset($_SESSION['auth']['teacher_id'])) {
+  if (isset($_SESSION['auth']['teacher_id'])) {
     return $_SESSION['auth']['teacher_id'];
+  } elseif ($_SESSION['auth']['pass_teacher_check']) {
+    return true;
   } else {
     header('Location: ../teacher/teacher_check.php');
     exit();

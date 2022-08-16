@@ -33,12 +33,12 @@ $error = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // エラーチェック
-  list($error, $form) = error_check($db, $this_year, $today, $form, "students");
+  list($error, $form) = error_check($this_year, $today, $form, "students");
 
   if (empty($error)) {
     // フォームに入力されたパスワードをハッシュ化
     $password = password_hash($form['password'], PASSWORD_DEFAULT);
-    $student->reset_password($db, $current_time, $password, $password_reset_token);
+    $student->reset_password($current_time, $password, $password_reset_token);
   }
   $smarty->assign('form', $form);
   $smarty->assign('error', $error);

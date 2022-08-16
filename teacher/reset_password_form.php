@@ -37,12 +37,12 @@ $smarty->assign('error', $error);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // エラーチェック
-  list($error, $form) = error_check($db, $this_year, $today, $form, "teachers");
+  list($error, $form) = error_check($this_year, $today, $form, "teachers");
 
   if (empty($error)) {
     // フォームに入力されたパスワードをハッシュ化
     $password = password_hash($form['password'], PASSWORD_DEFAULT);
-    $teacher->reset_password($db, $current_time, $password, $password_reset_token);
+    $teacher->reset_password($current_time, $password, $password_reset_token);
     header("Location: log_in.php");
     exit();
   }

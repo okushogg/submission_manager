@@ -1,7 +1,8 @@
 <?php
 
-function error_check($db, $this_year, $today, $form, $type)
+function error_check($this_year, $today, $form, $type)
 {
+  require('../private/dbconnect.php');
   $error = [];
 
   // Sign_upのエラーチェック

@@ -1,30 +1,36 @@
 <?php
 
-class student
+class student extends database
 {
-  // loginチェック
-  function student_login($db, $email)
+  // DB接続
+  function __construct()
   {
-    $stmt = $db->prepare('SELECT *
+    parent::connect_db();
+  }
+
+  // loginチェック
+  function student_login($email)
+  {
+    $stmt = $this->pdo->prepare('SELECT *
                             FROM students
                            WHERE email=:email
                              AND is_active = 1 LIMIT 1');
     if (!$stmt) {
-      die($db->error);
+      die($this->pdo->error);
     }
     $stmt->bindParam(':email', $email, PDO::PARAM_STR);
     $success = $stmt->execute();
     if (!$success) {
-      die($db->error);
+      die($this->pdo->error);
     }
     $login_student = $stmt->fetch(PDO::FETCH_ASSOC);
     return  $login_student;
   }
 
   // student_idから生徒情報を取得する
-  function get_student_info($db, $student_id)
+  function get_student_info($student_id)
   {
-    $student_stmt = $db->prepare("SELECT first_name, last_name, sex, email, image_id, is_active
+    $student_stmt = $this->pdo->prepare("SELECT first_name, last_name, sex, email, image_id, is_active
                                     FROM students
                                    WHERE id = :student_id");
     $student_stmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
@@ -34,12 +40,12 @@ class student
   }
 
   // 生徒情報を新規登録する
-  function register_new_student($db, $form, $password, $image_id)
+  function register_new_student($form, $password, $image_id)
   {
-    $stmt = $db->prepare('INSERT INTO students(last_name, first_name, email, password, image_id, sex)
+    $stmt = $this->pdo->prepare('INSERT INTO students(last_name, first_name, email, password, image_id, sex)
                                VALUES (:last_name, :first_name, :email, :password, :image_id, :sex)');
     if (!$stmt) {
-      die($db->error);
+      die($this->pdo->error);
     }
     $stmt->bindParam(':last_name', $form['last_name'], PDO::PARAM_STR);
     $stmt->bindParam(':first_name', $form['first_name'], PDO::PARAM_STR);
@@ -49,14 +55,14 @@ class student
     $stmt->bindParam(':sex', $form['sex'], PDO::PARAM_INT);
     $success = $stmt->execute();
     if (!$success) {
-      die($db->error);
+      die($this->pdo->error);
     }
   }
 
   // 生徒情報の更新
-  function update_student_info($db, $form, $current_time, $student_id)
+  function update_student_info($form, $current_time, $student_id)
   {
-    $stmt = $db->prepare("UPDATE students
+    $stmt = $this->pdo->prepare("UPDATE students
                              SET first_name = :first_name,
                                  last_name = :last_name,
                                  sex = :sex,
@@ -65,7 +71,7 @@ class student
                                  updated_at = :updated_at
                            WHERE id = :student_id");
     if (!$stmt) {
-      die($db->error);
+      die($this->pdo->error);
     }
     $stmt->bindValue(':first_name', $form['first_name'], PDO::PARAM_STR);
     $stmt->bindValue(':last_name', $form['last_name'], PDO::PARAM_STR);
@@ -76,23 +82,23 @@ class student
     $stmt->bindValue(':student_id', $student_id, PDO::PARAM_INT);
     $success = $stmt->execute();
     if (!$success) {
-      die($db->error);
+      die($this->pdo->error);
     }
   }
 
   // password_reset_tokenの設定
   // password_reset_tokenを登録する
-  function set_password_reset_token($db, $email, $current_time)
+  function set_password_reset_token($email, $current_time)
   {
     // メールアドレスがstudentsテーブルにあるか確認
-    $stmt = $db->prepare("SELECT id as student_id, email
+    $stmt = $this->pdo->prepare("SELECT id as student_id, email
                             FROM students
                            WHERE email = :email
                              AND is_active = 1");
     $stmt->bindValue(':email', $email, PDO::PARAM_STR);
     $success = $stmt->execute();
     if (!$success) {
-      $db->error;
+      $this->pdo->error;
     }
     $account_holder = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($account_holder) {
@@ -100,7 +106,7 @@ class student
       $password_reset_token = bin2hex(random_bytes(18));
 
       // メールが送信されたらpassword_reset_tokenをstudentsテーブルへ保存
-      $pw_reset_stmt = $db->prepare("UPDATE students
+      $pw_reset_stmt = $this->pdo->prepare("UPDATE students
                                         SET password_reset_token = :password_reset_token,
                                             updated_at = :updated_at
                                       WHERE id = :student_id ");
@@ -112,16 +118,16 @@ class student
         // DBへtokenが保存されたらメールを送信
         send_mail($account_holder['email'], $password_reset_token, "student");
       } else {
-        $db->error;
+        $this->pdo->error;
       }
     }
   }
 
   // passwordをリセット
-  function reset_password($db, $current_time, $password, $password_reset_token)
+  function reset_password($current_time, $password, $password_reset_token)
   {
     // password_reset_tokenが一致しているstudentのpasswordを変更
-    $stmt = $db->prepare("UPDATE students
+    $stmt = $this->pdo->prepare("UPDATE students
                              SET password = :password,
                                  updated_at = :updated_at,
                                  password_reset_token = null
@@ -131,7 +137,7 @@ class student
     $stmt->bindValue(':password_reset_token', $password_reset_token, PDO::PARAM_STR);
     $success = $stmt->execute();
     if (!$success) {
-      $db->error;
+      $this->pdo->error;
     }
     header("Location: log_in.php");
     exit();

@@ -7,4 +7,3 @@ try {
 } catch(PDOException $e) {
   echo 'Db接続エラー:' . $e->getMessage();
 }
-?>
