@@ -4,7 +4,9 @@ require('../private/libs.php');
 require('../private/dbconnect.php');
 require('../private/error_check.php');
 require_once('../private/set_up.php');
+require_once('../model/images.php');
 $smarty = new Smarty_submission_manager();
+$image = new image();
 
 // header tittle
 $title = "教員 クラス登録ページ";
@@ -30,7 +32,7 @@ $teacher_id = is_teacher_login();
 $image_id = $_SESSION['auth']['teacher_image_id'];
 
 // 画像の情報を取得
-$pic_info = get_pic_info($image_id);
+$pic_info = $image->get_pic_info($image_id);
 $smarty->assign('pic_info', $pic_info);
 
 

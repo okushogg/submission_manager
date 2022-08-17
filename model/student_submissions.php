@@ -8,7 +8,7 @@ class student_submission extends database
     parent::connect_db();
   }
 
-  // 作成したsubmissionsレコードに紐付く該当クラス全生徒のstudent_submissionsレコードを作成
+  // 課題の作成(クラスに所属する生徒を求める、課題を作成する、課題を各生徒に与える)
   function create_student_submission($form)
   {
     try {

@@ -47,7 +47,7 @@ $student_info = $student->get_student_info($student_id);
 $smarty->assign('student_info', $student_info);
 
 // 生徒の画像情報を取得
-$student_pic_info = $image->get_pic_info($db,$student_info['image_id']);
+$student_pic_info = $image->get_pic_info($student_info['image_id']);
 $smarty->assign('student_pic_info', $student_pic_info);
 
 
@@ -57,7 +57,7 @@ $smarty->assign('chosen_class', $chosen_class);
 
 
 // 教科一覧
-$all_subjects = $subject->get_all_subjects($db);
+$all_subjects = $subject->get_all_subjects();
 $smarty->assign('all_subjects', $all_subjects);
 
 // 生徒が持つ本年度の該当教科課題を求める
