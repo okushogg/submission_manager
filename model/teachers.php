@@ -15,9 +15,10 @@ class teacher extends database
     //$db = parent::connect_db();
 
     $stmt = $this->pdo->prepare('SELECT *
-                            FROM teachers
-                           WHERE email=:email
-                           LIMIT 1');
+                                   FROM teachers
+                                  WHERE email=:email
+                                    AND is_active = 1
+                                  LIMIT 1');
     if (!$stmt) {
       die($this->pdo->error);
     }

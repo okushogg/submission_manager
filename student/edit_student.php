@@ -53,7 +53,7 @@ $error = [];
 $smarty->assign('error', $error);
 
 // 生徒情報を取得
-$student_info = get_student_info($student_id);
+$student_info = $student->get_student_info($student_id);
 $smarty->assign('student_info', $student_info);
 
 // 現在の所属クラスを求める
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // 編集があったか確認
   $edit_check = edit_check($form, $student_info, $this_year_class);
-  if($edit_check){
+  if ($edit_check) {
     $error['edit_check'] = "no_edit";
   }
 
@@ -83,36 +83,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 画像のデータがある場合
     if ($_FILES) {
-
       // 画像のアップロード
       $image = $_FILES['image'];
       if ($image['name'] !== '') {
-        $filename = date('Ymdhis') . '_' . $image['name'];
-        $pic_dir = "teacher_pictures";
+        $file_name = date('Ymdhis') . '_' . $image['name'];
+        $pic_dir = "student_pictures";
         if (!makeThumb($pic_dir)) {
           die('ファイルのアップロードに失敗しました');
         }
-        $_SESSION['form']['image'] = $filename;
+        $form['image'] = $file_name;
       } else {
-        $_SESSION['form']['image'] = '';
-      }
-
-      // 画像がある場合
-      if ($form['image'] != '') {
-        $image_id = $image->student_pic_register($filename);
-        unset($stmt);
-      } else {
-        // 画像を指定しない場合は以前の写真を使用
-        $image_id = $student_info['image_id'];
+        $form['image'] = '';
+        $file_name = "";
       }
     }
+
     // 情報をテーブルに保存
-    $student->update_student_info($form, $current_time, $student_id);
-
-    // 所属クラスと出席番号の情報をbelongsテーブルに保存
-    $belong->update_belonged_class_and_student_num($db,$student_id, $this_year, $this_year_class, $form, $current_time);
-
-    header('Location: ../student/home.php');
+    $result = $student->update_student_info($form, $student_info, $current_time, $this_year, $this_year_class, $file_name);
+    if ($result) {
+      header('Location: ../student/home.php');
+      exit();
+    }
   }
   $smarty->assign('form', $form);
   $smarty->assign('error', $error);

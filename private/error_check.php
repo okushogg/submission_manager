@@ -2,7 +2,16 @@
 
 function error_check($this_year, $today, $form, $type)
 {
-  require('../private/dbconnect.php');
+  require_once('../model/students.php');
+  require_once('../model/database.php');
+
+  $student = new student();
+
+  // DB接続
+  $database = new database();
+  $database->connect_db();
+  $db = $database->pdo;
+
   $error = [];
 
   // Sign_upのエラーチェック
@@ -32,7 +41,7 @@ function error_check($this_year, $today, $form, $type)
     $form['email'] = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     // edit_studentでemailを変更した場合、同一アドレスがないかの確認を行う
     if (isset($_SESSION['auth']['is_login'])) {
-      $student_info = get_student_info($db, $_SESSION['auth']['student_id']);
+      $student_info = $student->get_student_info($_SESSION['auth']['student_id']);
       $edited_email = $student_info['email'] !== $form['email'];
     }
     if ($form['email'] === '') {

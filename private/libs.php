@@ -122,7 +122,7 @@ function makeThumb($pic_dir)
   $image = $_FILES['image'];
   $original_file = $image['tmp_name'];
   $type = mime_content_type($image['tmp_name']);
-  $filename = date('Ymdhis') . '_' . $image['name'];
+  $file_name = date('Ymdhis') . '_' . $image['name'];
 
   // getimagesize関数 オリジナル画像の横幅・高さを取得
   list($original_width, $original_height) = getimagesize($original_file);
@@ -161,7 +161,7 @@ function makeThumb($pic_dir)
   );
 
   // サムネイル画像の出力
-  $save_path = "../$pic_dir/$filename";
+  $save_path = "../$pic_dir/$file_name";
   if($type === 'image/png'){
     imagepng($thumb_image, $save_path);
   } elseif($type === 'image/jpeg'){
@@ -174,5 +174,5 @@ function makeThumb($pic_dir)
   imagedestroy($original_image);
   imagedestroy($thumb_image);
 
-  return $filename;
+  return $file_name;
 }

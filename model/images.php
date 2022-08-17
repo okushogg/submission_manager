@@ -39,7 +39,7 @@ class image extends database
     $get_image_id = $this->pdo->prepare("SELECT id
                                     FROM images
                                    WHERE path = :path ");
-    $get_image_id>bindParam(':path', $file_name, PDO::PARAM_STR);
+    $get_image_id->bindParam(':path', $file_name, PDO::PARAM_STR);
     $get_image_id->execute();
     $registered_image_id = $get_image_id->fetch(PDO::FETCH_COLUMN);
     return $registered_image_id;

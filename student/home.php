@@ -56,7 +56,7 @@ $smarty->assign('student_info', $student_info);
 
 // 生徒の画像情報を取得
 if($student_info){
-  $student_pic_info = $picture->get_pic_info($db,$student_info['image_id']);
+  $student_pic_info = $picture->get_pic_info($student_info['image_id']);
   $smarty->assign('student_pic_info', $student_pic_info);
 }
 
@@ -77,7 +77,7 @@ $smarty->assign('all_belonged_classes', $all_belonged_classes);
 
 
 // 教科一覧
-$all_subjects = $subject->get_all_subjects($db);
+$all_subjects = $subject->get_all_subjects();
 $smarty->assign('all_subjects', $all_subjects);
 
 // 生徒が持つ課題を求める（提出期限の前後1週間のもの）
