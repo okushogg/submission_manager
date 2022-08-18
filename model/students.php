@@ -148,15 +148,8 @@ class student extends database
   function set_password_reset_token($email, $current_time)
   {
     try {
-      // DB接続
-      $db = $this->pdo;
-      $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-      // トランザクション開始
-      $db->beginTransaction();
-
       // メールアドレスがstudentsテーブルにあるか確認
-      $stmt = $db->prepare("SELECT id as student_id, email
+      $stmt = $this->pdo->prepare("SELECT id as student_id, email
                                    FROM students
                                   WHERE email = :email
                                     AND is_active = 1");
@@ -168,7 +161,7 @@ class student extends database
         $password_reset_token = bin2hex(random_bytes(18));
 
         // メールが送信されたらpassword_reset_tokenをstudentsテーブルへ保存
-        $pw_reset_stmt = $db->prepare("UPDATE students
+        $pw_reset_stmt = $this->pdo->prepare("UPDATE students
                                           SET password_reset_token = :password_reset_token,
                                               updated_at = :updated_at
                                         WHERE id = :student_id ");
@@ -180,14 +173,10 @@ class student extends database
           // DBへtokenが保存されたらメールを送信
           send_mail($account_holder['email'], $password_reset_token, "student");
         } else {
-          $db->error;
+          $this->pdo->error;
         }
       }
-      // コミット
-      $db->commit();
     } catch (Exception $e) {
-      // ロールバック
-      $db->rollBack();
       return display_message($e->getMessage());
     }
   }

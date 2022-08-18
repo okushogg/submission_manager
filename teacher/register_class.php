@@ -1,10 +1,11 @@
 <?php
 session_start();
 require('../private/libs.php');
-require('../private/dbconnect.php');
 require('../private/error_check.php');
+
 require_once('../private/set_up.php');
 require_once('../model/images.php');
+
 $smarty = new Smarty_submission_manager();
 $image = new image();
 

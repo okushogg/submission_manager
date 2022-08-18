@@ -1,8 +1,6 @@
 <?php
 session_start();
 require('../private/libs.php');
-require('../private/dbconnect.php');
-
 require_once('../model/submissions.php');
 
 $submission = new submission();

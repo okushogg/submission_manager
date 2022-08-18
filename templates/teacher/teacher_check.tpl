@@ -11,7 +11,8 @@
     </div>
     <div id="content">
       <div id="lead">
-       <a href="javascript:history.back()">前に戻る</a>
+       <a href="javascript:history.back()">前に戻る</a><br>
+       <a href="../student/log_in.php">生徒ログインページへ</a>
       </div>
       <form action="" method="post">
         <dl>

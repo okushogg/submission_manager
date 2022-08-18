@@ -1,25 +1,18 @@
 <?php
 session_start();
 require('../private/libs.php');
-require('../private/dbconnect.php');
 require('../private/error_check.php');
 
 require_once('../private/set_up.php');
-require_once('../model/teachers.php');
 require_once('../model/images.php');
 require_once('../model/belongs.php');
-require_once('../model/classes.php');
 require_once('../model/subjects.php');
-require_once('../model/submissions.php');
 require_once('../model/student_submissions.php');
 
 $smarty = new Smarty_submission_manager();
-$teacher = new teacher();
 $image = new image();
-$belong = new belong();
 $class = new classRoom();
 $subject = new subject();
-$submission = new submission();
 $student_submission = new student_submission();
 
 // header tittle

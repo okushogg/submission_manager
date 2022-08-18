@@ -13,7 +13,7 @@ require_once('../model/student_submissions.php');
 
 $smarty = new Smarty_submission_manager();
 $student = new student();
-$picture = new image();
+$image = new image();
 $belong = new belong();
 $subject = new subject();
 $student_submission = new student_submission();
@@ -56,7 +56,7 @@ $smarty->assign('student_info', $student_info);
 
 // 生徒の画像情報を取得
 if($student_info){
-  $student_pic_info = $picture->get_pic_info($student_info['image_id']);
+  $student_pic_info = $image->get_pic_info($student_info['image_id']);
   $smarty->assign('student_pic_info', $student_pic_info);
 }
 

@@ -1,7 +1,6 @@
 <?php
 session_start();
 require('../private/libs.php');
-require('../private/dbconnect.php');
 
 require_once('../private/set_up.php');
 require_once('../model/images.php');

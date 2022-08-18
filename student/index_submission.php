@@ -1,21 +1,18 @@
 <?php
 session_start();
 require('../private/libs.php');
-require('../private/dbconnect.php');
 
 require_once('../private/set_up.php');
 require_once('../model/students.php');
-require_once('../model/classes.php');
 require_once('../model/images.php');
 require_once('../model/belongs.php');
 require_once('../model/student_submissions.php');
 require_once("../model/subjects.php");
 
 $smarty = new Smarty_submission_manager();
-$class = new classRoom();
+$student = new student();
 $image = new image();
 $belong = new belong();
-$student = new student();
 $subject = new subject();
 $student_submission = new student_submission();
 

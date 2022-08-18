@@ -85,45 +85,16 @@ class belong extends database
     }
   }
 
-  // 所属クラスと出席番号の情報をbelongsテーブルに保存
-  function update_belonged_class_and_student_num($student_id, $this_year, $this_year_class, $form, $current_time)
-  {
-    try {
-      // 進学した後新しいクラスを登録する場合
-      if ($this_year > $this_year_class['year']) {
-        $stmt_belongs = $this->pdo->prepare("INSERT INTO belongs(student_id, class_id, student_num)
-                                                  VALUES (:student_id, :class_id, :student_num)");
-        $stmt_belongs->bindParam(':student_id', $student_id, PDO::PARAM_INT);
-        $stmt_belongs->bindValue(':class_id', $form['class_id'], PDO::PARAM_INT);
-        $stmt_belongs->bindValue(':student_num', $form['student_num'], PDO::PARAM_INT);
-        $stmt_belongs->execute();
-        // 現在所属のクラスを変更する場合
-      } else {
-        $stmt_belongs = $this->pdo->prepare("UPDATE belongs
-                                                SET class_id = :class_id,
-                                                    student_num = :student_num,
-                                                    updated_at = :update_at
-                                              WHERE id = :belongs_id");
-        $stmt_belongs->bindValue(':class_id', $form['class_id'], PDO::PARAM_INT);
-        $stmt_belongs->bindValue(':student_num', $form['student_num'], PDO::PARAM_INT);
-        $stmt_belongs->bindValue(':update_at', $current_time, PDO::PARAM_STR);
-        $stmt_belongs->bindValue(':belongs_id', $this_year_class['belongs_id'], PDO::PARAM_INT);
-        $stmt_belongs->execute();
-      }
-    } catch (Exception $e) {
-      return display_message($e->getMessage());
-    }
-  }
-
   // student_numを求める
   function get_student_num_from_class_id($class_id)
   {
     try {
-      $belong_stmt = $this->pdo->prepare("SELECT student_id, student_num
-                                            FROM belongs
-                                           WHERE class_id = $class_id");
-      $belong_stmt->execute();
-      $student_num_array = $belong_stmt->fetchAll(PDO::FETCH_ASSOC | PDO::FETCH_UNIQUE);
+      $stmt = $this->pdo->prepare("SELECT student_id, student_num
+                                     FROM belongs
+                                    WHERE class_id = :class_id");
+      $stmt->bindValue(':class_id', $class_id, PDO::PARAM_INT);
+      $stmt->execute();
+      $student_num_array = $stmt->fetchAll(PDO::FETCH_ASSOC | PDO::FETCH_UNIQUE);
       return $student_num_array;
     } catch (Exception $e) {
       return display_message($e->getMessage());

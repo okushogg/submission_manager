@@ -1,16 +1,13 @@
 <?php
 session_start();
 require('../private/libs.php');
-require('../private/dbconnect.php');
 
 require_once('../private/set_up.php');
-require_once('../model/teachers.php');
 require_once('../model/images.php');
 require_once('../model/classes.php');
 require_once('../model/submissions.php');
 
 $smarty = new Smarty_submission_manager();
-$teacher = new teacher();
 $image = new image();
 $class = new classRoom();
 $submission = new submission();
